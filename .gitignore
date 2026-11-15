@@ -1,0 +1,14 @@
+# Firma del APK: NUNCA subir el keystore ni su contraseña
+build/
+*.jks
+*.keystore
+ks_pass.txt
+
+# Salidas generadas (el APK se publica en Releases)
+GuiaAvionesWT.apk
+GuiaAvionesWT.apk.idsig
+GuiaAvionesWT.html
+original/
+
+.claude/
+__pycache__/

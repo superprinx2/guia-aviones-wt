@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d1115">
+<title>WT Guía de Vuelo</title>
+<style>
+:root{
+ --bg:#0d1115;--bg2:#12171d;--pn:#171e25;--pn2:#1d262f;--ln:#27323d;--ln2:#33414e;
+ --t:#e7edf1;--m:#8b9aa6;--d:#5d6b76;
+ --a:#f0b43c;--a2:#ffcf6b;--g:#7dff5a;--gf:#3f8f2c;--r:#ff5a4d;--b:#4aa3ff;--c:#2fd4c4;
+ --rad:12px;--tab:62px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{font-size:14px}
+body{margin:0;font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--t);line-height:1.4;padding-bottom:calc(var(--tab) + env(safe-area-inset-bottom))}
+button{font:inherit;color:inherit}
+svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:middle}
+h2{font-size:1.15rem;margin:0 0 2px;letter-spacing:.3px}
+h3{font-size:1rem;margin:0 0 6px}
+p{margin:6px 0}
+small,.sm{font-size:.82rem;color:var(--m)}
+.up{text-transform:uppercase;letter-spacing:1.2px;font-size:.72rem;font-weight:700;color:var(--m)}
+
+/* ---------- SPLASH ---------- */
+#splash{position:fixed;inset:0;z-index:100;background:linear-gradient(#8fb2d8,#7d9fc4 40%,#1b2a3a 75%,#0d1115);display:flex;flex-direction:column;justify-content:flex-end;padding:28px 22px calc(34px + env(safe-area-inset-bottom));transition:opacity .5s,visibility .5s}
+#splash::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,8,12,.35) 0%,rgba(5,8,12,0) 30%,rgba(5,8,12,.55) 62%,rgba(5,8,12,.97) 100%)}
+#splash>*{position:relative}
+#splash>.sp-img{position:absolute;inset:0;background:center/cover no-repeat}
+#splash.off{opacity:0;visibility:hidden}
+#splash.inst{transition:none}
+@media (orientation:portrait){
+ #splash>.sp-img{inset:auto;left:-6vw;right:-6vw;top:12%;height:calc(112vw*.667);-webkit-mask-image:linear-gradient(transparent,#000 12%,#000 72%,transparent);mask-image:linear-gradient(transparent,#000 12%,#000 72%,transparent)}
+ #splash::before{background:linear-gradient(180deg,rgba(5,8,12,.3) 0%,rgba(5,8,12,0) 22%,rgba(5,8,12,.4) 50%,rgba(5,8,12,.97) 72%)}}
+.brand{position:absolute!important;top:calc(18px + env(safe-area-inset-top));left:22px;display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:2px;font-size:.8rem;color:#fff;text-shadow:0 1px 6px #000}
+.brand b{background:var(--a);color:#111;padding:2px 6px;border-radius:4px}
+.sp-rank{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.sp-name{font-size:2.6rem;font-weight:800;letter-spacing:1px;line-height:1;margin:0;text-shadow:0 2px 16px rgba(0,0,0,.6)}
+.sp-role{color:#c9d3da;margin:6px 0 18px;font-size:.95rem}
+.sp-go{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--a);color:#111;border:0;border-radius:10px;padding:14px;font-weight:800;letter-spacing:2px;font-size:.95rem;cursor:pointer;box-shadow:0 6px 24px rgba(240,180,60,.35)}
+.sp-go:active{transform:scale(.98)}
+.sp-cred{margin-top:10px;font-size:.68rem;color:#8796a1;text-align:center}
+
+/* ---------- TOP / SEG ---------- */
+header.top{position:sticky;top:0;z-index:20;background:rgba(13,17,21,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--ln)}
+.tb{display:flex;align-items:center;gap:10px;padding:calc(8px + env(safe-area-inset-top)) 14px 8px;max-width:1100px;margin:auto}
+.tb .ttl{flex:1;min-width:0}
+.tb .ttl b{display:block;font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb .ttl span{font-size:.75rem;color:var(--m)}
+.acpill{display:flex;align-items:center;gap:6px;background:var(--pn);border:1px solid var(--ln);border-radius:20px;padding:4px 10px 4px 4px;font-size:.78rem;cursor:pointer}
+.acpill img{width:26px;height:26px;border-radius:50%;object-fit:cover}
+.seg{display:flex;gap:6px;overflow-x:auto;padding:0 14px 9px;max-width:1100px;margin:auto;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg:empty{display:none}
+.seg button{flex:none;display:flex;align-items:center;gap:6px;background:var(--pn);border:1px solid var(--ln);border-radius:18px;padding:6px 12px;font-size:.82rem;cursor:pointer;color:var(--m)}
+.seg button.on{background:var(--a);border-color:var(--a);color:#111;font-weight:700}
+.seg button svg.i{width:15px;height:15px}
+
+/* ---------- TABBAR ---------- */
+nav.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(15,20,25,.96);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--ln);padding-bottom:env(safe-area-inset-bottom)}
+nav.tabbar .in{display:flex;max-width:640px;margin:auto;height:var(--tab)}
+nav.tabbar button{flex:1;background:none;border:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:.68rem;color:var(--d);cursor:pointer;position:relative}
+nav.tabbar button svg.i{width:22px;height:22px}
+nav.tabbar button.on{color:var(--a)}
+nav.tabbar button.on::before{content:"";position:absolute;top:0;width:28px;height:3px;border-radius:0 0 3px 3px;background:var(--a)}
+
+/* ---------- LAYOUT ---------- */
+main{max-width:1100px;margin:auto;padding:14px}
+.view{display:none;animation:fade .25s}
+.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.lead{color:var(--m);margin:0 0 12px;font-size:.88rem}
+.card{background:var(--pn);border:1px solid var(--ln);border-radius:var(--rad);padding:12px}
+.grid{display:grid;gap:10px}
+.g2{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>*{flex:1;min-width:280px}
+.mt{margin-top:12px}
+.hd{display:flex;align-items:center;gap:8px;margin:18px 0 8px}
+.hd h3{margin:0}
+.hd .ln{flex:1;height:1px;background:var(--ln)}
+
+kbd,.key{display:inline-flex;align-items:center;gap:2px;background:linear-gradient(#2c333a,#20262c);border:1px solid #444f59;border-bottom-width:3px;border-radius:5px;padding:0 6px;min-height:22px;font-family:Consolas,"Roboto Mono",monospace;font-size:.78rem;color:var(--a2);white-space:nowrap;vertical-align:middle}
+.key.none{color:var(--m);border-style:dashed;background:transparent}
+.chip{display:inline-flex;align-items:center;gap:5px;background:var(--pn2);border:1px solid var(--ln);border-radius:14px;padding:3px 9px;font-size:.76rem;color:var(--t);white-space:nowrap}
+.chip svg.i{width:14px;height:14px}
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:700;padding:2px 7px;border-radius:10px;white-space:nowrap;letter-spacing:.3px}
+.t-ok{background:rgba(125,255,90,.14);color:#a6ff8a}.t-no{background:rgba(255,90,77,.14);color:#ff9a90}.t-mid{background:rgba(240,180,60,.15);color:var(--a2)}.t-info{background:rgba(74,163,255,.15);color:#9fd0ff}
+.tip,.warn{display:flex;gap:10px;align-items:flex-start;border-radius:10px;padding:10px 12px;margin-top:12px;font-size:.86rem}
+.tip{background:rgba(125,255,90,.07);border:1px solid rgba(125,255,90,.22)}
+.warn{background:rgba(255,90,77,.08);border:1px solid rgba(255,90,77,.3)}
+.tip>svg.i{color:var(--g);margin-top:1px}.warn>svg.i{color:var(--r);margin-top:1px}
+.tip ul,.warn ul{margin:4px 0 0;padding-left:18px}
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--a);color:#111;border:0;border-radius:8px;padding:7px 12px;cursor:pointer;font-size:.84rem;font-weight:700}
+.btn.alt{background:var(--pn2);color:var(--t);border:1px solid var(--ln2);font-weight:500}
+.btn.red{background:#7a2a22;color:#fff}
+.btn svg.i{width:16px;height:16px}
+table{width:100%;border-collapse:collapse;font-size:.86rem}
+td,th{border-bottom:1px solid var(--ln);padding:7px 6px;text-align:left;vertical-align:middle}
+th{color:var(--m);font-size:.72rem;text-transform:uppercase;letter-spacing:1px}
+svg.d{width:100%;height:auto;display:block}
+.sky{background:linear-gradient(#5b8fc0,#2b5f97 55%,#163f70);border-radius:8px}
+.n{display:inline-flex;width:20px;height:20px;border-radius:50%;background:var(--a);color:#111;font-weight:800;font-size:.72rem;align-items:center;justify-content:center;flex:none}
+
+/* ---------- HOME ---------- */
+.hero{position:relative;border-radius:16px;overflow:hidden;min-height:250px;background:#000 center 40%/cover no-repeat;display:flex;flex-direction:column;justify-content:flex-end;padding:16px;border:1px solid var(--ln)}
+.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 35%,rgba(8,11,14,.92) 100%)}
+.hero>*{position:relative}
+.hero h1{font-size:2rem;margin:2px 0 0;letter-spacing:.5px;line-height:1}
+.hero .rk{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.rank{background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.2);color:#fff;font-weight:800;font-size:.72rem;letter-spacing:1px;padding:3px 8px;border-radius:5px}
+.flag{width:24px;height:16px;border-radius:2px;display:inline-block;box-shadow:0 0 0 1px rgba(255,255,255,.25)}
+.specs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+@media(min-width:700px){.specs{grid-template-columns:repeat(6,1fr)}}
+.spec{background:var(--pn);border:1px solid var(--ln);border-radius:10px;padding:9px 6px;text-align:center}
+.spec svg.i{width:22px;height:22px;color:var(--a)}
+.spec b{display:block;font-size:.9rem;margin-top:3px}
+.spec small{font-size:.68rem}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media(max-width:520px){.tiles{grid-template-columns:repeat(4,1fr)}}
+.tile{background:var(--pn);border:1px solid var(--ln);border-radius:12px;padding:12px 4px 9px;text-align:center;cursor:pointer;font-size:.72rem;color:var(--t);transition:.15s}
+.tile:active,.tile:hover{border-color:var(--a)}
+.tile .ic{width:40px;height:40px;margin:0 auto 6px;border-radius:11px;display:flex;align-items:center;justify-content:center}
+.tile .ic svg.i{width:22px;height:22px}
+.hscroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+.mthumb{flex:none;width:150px;background:var(--pn);border:1px solid var(--ln);border-radius:12px;overflow:hidden;cursor:pointer}
+.mthumb .ph{height:78px;background:#0a0e12 center/cover}
+.mthumb .tx{padding:7px 9px}
+.mthumb b{font-size:.84rem}
+.acsel{display:flex;gap:10px;overflow-x:auto}
+.accard{flex:none;width:210px;border-radius:12px;overflow:hidden;border:2px solid var(--a);background:var(--pn);cursor:pointer}
+.accard .ph{height:100px;background:#000 center/cover}
+.accard .tx{padding:8px 10px}
+.accard.soon{border:1px dashed var(--ln2);opacity:.6;cursor:default;display:flex;align-items:center;justify-content:center;flex-direction:column;min-height:150px;color:var(--m)}
+
+/* ---------- WEAPON CARDS ---------- */
+.wc{background:var(--pn);border:1px solid var(--ln);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.wc .ph{position:relative;height:150px;background:#0a0e12 center/cover no-repeat}
+.wc .ph.art{display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 40%,#22303c,#0b1016 75%)}
+.wc .ph.art svg{width:80%}
+.wc .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 50%,rgba(14,19,24,.9))}
+.wc .gb{position:absolute;z-index:1;left:10px;top:10px;display:flex;align-items:center;gap:5px;background:rgba(0,0,0,.65);border-radius:14px;padding:3px 9px 3px 5px;font-size:.72rem;font-weight:700;backdrop-filter:blur(4px)}
+.wc .gb .gi{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#111}
+.wc .gb .gi svg.i{width:13px;height:13px;stroke-width:2.2}
+.wc .star{position:absolute;z-index:1;right:10px;top:10px;background:var(--a);color:#111;font-size:.68rem;font-weight:800;padding:3px 8px;border-radius:10px}
+.wc .nm{position:absolute;z-index:1;left:12px;bottom:6px;right:12px;display:flex;align-items:flex-end;justify-content:space-between;gap:8px}
+.wc .nm b{font-size:1.15rem;text-shadow:0 1px 6px #000}
+.wc .nm svg{width:110px;height:22px;flex:none}
+.wc .bd{padding:10px 12px 12px;flex:1;display:flex;flex-direction:column;gap:8px}
+.flags{display:flex;gap:6px;flex-wrap:wrap}
+.rbar{position:relative;height:8px;border-radius:4px;background:var(--bg2);border:1px solid var(--ln)}
+.rbar i{position:absolute;top:-1px;bottom:-1px;border-radius:4px}
+.rlab{display:flex;justify-content:space-between;font-size:.68rem;color:var(--d);margin-top:2px}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
+.steps li{display:block;line-height:1.75;font-size:.84rem;background:var(--bg2);border-radius:8px;padding:4px 8px}
+.steps li .n{width:18px;height:18px;font-size:.66rem;display:inline-flex;margin-right:6px;vertical-align:middle}
+.steps li svg.i{width:16px;height:16px;margin-right:3px}
+details.more{border-top:1px solid var(--ln);padding-top:6px}
+details.more summary{cursor:pointer;font-size:.82rem;color:var(--a2);list-style:none;display:flex;align-items:center;gap:6px}
+details.more summary::-webkit-details-marker{display:none}
+details.more[open] summary .chev{transform:rotate(90deg)}
+.chev{transition:.2s}
+.wtip{font-size:.8rem;color:var(--m);display:flex;gap:6px}
+.wtip svg.i{color:var(--a);width:15px;height:15px;margin-top:1px}
+
+/* ---------- SETUPS ---------- */
+.setlist{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.setlist button{flex:none;background:var(--pn);border:1px solid var(--ln);border-radius:10px;padding:7px 10px;cursor:pointer;display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--t)}
+.setlist button .lt{width:22px;height:22px;border-radius:6px;background:var(--pn2);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.75rem}
+.setlist button.on{border-color:var(--a);background:rgba(240,180,60,.12)}
+.setlist button.on .lt{background:var(--a);color:#111}
+.mirror{display:grid;grid-template-columns:1fr auto 1fr;gap:5px 6px;align-items:center}
+.mirror .sl{display:flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--ln);border-left:3px solid;border-radius:8px;padding:4px 8px;font-size:.78rem;min-width:0}
+.mirror .sl.r{flex-direction:row-reverse;border-left-width:1px;border-right:3px solid;text-align:right}
+.mirror .sl b{font-size:.7rem;color:var(--m);width:16px;flex:none;text-align:center}
+.mirror .sl span{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mirror .sl svg.ms{flex:none}
+.mirror .eq{color:var(--d);font-size:.8rem}
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.legend .chip svg.ms{width:46px;height:10px}
+
+/* ---------- PHOTOS / BLUEPRINT ---------- */
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.gal figure{margin:0;border-radius:12px;overflow:hidden;background:var(--pn);border:1px solid var(--ln);cursor:zoom-in}
+.gal img{width:100%;height:180px;object-fit:cover;display:block}
+.gal figcaption{padding:7px 10px;font-size:.78rem;color:var(--m)}
+#lb{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.94);display:none;align-items:center;justify-content:center;flex-direction:column;padding:16px}
+#lb.on{display:flex}
+#lb img{max-width:100%;max-height:82vh;border-radius:8px}
+#lb p{color:#aab;font-size:.78rem;text-align:center}
+.bp{position:relative;border-radius:14px;overflow:hidden;background-color:#0c3a6b;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:60px 60px,60px 60px,12px 12px,12px 12px;border:1px solid #2a5d93;padding:14px}
+.bp img{width:100%;display:block;filter:invert(1);mix-blend-mode:screen}
+.bp .stamp{position:absolute;right:12px;bottom:10px;border:2px solid rgba(255,255,255,.6);color:rgba(255,255,255,.8);font-family:Consolas,monospace;font-size:.7rem;padding:4px 8px;letter-spacing:1px}
+.dims{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-top:10px}
+.dims .spec b{font-family:Consolas,monospace}
+
+/* ---------- 3D ---------- */
+#v3wrap{position:relative;height:min(58vh,520px);border-radius:14px;overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#35597d,#0d1115 75%);touch-action:none;border:1px solid var(--ln)}
+#v3wrap canvas{display:block;width:100%;height:100%}
+.v3hint{position:absolute;left:10px;bottom:8px;font-size:.72rem;color:#cfe;opacity:.75;pointer-events:none}
+#v3parts{display:flex;gap:6px;overflow-x:auto;margin-top:10px;padding-bottom:4px;scrollbar-width:none}
+#v3parts button{flex:none;background:var(--pn);border:1px solid var(--ln);color:var(--t);border-radius:16px;padding:5px 11px;cursor:pointer;font-size:.78rem}
+#v3parts button.on{background:var(--a);border-color:var(--a);color:#111;font-weight:700}
+
+/* ---------- FUNCTIONS / CONTROLS ---------- */
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px}
+.fcard{background:var(--pn);border:1px solid var(--ln);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:5px}
+.fcard .top{display:flex;align-items:center;gap:8px}
+.fcard .top b{flex:1;font-size:.9rem}
+.fcard p{margin:0;font-size:.8rem;color:var(--m)}
+.fcard .acts{display:flex;gap:6px;margin-top:2px}
+.fcard .acts button{background:none;border:1px solid var(--ln2);border-radius:7px;padding:3px 8px;font-size:.74rem;color:var(--a2);cursor:pointer;display:flex;align-items:center;gap:4px}
+.cico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none}
+.cico svg.i{width:17px;height:17px}
+.ctoolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.search{flex:1;min-width:180px;display:flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--ln);border-radius:9px;padding:0 10px}
+.search input{flex:1;background:none;border:0;color:var(--t);padding:8px 0;font:inherit;outline:none}
+.ctrlrow{display:flex;align-items:center;gap:10px;padding:8px 2px;border-bottom:1px solid var(--ln);flex-wrap:wrap}
+.ctrlrow:last-child{border-bottom:0}
+.ctrlrow .nm{flex:1;min-width:150px}
+.ctrlrow .nm b{font-size:.88rem}
+.ctrlrow .nm small{display:block}
+.ctrlrow.conflict{background:rgba(255,90,77,.07);border-radius:8px}
+.ctrlrow .kb{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.ibtn{background:var(--pn2);border:1px solid var(--ln2);border-radius:8px;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--a2)}
+.keygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.kt{background:var(--pn);border:1px solid var(--ln);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.kt span{font-size:.8rem;color:var(--m)}
+.stepper{counter-reset:s;list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.stepper li{counter-increment:s;display:flex;gap:10px;align-items:flex-start;background:var(--pn);border:1px solid var(--ln);border-radius:10px;padding:9px 11px;font-size:.86rem}
+.stepper li::before{content:counter(s);flex:none;width:22px;height:22px;border-radius:50%;background:var(--a);color:#111;font-weight:800;font-size:.75rem;display:flex;align-items:center;justify-content:center}
+
+/* ---------- RADAR / TACTICS ---------- */
+#info{min-height:110px}
+#info h4{margin:0 0 6px;color:var(--g);font-size:1rem}
+.rbtn{cursor:pointer}.rbtn:hover rect.b{stroke:#fff;stroke-width:3}
+.phases{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}
+.phase{flex:none;width:190px;background:var(--pn);border:1px solid var(--ln);border-radius:12px;padding:10px;border-top:3px solid var(--g)}
+.phase.red{border-top-color:var(--r)}
+.phase .ph-h{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.phase .ph-h b{font-size:.88rem}
+.phase .ph-h small{display:block;font-size:.7rem}
+.phase ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px;font-size:.8rem}
+.phase li{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.dcard{background:var(--pn);border:1px solid var(--ln);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.dcard .hdr{display:flex;align-items:center;gap:10px}
+.dcard .big{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.dcard .big svg.i{width:24px;height:24px}
+.seq{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:.8rem}
+.seq .ar{color:var(--d)}
+.do li,.dont li{margin:4px 0;font-size:.86rem;list-style:none;display:flex;gap:7px;align-items:flex-start}
+.do,.dont{padding:0;margin:0}
+.do svg.i{color:var(--g)}.dont svg.i{color:var(--r)}
+
+/* ---------- MODALS ---------- */
+#capture{position:fixed;inset:0;background:rgba(5,8,12,.75);backdrop-filter:blur(5px);z-index:60;display:none;align-items:center;justify-content:center;padding:16px}
+#capture.on{display:flex}
+#capture .box{background:var(--pn);border:1px solid var(--ln2);border-radius:14px;padding:16px;max-width:420px;width:100%;text-align:center}
+#capture select{width:100%;margin:6px 0;padding:7px;background:var(--bg2);color:#fff;border:1px solid var(--ln2);border-radius:8px}
+#capPad{border:2px dashed var(--ln2);border-radius:10px;padding:12px;margin-top:8px;min-height:60px}
+.toast{position:fixed;left:50%;bottom:calc(var(--tab) + 16px);transform:translateX(-50%);background:#2f6b25;color:#fff;padding:9px 16px;border-radius:9px;z-index:70;opacity:0;transition:.3s;pointer-events:none;font-size:.86rem}
+.toast.on{opacity:1}
+.credits li{margin:6px 0;font-size:.8rem;color:var(--m)}
+.credits a{color:var(--b)}
+
+/* ---------- RENDER DEL JUEGO (imagen del wiki sobre fondo tipo hangar) ---------- */
+.gx{position:relative;overflow:hidden;background:radial-gradient(ellipse at 30% 30%,var(--nc,#3a4a5a) 0%,transparent 60%),linear-gradient(160deg,#2b3946,#141b22 70%);}
+.gx::before{content:"";position:absolute;inset:-20% -10% auto -10%;height:70%;background:linear-gradient(100deg,transparent 10%,var(--nc,#56677a) 35%,transparent 70%);opacity:.35;filter:blur(18px);transform:skewY(-8deg)}
+.gx img.rd{position:absolute;left:50%;top:46%;width:min(92%,560px);transform:translate(-50%,-50%);filter:drop-shadow(0 10px 18px rgba(0,0,0,.45))}
+.gx .fb{position:absolute;left:50%;top:45%;transform:translate(-50%,-50%);color:rgba(255,255,255,.18)}
+.gx .fb svg.i{width:120px;height:120px;stroke-width:1}
+.gx.ok .fb{display:none}
+.hero.gx{background-color:#141b22}
+.hero.gx img.rd{top:40%}
+#splash .sp-img.gx{background:none}
+#splash .sp-img.gx img.rd{width:min(110%,720px);top:44%}
+
+/* ---------- CATÁLOGO ---------- */
+.cfil{display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px;scrollbar-width:none}
+.cfil::-webkit-scrollbar{display:none}
+.cfil button{flex:none;display:flex;align-items:center;gap:5px;background:var(--pn);border:1px solid var(--ln);border-radius:16px;padding:5px 10px;font-size:.78rem;color:var(--m);cursor:pointer}
+.cfil button.on{background:var(--a);border-color:var(--a);color:#111;font-weight:700}
+.cfil .flag{width:18px;height:12px}
+.clist{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px;margin-top:8px}
+.ci{display:flex;align-items:center;gap:10px;background:var(--pn);border:1px solid var(--ln);border-radius:12px;padding:6px 10px 6px 6px;cursor:pointer;position:relative}
+.ci:hover{border-color:var(--ln2)}
+.ci .sl{width:84px;height:44px;flex:none;border-radius:8px;background:linear-gradient(160deg,#2b3946,#141b22);display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--d)}
+.ci .sl{position:relative}
+.ci .sl img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.ci .tx{flex:1;min-width:0}
+.ci .tx b{display:block;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci .tx small{display:flex;align-items:center;gap:5px;font-size:.72rem}
+.ci .tx .flag{width:16px;height:11px}
+.ci .own{position:absolute;right:6px;top:5px;color:var(--g)}
+.ci .own svg.i{width:14px;height:14px}
+.buy{display:inline-flex;align-items:center;gap:4px;font-size:.7rem;font-weight:800;padding:2px 7px;border-radius:9px;white-space:nowrap}
+.buy.ge{background:rgba(240,180,60,.16);color:var(--a2)}
+.buy.pk{background:rgba(74,163,255,.16);color:#9fd0ff}
+.eagle{width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffe9a6,#f0b43c 55%,#a36d10);display:inline-block;flex:none}
+.cnt{font-size:.78rem;color:var(--m);margin-top:6px}
+.wchips{display:flex;gap:6px;flex-wrap:wrap}
+.pbox{display:flex;flex-direction:column;gap:8px}
+.pbox .opt{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--ln);border-radius:10px;padding:10px}
+.pbox .opt .big{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:none}
+.pbox .opt .big svg.i{width:20px;height:20px}
+.pbox .opt div{flex:1}
+.pbox .opt b{display:block}
+.empty{text-align:center;color:var(--m);padding:30px 10px}
+</style>
+</head>
+<body>
+
+<!-- ======================= ICON SPRITE ======================= -->
+<svg width="0" height="0" style="position:absolute">
+ <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></symbol>
+ <symbol id="i-plane" viewBox="0 0 24 24"><path d="M12 2l1.6 5.5L13.8 10 21 14v2l-7.2-2.2.2 4.2 2.5 2V22L12 20.8 7.5 22v-2l2.5-2 .2-4.2L3 16v-2l7.2-4 .2-2.5z"/></symbol>
+ <symbol id="i-missile" viewBox="0 0 24 24"><path d="M4 20l3-1 11-11a2.8 2.8 0 0 0-4-4L3 15l-1 3z"/><path d="M14 4l6 6"/><path d="M6 14l-3-1"/><path d="M10 18l1 3"/></symbol>
+ <symbol id="i-radar" viewBox="0 0 24 24"><path d="M12 12L19 5"/><path d="M20.5 12A8.5 8.5 0 1 1 12 3.5"/><path d="M16.5 12A4.5 4.5 0 1 1 12 7.5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></symbol>
+ <symbol id="i-keys" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></symbol>
+ <symbol id="i-cube" viewBox="0 0 24 24"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/></symbol>
+ <symbol id="i-blue" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/><path d="M13 13h5v5"/></symbol>
+ <symbol id="i-photo" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 17l-5-5-8 7"/></symbol>
+ <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h12M9 12h12M9 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></symbol>
+ <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></symbol>
+ <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="1"/><path d="M9 12h6M12 9v6"/></symbol>
+ <symbol id="i-multi" viewBox="0 0 24 24"><circle cx="7" cy="8" r="3"/><circle cx="17" cy="8" r="3"/><circle cx="12" cy="17" r="3"/></symbol>
+ <symbol id="i-fire" viewBox="0 0 24 24"><path d="M12 22c4 0 7-3 7-7 0-3-2-5-3-7-1 2-2 3-3 3 0-3-1-6-4-9 0 4-4 7-4 13 0 4 3 7 7 7z"/></symbol>
+ <symbol id="i-tv" viewBox="0 0 24 24"><rect x="2" y="7" width="14" height="11" rx="2"/><path d="M16 11l6-3v9l-6-3"/><circle cx="9" cy="12.5" r="2.5"/></symbol>
+ <symbol id="i-laser" viewBox="0 0 24 24"><path d="M3 21L17 7"/><circle cx="19" cy="5" r="2.5"/><path d="M19 1v1M23 5h-1M16 2l.7.7M22 8l-.7-.7"/></symbol>
+ <symbol id="i-arm" viewBox="0 0 24 24"><path d="M5 19a9 9 0 0 1 0-12.7"/><path d="M8.5 15.5a4 4 0 0 1 0-5.6"/><circle cx="12" cy="12.7" r="1.5"/><path d="M12 14v8M9 22h6"/><path d="M15 4l5 5M20 4v5h-5"/></symbol>
+ <symbol id="i-wave" viewBox="0 0 24 24"><path d="M3 12h6"/><path d="M13 7a7 7 0 0 1 0 10"/><path d="M17 4a11 11 0 0 1 0 16"/><path d="M9 9v6l3-3z"/></symbol>
+ <symbol id="i-semi" viewBox="0 0 24 24"><path d="M2 12h4l2-2v4l-2-2"/><path d="M10 9l11 3-11 3"/><path d="M14 18l3-2"/></symbol>
+ <symbol id="i-bomb" viewBox="0 0 24 24"><ellipse cx="11" cy="13" rx="7" ry="4.5" transform="rotate(-35 11 13)"/><path d="M16 8l3-3M17 3l3 3"/></symbol>
+ <symbol id="i-rocket" viewBox="0 0 24 24"><rect x="3" y="7" width="15" height="10" rx="3"/><circle cx="8" cy="10.5" r="1"/><circle cx="12" cy="10.5" r="1"/><circle cx="8" cy="14" r="1"/><circle cx="12" cy="14" r="1"/><path d="M18 9l3 3-3 3"/></symbol>
+ <symbol id="i-gun" viewBox="0 0 24 24"><path d="M2 10h14l2 2h4v2h-4l-2 2H2z"/><path d="M6 16v3"/></symbol>
+ <symbol id="i-cruise" viewBox="0 0 24 24"><path d="M2 12h16l4 0-4-2H2zM9 12l-3 5M9 12l-3-5"/></symbol>
+ <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z"/><path d="M9 12l2 2 4-4"/></symbol>
+ <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/></symbol>
+ <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/></symbol>
+ <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol>
+ <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+ <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v12M6 10l6 6 6-6M4 20h16"/></symbol>
+ <symbol id="i-upl" viewBox="0 0 24 24"><path d="M12 16V4M6 10l6-6 6 6M4 20h16"/></symbol>
+ <symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></symbol>
+ <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></symbol>
+ <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></symbol>
+ <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></symbol>
+ <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+ <symbol id="i-engine" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.5"/><path d="M12 4v5.5M12 14.5V20M4 12h5.5M14.5 12H20"/></symbol>
+ <symbol id="i-speed" viewBox="0 0 24 24"><path d="M4 18a9 9 0 1 1 16 0"/><path d="M12 14l5-5"/><circle cx="12" cy="14" r="1.3" fill="currentColor"/></symbol>
+ <symbol id="i-crew" viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2 20c0-3.5 2.7-6 6-6s6 2.5 6 6M12 20c0-2 1.5-6 4-6 3.3 0 6 2.5 6 6"/></symbol>
+ <symbol id="i-pylon" viewBox="0 0 24 24"><path d="M2 6h20"/><path d="M5 6v3M10 6v3M14 6v3M19 6v3"/><rect x="4" y="9" width="2" height="9" rx="1"/><rect x="9" y="9" width="2" height="11" rx="1"/><rect x="13" y="9" width="2" height="11" rx="1"/><rect x="18" y="9" width="2" height="9" rx="1"/></symbol>
+ <symbol id="i-flight" viewBox="0 0 24 24"><path d="M3 17c4-1 7-4 9-9 1 3 4 6 9 7"/><path d="M12 8V3"/></symbol>
+ <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol>
+ <symbol id="i-mouse" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="6"/><path d="M12 7v4"/></symbol>
+ <symbol id="i-turn" viewBox="0 0 24 24"><path d="M4 20V10a6 6 0 0 1 6-6h8"/><path d="M14 0l4 4-4 4" transform="translate(0 0)"/></symbol>
+ <symbol id="i-dive" viewBox="0 0 24 24"><path d="M3 5c6 0 10 4 12 12"/><path d="M11 15l4 3 3-4"/><path d="M2 21h20"/></symbol>
+ <symbol id="i-chaff" viewBox="0 0 24 24"><path d="M4 4l3 2M9 3l1 3M14 5l-1 3M18 4l-2 3M6 10l2 1M11 9l1 2M16 10l-2 1M8 15l1 2M13 14l1 2"/></symbol>
+ <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></symbol>
+ <symbol id="i-sound" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></symbol>
+ <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7c2 0 3.7.6 5.1 1.5M22 12s-3.5 7-10 7c-2 0-3.7-.6-5.1-1.5"/><path d="M3 3l18 18"/></symbol>
+ <symbol id="i-shop" viewBox="0 0 24 24"><path d="M3 4h2l2.5 11h11L21 7H6.2"/><circle cx="9" cy="19.5" r="1.5"/><circle cx="17" cy="19.5" r="1.5"/></symbol>
+<symbol id="i-gift" viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="12" rx="1"/><path d="M2 9h20M12 9v12"/><path d="M12 9c-2-4-6-5-6-2s6 2 6 2 6 1 6-2-4-2-6 2"/></symbol>
+<symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24"><path d="M3 19c6 0 10-4 12-12"/><path d="M11 8l4-3 3 4"/></symbol>
+</svg>
+
+<!-- ======================= SPLASH ======================= -->
+<div id="splash">
+ <div class="sp-img gx" id="spimg" style="--nc:#b3261e"></div>
+ <div class="brand"><b>WT</b>GUÍA DE VUELO</div>
+ <div class="sp-rank"><span class="flag" id="spflag"></span><span class="rank">RANGO VIII</span><span class="rank" style="background:rgba(240,180,60,.85);color:#111;border-color:transparent">JET</span></div>
+ <h1 class="sp-name">Su-30MKK</h1>
+ <div class="sp-role">Caza multirol pesado · Radar · Misiles · Ataque a tierra</div>
+ <button class="sp-go" id="spgo">ENTRAR AL HANGAR <svg class="i"><use href="#i-chev"/></svg></button>
+ <div class="sp-cred">Guía no oficial creada por fans · No afiliada a Gaijin Entertainment</div>
+</div>
+
+<!-- ======================= TOP ======================= -->
+<header class="top">
+ <div class="tb">
+  <div class="ttl"><b id="ttl">Hangar</b><span id="sttl">Su-30MKK</span></div>
+  <div class="acpill" onclick="go('home')"><img id="acpimg" alt="" style="background:#1d262f">Su-30MKK</div>
+ </div>
+ <div class="seg" id="seg"></div>
+</header>
+
+<main>
+
+<!-- ============ HOME ============ -->
+<section class="view" data-v="home">
+ <div class="hero gx" id="hero" style="--nc:#b3261e">
+  <div class="rk"><span class="flag cnflag"></span><span class="rank">RANGO VIII</span><span class="rank">CHINA</span></div>
+  <h1>Su-30MKK</h1>
+  <div style="color:#c9d3da;font-size:.85rem">Caza multirol pesado de dos plazas</div>
+ </div>
+ <div class="specs">
+  <div class="spec"><svg class="i"><use href="#i-engine"/></svg><b>2× AL-31F</b><small>motores</small></div>
+  <div class="spec"><svg class="i"><use href="#i-speed"/></svg><b>Mach 2</b><small>vel. máx.</small></div>
+  <div class="spec"><svg class="i"><use href="#i-radar"/></svg><b>N001VE</b><small>radar PD</small></div>
+  <div class="spec"><svg class="i"><use href="#i-gun"/></svg><b>30 mm</b><small>150 balas</small></div>
+  <div class="spec"><svg class="i"><use href="#i-pylon"/></svg><b>12</b><small>pilones</small></div>
+  <div class="spec"><svg class="i"><use href="#i-crew"/></svg><b>2</b><small>tripulantes</small></div>
+ </div>
+
+ <div class="hd"><span class="up">Acceso rápido</span><span class="ln"></span></div>
+ <div class="tiles" id="tiles"></div>
+
+ <div class="hd"><span class="up">Armamento aire-aire</span><span class="ln"></span><a class="sm" style="color:var(--a2);cursor:pointer" onclick="go('armas','aa')">Ver todo</a></div>
+ <div class="hscroll" id="homeMsl"></div>
+
+ <div class="hd"><span class="up">Mis aviones</span><span class="ln"></span></div>
+ <div class="acsel" id="myAc"></div>
+ <p class="sm">Marca <b>"Lo tengo"</b> en la ficha de cualquier avión del catálogo para verlo aquí.</p>
+ <p class="sm" style="text-align:center;margin-top:20px"><a style="color:var(--m);cursor:pointer;text-decoration:underline" onclick="go('creditos')">Créditos de imágenes y aviso legal</a></p>
+</section>
+
+<!-- ============ AVIÓN: FOTOS ============ -->
+<section class="view" data-v="avion/fotos">
+ <div class="gal" id="gal"></div>
+</section>
+
+<!-- ============ CATÁLOGO ============ -->
+<section class="view" data-v="cat">
+ <div class="ctoolbar"><div class="search"><svg class="i"><use href="#i-search"/></svg><input id="cq" placeholder="Buscar avión… (ej. F-16, Spitfire, Bf 109)" oninput="renderCat()"></div></div>
+ <div class="cfil mt" id="cfBuy"></div>
+ <div class="cfil" id="cfNat"></div>
+ <div class="cfil" id="cfRole"></div>
+ <div class="cfil" id="cfRank"></div>
+ <div class="cnt" id="cCount"></div>
+ <div class="clist" id="cList"></div>
+</section>
+
+<!-- ============ FICHA (plantilla única para todos los aviones) ============ -->
+<section class="view" data-v="ficha">
+ <div class="hero gx" id="fHero"><img class="rd" id="fImg" alt=""><div class="fb"><svg class="i"><use href="#i-plane"/></svg></div>
+  <div class="rk" id="fRk"></div><h1 id="fName"></h1><div style="color:#c9d3da;font-size:.85rem" id="fRole"></div></div>
+ <div class="specs" id="fSpecs"></div>
+ <div class="hd"><span class="up">Cómo conseguirlo</span><span class="ln"></span></div>
+ <div class="pbox" id="fBuy"></div>
+ <div class="hd"><span class="up">Armamento</span><span class="ln"></span></div>
+ <div class="card" id="fArm"></div>
+ <div class="row mt" style="gap:8px"><button class="btn alt" id="fOwn" style="flex:1;min-width:0;justify-content:center"></button><a class="btn alt" id="fWiki" target="_blank" rel="noopener" style="flex:1;min-width:0;justify-content:center;text-decoration:none"></a></div>
+ <div class="tip" id="fGuide" style="display:none"><svg class="i"><use href="#i-bulb"/></svg><div>Este avión tiene la <b>guía completa</b> (3D, armas, radar y controles). <a style="color:var(--a2);cursor:pointer" onclick="go('home')">Abrir guía del Su-30MKK</a></div></div>
+ <p class="sm" style="margin-top:12px">Datos del wiki oficial de War Thunder. El precio en águilas es el precio base (sin descuentos) y los paquetes cambian según la región y las ofertas.</p>
+</section>
+
+<!-- ============ AVIÓN: PLANOS ============ -->
+<section class="view" data-v="avion/planos">
+ <div class="bp" id="bp"><div class="stamp">Su-30 · 3 VISTAS</div></div>
+ <div class="dims">
+  <div class="spec"><small>LARGO</small><b>21,9 m</b></div>
+  <div class="spec"><small>ENVERGADURA</small><b>14,7 m</b></div>
+  <div class="spec"><small>ALTURA</small><b>6,4 m</b></div>
+  <div class="spec"><small>PESO MÁX.</small><b>38 t</b></div>
+  <div class="spec"><small>TECHO</small><b>17 km</b></div>
+  <div class="spec"><small>CAÑÓN</small><b>GSh-30-1</b></div>
+ </div>
+ <div class="tip"><svg class="i"><use href="#i-info"/></svg><div>Plano del Su-30 (misma célula que el MKK). Toca <b>3D</b> arriba para ver cada parte en movimiento.</div></div>
+</section>
+
+<!-- ============ AVIÓN: 3D ============ -->
+<section class="view" data-v="avion/3d">
+ <div id="v3wrap"><div class="v3hint">Arrastra para girar · pellizca para acercar · toca una parte</div></div>
+ <div id="v3parts"></div>
+ <div id="v3info" class="mt"><div class="card"><h3>Toca una parte del avión</h3><p class="sm">O elige una de la lista de arriba.</p></div></div>
+</section>
+
+<!-- ============ AVIÓN: FUNCIONES ============ -->
+<section class="view" data-v="avion/func">
+ <p class="lead">Cada función con su tecla. <span class="tag t-ok">confirmada</span> <span class="tag t-mid">verifica</span> <span class="tag t-no">sin tecla</span></p>
+ <div id="funcList"></div>
+</section>
+
+<!-- ============ ARMAS: AA ============ -->
+<section class="view" data-v="armas/aa">
+ <div class="tip" style="margin-top:0"><svg class="i"><use href="#i-keys"/></svg><div><kbd>Bloq Mayús</kbd> abre el selector de armas · Disparo: tecla <b>"Lanzar misiles"</b> (asígnala en <a style="color:var(--a2);cursor:pointer" onclick="go('ctrl','teclas')">Controles</a>)</div></div>
+ <div class="hd"><span class="up">Guía del misil</span><span class="ln"></span></div>
+ <div class="flags" id="guideLegend"></div>
+ <div class="grid g2 mt" id="aaList"></div>
+</section>
+
+<!-- ============ ARMAS: AG ============ -->
+<section class="view" data-v="armas/ag">
+ <div class="tip" style="margin-top:0"><svg class="i"><use href="#i-keys"/></svg><div>Asigna en Controles: <b>Vista cámara arma guiada</b>, <b>Fijar objetivo</b>, <b>Lanzar bombas</b> y <b>Lanzar misil aire-tierra</b>.</div></div>
+ <div class="grid g2 mt" id="agList"></div>
+ <div class="warn"><svg class="i"><use href="#i-warn"/></svg><div><b>No combines en el mismo vuelo</b> (reporte de jugadores):<ul><li><b>Pod APK-9 + bombas KAB</b> → el pod rompe el seguimiento de las KAB</li><li><b>Kh-29L + LD-10/YJ-91</b> → los antirradiación desaparecen</li></ul></div></div>
+ <div class="hd"><span class="up">Sin guía (baratas)</span><span class="ln"></span></div>
+ <div class="grid g3" id="dumbList"></div>
+</section>
+
+<!-- ============ ARMAS: SETUPS ============ -->
+<section class="view" data-v="armas/setups">
+ <div class="setlist" id="setTabs"></div>
+ <div class="card mt">
+  <div style="display:flex;align-items:center;gap:10px"><div class="cico" id="setIco" style="background:rgba(240,180,60,.15);color:var(--a)"></div><div><h3 id="setName" style="margin:0"></h3><small id="setDesc"></small></div></div>
+  <svg viewBox="0 0 400 205" id="pyl" class="d mt" style="max-width:520px;margin:12px auto 0"></svg>
+  <div class="legend" id="setLeg"></div>
+  <div class="hd"><span class="up">Slots espejo (izq ↔ der)</span><span class="ln"></span></div>
+  <div class="mirror" id="setMir"></div>
+ </div>
+ <div class="warn"><svg class="i"><use href="#i-warn"/></svg><div><b>Error rojo "carga del grupo de pilones excedida":</b> pon lo mismo en el slot espejo (1↔12, 2↔11, 3↔10, 4↔9, 5↔8, 6↔7).</div></div>
+ <div class="tip"><svg class="i"><use href="#i-bulb"/></svg><div>Si un slot no acepta el misil: PL-12 → RVV-AE → R-27ER1. Los extremos (1 y 12) solo aceptan R-73E / PL-8B.</div></div>
+</section>
+
+<!-- ============ COMBATE: PANEL ============ -->
+<section class="view" data-v="combate/panel">
+ <p class="lead">Toca cada botón o texto del radar.</p>
+ <div class="row">
+ <div class="card" style="flex:1.4">
+ <svg viewBox="0 0 640 520" class="sky d" id="panel">
+  <defs><style>.b{fill:#3b5f52;fill-opacity:.75;stroke:#7dff5a;stroke-width:2}.ic{stroke:#7dff5a;fill:none;stroke-width:3;stroke-linecap:round}.lbl{fill:#2a2f3a;stroke:#8a8f9a}.lt{fill:#e8c46a;font:bold 13px Arial}.gt{fill:#7dff5a;font:bold 17px Consolas,monospace}</style></defs>
+  <path d="M380 330 L215 225 A200 200 0 0 1 545 225 Z" fill="#3f8f2c" fill-opacity=".8" stroke="#7dff5a" stroke-width="2"/>
+  <g stroke="#7dff5a" stroke-width="2" fill="none"><line x1="380" y1="330" x2="380" y2="130"/><line x1="380" y1="330" x2="327" y2="137"/><line x1="380" y1="330" x2="433" y2="137"/><line x1="380" y1="330" x2="282" y2="156"/><line x1="380" y1="330" x2="478" y2="156"/><path d="M342 287 A50 50 0 0 1 418 287"/><path d="M304 245 A100 100 0 0 1 456 245"/><path d="M276 195 A150 150 0 0 1 484 195"/></g>
+  <line x1="380" y1="330" x2="380" y2="130" stroke="#b8ff9a" stroke-width="6" opacity=".7"><animateTransform attributeName="transform" type="rotate" values="-25 380 330;25 380 330;-25 380 330" dur="3.5s" repeatCount="indefinite"/></line>
+  <rect x="398" y="228" width="12" height="5" fill="#d9ffcc"/><rect x="340" y="262" width="12" height="5" fill="#d9ffcc"/>
+  <text x="322" y="118" class="gt">SRC PD</text><text x="330" y="375" class="gt">50°x10°</text><text x="505" y="355" class="gt">50 km*</text>
+  <g stroke="#7dff5a" stroke-width="3"><line x1="262" y1="262" x2="256" y2="272"/><line x1="290" y1="280" x2="284" y2="290"/><line x1="300" y1="285" x2="294" y2="295"/></g>
+  <rect x="270" y="268" width="14" height="10" fill="#7dff5a" opacity=".6"/>
+  <text x="210" y="285" class="gt">60°</text><text x="240" y="318" class="gt">-55°</text>
+  <g class="rbtn" data-k="vista"><rect class="b" x="60" y="95" width="56" height="56" rx="3"/><path class="ic" d="M74 112 l18 24 l14 -18 a22 22 0 0 0 -32 -6 M80 106 a26 26 0 0 1 30 4"/></g>
+  <g><rect class="lbl" x="56" y="160" width="64" height="20" rx="3"/><text x="64" y="175" class="lt">ALT+A</text></g>
+  <g class="rbtn" data-k="tipo"><rect class="b" x="60" y="183" width="56" height="56" rx="3"/><path class="ic" d="M72 205 a22 22 0 0 1 32 0 M78 213 a14 14 0 0 1 20 0 M84 221 a6 6 0 0 1 8 0"/><circle cx="88" cy="228" r="3" fill="#7dff5a"/></g>
+  <g><rect class="lbl" x="56" y="248" width="64" height="20" rx="3"/><text x="62" y="263" class="lt">ALT+W</text></g>
+  <g class="rbtn" data-k="acm"><rect class="b" x="60" y="271" width="56" height="56" rx="3"/><path class="ic" d="M70 290 l18 26 l18 -26 a26 26 0 0 0 -36 0"/><path class="ic" d="M82 296 h12" stroke-width="2"/></g>
+  <g><rect class="lbl" x="56" y="336" width="64" height="20" rx="3"/><text x="64" y="351" class="lt">ALT+B</text></g>
+  <g class="rbtn" data-k="busq"><rect class="b" x="60" y="359" width="56" height="56" rx="3"/><circle class="ic" cx="84" cy="383" r="11"/><line class="ic" x1="92" y1="391" x2="103" y2="402"/></g>
+  <g class="rbtn" data-k="barras"><rect class="b" x="60" y="440" width="56" height="50" rx="3"/><rect x="74" y="452" width="30" height="9" fill="#7dff5a"/><rect x="74" y="467" width="22" height="9" fill="#7dff5a"/></g>
+  <g class="rbtn" data-k="subir"><rect class="b" x="150" y="440" width="56" height="50" rx="3"/><path class="ic" d="M160 475 l6 -3 M170 470 l6 -3 M182 478 c2 -10 4 -16 10 -20 M186 458 l6 0 l0 6" stroke-width="2.5"/></g>
+  <g class="rbtn" data-k="bajar"><rect class="b" x="222" y="440" width="56" height="50" rx="3"/><path class="ic" d="M232 455 l6 3 M242 460 l6 3 M254 452 c2 10 4 16 10 20 M258 474 l6 0 l0 -6" stroke-width="2.5"/></g>
+  <g class="rbtn" data-k="centro"><rect class="b" x="294" y="440" width="56" height="50" rx="3"/><line class="ic" x1="322" y1="450" x2="322" y2="480"/><path class="ic" d="M300 465 h14 M310 460 l5 5 l-5 5 M344 465 h-14 M334 460 l-5 5 l5 5" stroke-width="2.5"/></g>
+  <g><rect class="lbl" x="364" y="414" width="64" height="20" rx="3"/><text x="370" y="429" class="lt">ALT+Q</text></g>
+  <g class="rbtn" data-k="escala"><rect class="b" x="366" y="440" width="56" height="50" rx="3"/><path class="ic" d="M380 478 l28 -28 M380 466 v12 h12 M408 462 v-12 h-12"/></g>
+  <g><rect class="lbl" x="436" y="414" width="64" height="20" rx="3"/><text x="442" y="429" class="lt">ALT+R</text></g>
+  <g class="rbtn" data-k="power"><rect class="b" x="438" y="440" width="56" height="50" rx="3"/><path class="ic" d="M456 456 a14 14 0 1 0 20 0 M466 448 v14"/></g>
+  <rect class="rbtn" data-k="modo" x="316" y="98" width="100" height="26" fill="transparent"/>
+  <rect class="rbtn" data-k="patron" x="325" y="356" width="100" height="26" fill="transparent"/>
+  <rect class="rbtn" data-k="km" x="500" y="336" width="100" height="26" fill="transparent"/>
+  <rect class="rbtn" data-k="elev" x="200" y="255" width="110" height="70" fill="transparent"/>
+  <rect class="rbtn" data-k="barrido" x="355" y="150" width="50" height="170" fill="transparent"/>
+  <rect class="rbtn" data-k="contacto" x="392" y="220" width="26" height="20" fill="transparent"/>
+ </svg>
+ </div>
+ <div class="card" id="info"><h4>👆 Toca un botón del radar</h4><p class="sm">También: "SRC PD", "50°x10°", "50 km*", las marcas 60°/-55°, la línea que se mueve y los puntitos.</p></div>
+ </div>
+ <div class="hd"><span class="up">Tus teclas de radar</span><span class="ln"></span></div>
+ <div class="keygrid" id="radarKeys"></div>
+</section>
+
+<!-- ============ COMBATE: LEER ============ -->
+<section class="view" data-v="combate/leer">
+ <div class="row">
+ <div class="card"><h3>Símbolos</h3>
+ <svg viewBox="0 0 420 240" class="d" style="background:#3f8f2c;border-radius:8px"><g font-family="Arial" font-size="14" fill="#fff">
+  <rect x="30" y="30" width="16" height="6" fill="#d9ffcc"/><text x="70" y="38">Raya = avión detectado</text>
+  <rect x="30" y="80" width="16" height="6" fill="#d9ffcc"/><line x1="25" y1="74" x2="25" y2="92" stroke="#fff" stroke-width="2"/><line x1="51" y1="74" x2="51" y2="92" stroke="#fff" stroke-width="2"/><text x="70" y="88">Rayas a los lados = SELECCIONADO</text>
+  <rect x="30" y="130" width="16" height="6" fill="#d9ffcc"/><rect x="22" y="122" width="32" height="22" fill="none" stroke="#fff" stroke-width="2"/><text x="70" y="138">Cuadro = FIJADO (lock)</text>
+  <rect x="30" y="185" width="16" height="6" fill="#d9ffcc"/><line x1="28" y1="177" x2="48" y2="177" stroke="#5ad1ff" stroke-width="3"/><text x="70" y="192">Raya arriba = AMIGO</text></g></svg>
+ </div>
+ <div class="card"><h3>Posiciones</h3>
+ <svg viewBox="0 0 420 260" class="d"><path d="M210 240 L60 140 A180 180 0 0 1 360 140 Z" fill="#3f8f2c" stroke="#7dff5a" stroke-width="2"/>
+  <circle cx="210" cy="240" r="7" fill="#e8c46a"/><text x="222" y="250" fill="#e8c46a" font-size="14">TÚ</text>
+  <rect x="203" y="70" width="14" height="5" fill="#d9ffcc"/><text x="225" y="76" fill="#fff" font-size="13">lejos, de frente</text>
+  <rect x="110" y="185" width="14" height="5" fill="#d9ffcc"/><text x="70" y="210" fill="#fff" font-size="13">cerca, a tu izquierda</text>
+  <path d="M210 240 L110 90" stroke="#fff" stroke-dasharray="4 3"/><text x="70" y="85" fill="#fff" font-size="12">cada raya = 15°</text>
+  <path d="M150 200 A70 70 0 0 1 270 200" stroke="#fff" fill="none" stroke-dasharray="4 3"/><text x="275" y="205" fill="#fff" font-size="12">arco = ¼ escala</text></svg>
+ <p class="sm">Escala 50 km → cada arco = 12,5 km.</p>
+ </div>
+ </div>
+ <div class="tip"><svg class="i"><use href="#i-bulb"/></svg><div>El cono <b>no muestra altura</b>. ¿No aparece el enemigo? <b>Sube o baja la antena</b>.</div></div>
+</section>
+
+<!-- ============ COMBATE: FIJAR ============ -->
+<section class="view" data-v="combate/fijar">
+ <div class="grid g3" id="lock1"></div>
+ <div class="tip"><svg class="i"><use href="#i-mouse"/></svg><div><b>Con el mouse:</b> activa el cursor y haz <b>doble clic sobre la raya</b> del avión. Se fija al instante.</div></div>
+</section>
+
+<!-- ============ COMBATE: MULTI ============ -->
+<section class="view" data-v="combate/multi">
+ <div class="grid g3" id="multiTbl"></div>
+ <div class="grid g3 mt" id="multi"></div>
+ <div class="tip"><svg class="i"><use href="#i-info"/></svg><div>En TWS el radar sigue varios blancos sin lock: sirve para radar activo (PL-12/R-77). El R-27ER <b>sí necesita lock</b>.</div></div>
+</section>
+
+<!-- ============ COMBATE: CERCA ============ -->
+<section class="view" data-v="combate/cerca">
+ <div class="row">
+ <div class="card"><h3>Pantalla ACM IR</h3>
+ <svg viewBox="0 0 420 300" class="sky d">
+  <path d="M210 250 L70 150 A170 170 0 0 1 350 150 Z" fill="#3f8f2c" fill-opacity=".85" stroke="#7dff5a" stroke-width="2"/>
+  <rect x="205" y="80" width="10" height="170" fill="#b8ff9a" opacity=".8"/>
+  <text x="170" y="65" fill="#7dff5a" font-size="18" font-family="Consolas" font-weight="700">ACM IR</text>
+  <text x="175" y="285" fill="#7dff5a" font-size="16" font-family="Consolas" font-weight="700">3°x75°</text>
+  <text x="330" y="270" fill="#7dff5a" font-size="16" font-family="Consolas" font-weight="700">10 km</text>
+  <g font-size="12" fill="#000" font-weight="700"><circle cx="240" cy="60" r="10" fill="#e8c46a"/><text x="236" y="64">1</text><circle cx="230" cy="110" r="10" fill="#e8c46a"/><text x="226" y="114">2</text><circle cx="250" cy="282" r="10" fill="#e8c46a"/><text x="246" y="286">3</text></g>
+ </svg>
+ <ul class="steps mt">
+  <li><span class="n">1</span><b>ACM IR</b> = sensor de calor · <span class="tag t-ok"><svg class="i" style="width:12px;height:12px"><use href="#i-eye-off"/></svg>sin alarma enemiga</span></li>
+  <li><span class="n">2</span>Franja vertical: solo mira delante de tu nariz</li>
+  <li><span class="n">3</span>3° × 75° · alcance 10 km</li>
+ </ul></div>
+ <div class="card"><h3>Cómo usarlo</h3>
+ <ul class="steps">
+  <li><span class="n">1</span><kbd>ALT+W</kbd> → ACM · <kbd>ALT+A</kbd> radar/IR</li>
+  <li><span class="n">2</span>Enemigo <b>encima de tu nariz</b></li>
+  <li><span class="n">3</span>Se <b>fija solo</b> (cuadro en el HUD)</li>
+  <li><span class="n">4</span><b>R-73E</b> → <svg class="i" style="width:15px;height:15px;color:var(--a)"><use href="#i-sound"/></svg> tono agudo → dispara</li>
+ </ul>
+ <div class="hd"><span class="up">¿Por qué no fijaba a 2 km?</span><span class="ln"></span></div>
+ <ul class="dont">
+  <li><svg class="i"><use href="#i-x"/></svg>En SRC PD 50 km queda pegado a la punta del cono</li>
+  <li><svg class="i"><use href="#i-x"/></svg>De costado, el PD lo borra</li>
+  <li><svg class="i"><use href="#i-x"/></svg>Arriba/abajo queda fuera de los 10°</li>
+ </ul>
+ <div class="tip"><svg class="i"><use href="#i-check"/></svg><div><b>Menos de 8 km → cambia siempre a ACM.</b></div></div>
+ </div>
+ </div>
+</section>
+
+<!-- ============ COMBATE: BVR ============ -->
+<section class="view" data-v="combate/bvr">
+ <p class="lead">El AIM-120 del F-16 = tu <b>PL-12</b>. Mismo juego: disparar de lejos.</p>
+ <div class="card"><h3>La técnica "crank": dispara, gira 45°, espera</h3>
+ <svg viewBox="0 0 900 230" class="d"><rect width="900" height="230" fill="#0b1016" rx="8"/>
+ <g font-family="Arial" font-weight="700">
+  <path d="M60 180 l34 -12 l0 24 z" fill="#7dff5a"/>
+  <path d="M94 180 Q200 160 260 120" stroke="#7dff5a" fill="none" stroke-width="4"/>
+  <path d="M260 120 l34 -12 l0 24 z" fill="#7dff5a"/>
+  <path d="M294 120 Q600 30 820 55" stroke="#ff5a4d" stroke-dasharray="12 8" fill="none" stroke-width="4"/>
+  <path d="M850 55 l-30 -10 l0 20 z" fill="#5ad1ff"/><text x="880" y="100" fill="#5ad1ff" font-size="26" text-anchor="end">ENEMIGO</text>
+  <path d="M294 120 L450 180" stroke="#7dff5a" fill="none" stroke-width="4"/><path d="M450 180 l34 -2 l-16 22 z" fill="#7dff5a"/>
+  <path d="M470 170 L560 95 A110 110 0 0 1 640 150 Z" fill="#3f8f2c" opacity=".55"/>
+  <g font-size="24" text-anchor="middle"><circle cx="75" cy="135" r="20" fill="#f0b43c"/><text x="75" y="143" fill="#111">1</text>
+  <circle cx="275" cy="75" r="20" fill="#f0b43c"/><text x="275" y="83" fill="#111">2</text>
+  <circle cx="420" cy="205" r="20" fill="#f0b43c"/><text x="420" y="213" fill="#111">3</text>
+  <circle cx="680" cy="150" r="20" fill="#f0b43c"/><text x="680" y="158" fill="#111">4</text></g>
+ </g></svg>
+ <ul class="steps mt">
+  <li><span class="n">1</span><svg class="i" style="color:var(--g)"><use href="#i-up"/></svg>Sube a <b>9–11 km</b>, Mach &gt; 1.1</li>
+  <li><span class="n">2</span><kbd>TWS HDN</kbd> <kbd>ALT+T</kbd> → <b>2 PL-12</b> a 30–40 km</li>
+  <li><span class="n">3</span><svg class="i" style="color:var(--a)"><use href="#i-turn"/></svg>Gira <b>45–50°</b>: enemigo en el borde del cono</li>
+  <li><span class="n">4</span><svg class="i" style="color:var(--r)"><use href="#i-target"/></svg>~10–15 s: misil activo → gira y aléjate</li>
+ </ul>
+ <div class="grid g3 mt">
+  <div class="kt"><span>De frente y alto</span><b style="color:var(--g)">30–40 km</b></div>
+  <div class="kt"><span>Misma altura</span><b style="color:var(--a2)">20–25 km</b></div>
+  <div class="kt"><span>Si huye</span><b style="color:var(--r)">&lt; 12 km</b></div>
+ </div>
+ </div>
+ <div class="row mt">
+ <div class="card"><h3>📡 Antena ABAJO</h3>
+ <svg viewBox="0 0 400 180" class="d"><rect width="400" height="180" fill="#0b1016" rx="8"/><g font-family="Arial" font-size="12" fill="#fff">
+  <path d="M40 50 l26 -8 l0 16 z" fill="#7dff5a"/><text x="30" y="35">TÚ (10 km)</text>
+  <path d="M66 50 L380 20 L380 95 Z" fill="#3f8f2c" opacity=".35"/><text x="250" y="60" fill="#8b9aa6">antena al frente</text>
+  <path d="M66 50 L380 90 L380 170 Z" fill="#7dff5a" opacity=".35"/><text x="250" y="150">antena ABAJO ✔</text>
+  <path d="M340 130 l-20 -6 l0 12 z" fill="#5ad1ff"/><text x="300" y="118">enemigo (5 km)</text></g></svg>
+ <p class="sm">Barrido de solo 10° de alto: un enemigo 3–4 km más bajo a 20 km queda <b>fuera</b>. Usa el botón flecha abajo del panel (o asígnale tecla).</p>
+ </div>
+ <div class="card"><h3>❓ Por qué no sonó la alarma</h3>
+ <svg viewBox="0 0 420 150" class="d"><rect width="420" height="150" fill="#0b1016" rx="8"/><g font-family="Arial" font-size="12" fill="#fff">
+  <path d="M20 70 l25 -8 l0 16 z" fill="#5ad1ff"/><text x="10" y="100">F-16</text>
+  <path d="M395 70 l-25 -8 l0 16 z" fill="#7dff5a"/><text x="378" y="100">TÚ</text>
+  <line x1="45" y1="70" x2="250" y2="70" stroke="#888" stroke-dasharray="5 4"/><line x1="250" y1="70" x2="368" y2="70" stroke="#ff5a4d" stroke-width="3"/>
+  <text x="60" y="55">fase 1: guiado en TWS</text><text x="80" y="92" fill="#8b9aa6">🔇 sin alarma</text>
+  <text x="255" y="55" fill="#ff5a4d">fase 2: radar propio</text><text x="262" y="92" fill="#ff5a4d">🔊 ALARMA</text>
+  <text x="60" y="132">Te enteras solo en los últimos segundos</text></g></svg>
+ <p class="sm">Regla: enemigo <b>de frente a 25–40 km</b> = asume que ya te disparó. Dispara tú primero.</p>
+ </div>
+ </div>
+</section>
+
+<!-- ============ COMBATE: PARTIDA ============ -->
+<section class="view" data-v="combate/partida">
+ <p class="lead">Una partida completa, fase por fase.</p>
+ <div class="phases" id="phases"></div>
+ <div class="row mt">
+  <div class="card"><h3 style="color:var(--g)">Haz esto</h3><ul class="do">
+   <li><svg class="i"><use href="#i-check"/></svg>2 PL-12 por enemigo lejano</li>
+   <li><svg class="i"><use href="#i-check"/></svg>Después de disparar, <b>gira</b></li>
+   <li><svg class="i"><use href="#i-check"/></svg>Mantén velocidad y altura</li>
+   <li><svg class="i"><use href="#i-check"/></svg>Vuela cerca de tu equipo</li></ul></div>
+  <div class="card"><h3 style="color:var(--r)">Evita esto</h3><ul class="dont">
+   <li><svg class="i"><use href="#i-x"/></svg>Volar recto mirando el misil</li>
+   <li><svg class="i"><use href="#i-x"/></svg>R-27ER1 si te están disparando</li>
+   <li><svg class="i"><use href="#i-x"/></svg>Girar fuerte a baja velocidad</li>
+   <li><svg class="i"><use href="#i-x"/></svg>Bomba de 1500 kg en aire-aire</li></ul></div>
+ </div>
+</section>
+
+<!-- ============ COMBATE: DEFENSA ============ -->
+<section class="view" data-v="combate/defensa">
+ <div class="grid g3" id="defList"></div>
+</section>
+
+<!-- ============ CONTROLES: TECLAS ============ -->
+<section class="view" data-v="ctrl/teclas">
+ <div class="card ctoolbar">
+  <button class="btn" onclick="downloadBlk()"><svg class="i"><use href="#i-down"/></svg>Descargar .blk</button>
+  <label class="btn alt" style="cursor:pointer"><svg class="i"><use href="#i-upl"/></svg>Importar<input type="file" accept=".blk,.txt" style="display:none" onchange="importBlk(this)"></label>
+  <button class="btn red" onclick="resetAll()"><svg class="i"><use href="#i-reset"/></svg></button>
+  <span class="chip">Cambios: <b id="ctrlCount">0</b></span>
+  <div class="search"><svg class="i"><use href="#i-search"/></svg><input id="csearch" placeholder="Buscar acción…" oninput="renderCtrl()"></div>
+ </div>
+ <div id="ctrlList"></div>
+ <div class="warn"><svg class="i"><use href="#i-info"/></svg><div>El archivo solo incluye <b>las teclas que cambies</b>. Las marcadas <span class="tag t-no">sin tecla</span> o <span class="tag t-mid">verifica</span> usan nombres internos deducidos: revisa en el juego. Si falla, asígnala en el juego, exporta y <b>importa ese archivo aquí</b>.</div></div>
+</section>
+
+<!-- ============ CONTROLES: INSTALAR ============ -->
+<section class="view" data-v="ctrl/instalar">
+ <ol class="stepper">
+  <li><div><svg class="i" style="color:var(--a)"><use href="#i-down"/></svg> Descarga el <b>.blk</b> en <a style="color:var(--a2);cursor:pointer" onclick="go('ctrl','teclas')">Mis teclas</a></div></li>
+  <li><div>War Thunder → <b>Controles</b> → <b>Exportar</b> (respaldo de lo actual)</div></li>
+  <li><div><b>Importar</b> → elige el archivo descargado</div></li>
+  <li><div>Revisa <b>Avión → Radar/IRST</b>: deben salir las teclas</div></li>
+  <li><div>Asigna a mano <b>antena arriba/abajo</b> (ej. <kbd>ALT+↑</kbd> <kbd>ALT+↓</kbd>)</div></li>
+  <li><div>Opciones → <b>"Cambio cíclico de objetivo del radar"</b>: ACTIVADO (si no, <kbd>ALT+T</kbd> no cambia de blanco)</div></li>
+ </ol>
+ <div class="warn"><svg class="i"><use href="#i-shield"/></svg><div>¿El juego rechaza el archivo? Importa tu respaldo y asigna las teclas a mano.</div></div>
+ <div class="hd"><span class="up">Qué se corrigió en tu archivo</span><span class="ln"></span></div>
+ <ul class="do">
+  <li><svg class="i"><use href="#i-check"/></svg><span><b>Ctrl izquierdo solo</b> (objetivo anterior) → quitado</span></li>
+  <li><svg class="i"><use href="#i-check"/></svg><span>Tecla <b>1</b> (cámara proyectil) chocaba con armas → quitada</span></li>
+  <li><svg class="i"><use href="#i-check"/></svg><span>Capturas de pantalla repetidas → limpiadas</span></li>
+  <li><svg class="i"><use href="#i-check"/></svg><span>Teclas de radar del juego → sin tocar</span></li>
+ </ul>
+</section>
+
+<!-- ============ CONTROLES: PRUEBA ============ -->
+<section class="view" data-v="ctrl/prueba">
+ <p class="lead">🧪 1 minuto en Batalla de prueba: pulsa cada tecla y mira qué cambia.</p>
+ <div class="card"><table>
+  <tr><th>Pulsa</th><th>Si cambia…</th><th>Es</th></tr>
+  <tr><td><kbd>ALT+B</kbd></td><td>SRC <b>PD</b> → TWS</td><td><span class="tag t-mid">Modo ⭐</span></td></tr>
+  <tr><td><kbd>ALT+B</kbd></td><td><b>50°x10°</b> → otro</td><td><span class="tag t-info">Barrido</span></td></tr>
+  <tr><td><kbd>ALT+W</kbd></td><td>SRC → ACM</td><td><span class="tag t-info">Lejos/cerca</span></td></tr>
+  <tr><td><kbd>ALT+A</kbd></td><td>ondas → IR</td><td><span class="tag t-info">Radar/IR</span></td></tr>
+  <tr><td><kbd>ALT+Q</kbd></td><td>50 → 100 km</td><td><span class="tag t-info">Escala</span></td></tr>
+ </table></div>
+ <div class="tip"><svg class="i"><use href="#i-mouse"/></svg><div>¿Ninguna cambia el modo? <b>Clic en "SRC PD"</b> con el cursor, o asigna <b>"Cambiar modo del Radar/IRST"</b> en Controles.</div></div>
+</section>
+
+<!-- ============ CRÉDITOS ============ -->
+<section class="view" data-v="creditos">
+ <div class="card"><h3>Aviso</h3><p class="sm">Guía no oficial creada por fans. War Thunder es marca de Gaijin Entertainment; esta app no está afiliada ni respaldada por Gaijin. Los datos de juego son orientativos y pueden cambiar con las actualizaciones.</p></div>
+ <div class="card mt"><h3>Imágenes de los aviones</h3><p class="sm">Los renders de los aviones y los datos del catálogo vienen del <a style="color:var(--b)" href="https://wiki.warthunder.com" target="_blank" rel="noopener">wiki oficial de War Thunder</a> (© Gaijin Entertainment). <b>No van dentro de la app</b>: se cargan desde internet cuando abres cada avión, así la app sigue pesando poco. Sin conexión verás una silueta.</p></div>
+ <div class="card mt"><h3>Otras imágenes</h3><p class="sm">Fotos de armamento y planos de Wikimedia Commons bajo licencias libres:</p><ul class="credits" id="credList"></ul></div>
+</section>
+
+</main>
+
+<!-- ======================= TABBAR ======================= -->
+<nav class="tabbar"><div class="in" id="tabbar"></div></nav>
+
+<div id="lb" onclick="this.classList.remove('on')"><img id="lbimg" alt=""><p id="lbcap"></p></div>
+
+<div id="capture"><div class="box"><h3 id="capTitle" style="color:var(--a);margin:0"></h3>
+<p class="sm">PC: pulsa la tecla o combinación. Mouse: haz clic en el recuadro.</p>
+<div id="capPad"><div id="capKeys"></div><small>recuadro para clic / rueda</small></div>
+<div style="margin-top:12px;text-align:left;border-top:1px solid var(--ln);padding-top:10px"><b class="sm">En el celular, elige:</b><br>
+<label class="sm"><input type="checkbox" id="mCtrl"> Ctrl</label> <label class="sm"><input type="checkbox" id="mShift"> Shift</label> <label class="sm"><input type="checkbox" id="mAlt"> Alt</label>
+<select id="mKey"></select>
+<button class="btn" onclick="capManual()">Usar esta tecla</button></div>
+<div style="margin-top:12px;display:flex;gap:8px;justify-content:center"><button class="btn alt" onclick="capEnd([])">Sin tecla</button><button class="btn red" onclick="capEnd()">Cancelar</button></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script type="text/plain" id="origblk">%%ORIGBLK%%</script>
+<script>%%THREE%%</script>
+<script>
+const $=id=>document.getElementById(id);
+const ico=(n,s='')=>`<svg class="i" ${s?`style="${s}"`:''}><use href="#i-${n}"/></svg>`;
+const kb=t=>`<kbd>${t}</kbd>`;
+
+/* ================= IMÁGENES ================= */
+const IMG={su_3view:'%%IMG:su_3view%%',
+ r73:'%%IMG:r73%%',r77:'%%IMG:r77%%',r27:'%%IMG:r27%%',pl12:'%%IMG:pl12%%',pl8:'%%IMG:pl8%%',
+ kab500:'%%IMG:kab500%%',kab1500:'%%IMG:kab1500%%',kh29:'%%IMG:kh29%%',kh59:'%%IMG:kh59%%',fab500:'%%IMG:fab500%%',rockets:'%%IMG:rockets%%',gun:'%%IMG:gun%%'};
+Object.keys(IMG).forEach(k=>{if(!IMG[k]||IMG[k].startsWith('%%'))IMG[k]=''});
+const CREDITS=%%CREDITS%%;
+
+/* Imágenes del juego: se cargan del wiki oficial (no se empaquetan). Sin internet -> silueta. */
+const WT='https://static.encyclopedia.warthunder.com/';
+const wtRender=id=>WT+'images/'+id+'.png', wtSlot=id=>WT+'slots/'+id+'.png';
+function gx(el,id){/* pone el render del avión sobre un fondo tipo hangar, reutilizable en splash, hero y fichas */
+ let img=el.querySelector('img.rd');if(!img){img=document.createElement('img');img.className='rd';img.alt='';el.prepend(img)}
+ if(!el.querySelector('.fb'))img.insertAdjacentHTML('afterend','<div class="fb"><svg class="i"><use href="#i-plane"/></svg></div>');
+ el.classList.remove('ok');img.style.visibility='hidden';
+ img.onload=()=>{img.style.visibility='';el.classList.add('ok')};img.onerror=()=>{img.removeAttribute('src')};
+ img.src=wtRender(id);}
+gx($('spimg'),'su_30mkk');gx($('hero'),'su_30mkk');
+$('acpimg').src=wtSlot('su_30mkk');$('acpimg').onerror=function(){this.style.visibility='hidden'};
+
+/* bandera China (SVG) */
+const CNFLAG=`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20"><rect width="30" height="20" fill="#de2910"/><g fill="#ffde00"><polygon points="5,2 6.2,5.6 2.4,3.4 7.6,3.4 3.8,5.6"/><circle cx="10" cy="2" r=".8"/><circle cx="12" cy="4" r=".8"/><circle cx="12" cy="7" r=".8"/><circle cx="10" cy="9" r=".8"/></g></svg>')}`;
+document.querySelectorAll('.cnflag,#spflag').forEach(e=>e.style.background=`url("${CNFLAG}") center/cover`);
+
+/* ================= SILUETAS DE MISILES ================= */
+const SHAPE={
+ aam_s:{L:[8,94],r:2.2,n:9,fins:[[8,7,4.2,4]],can:[[74,5,3,2]]},
+ aam_l:{L:[4,96],r:2,n:10,fins:[[4,7,3.5,3]],can:[[40,10,2.6,6]]},
+ r77:{L:[6,96],r:2.2,n:9,fins:[[6,4,4,0,'grid']],can:[[50,8,2.4,5]]},
+ r27:{L:[6,96],r:2.4,n:9,fins:[[6,8,3.5,4]],can:[[50,14,7,8,'bf']],can2:[[78,4,2.4,2]]},
+ agm:{L:[8,94],r:4,n:7,fins:[[8,9,5,5]],can:[[76,6,3,3]]},
+ bomb:{L:[12,92],r:5.5,n:18,fins:[[10,8,5,5]],can:[[66,6,3,3]],bomb:1},
+ fab:{L:[14,90],r:6,n:22,fins:[[10,10,6,6]],bomb:1},
+ cruise:{L:[6,96],r:3,n:8,fins:[[6,6,4,3]],can:[[44,12,6,9]]},
+ arm:{L:[6,96],r:2.8,n:8,fins:[[6,7,4,4]],can:[[50,10,3.6,6]]},
+ rocket:{pod:1},gun:{gun:1},pod:{L:[10,92],r:3.5,n:6,fins:[]}
+};
+function mslSVG(k,col,cls='ms',w=110,h=22){
+ const S=SHAPE[k]||SHAPE.aam_l;let g='';const c=10;
+ if(S.pod){g=`<rect x="10" y="4" width="78" height="12" rx="4" fill="#7a8794"/><path d="M88 4 Q96 10 88 16" fill="${col}"/>`+[20,32,44,56,68].map(x=>`<circle cx="${x}" cy="10" r="2.4" fill="#222"/>`).join('');}
+ else if(S.gun){g=`<rect x="6" y="6" width="44" height="8" rx="2" fill="#5b636b"/><rect x="50" y="8.4" width="44" height="3.2" fill="${col}"/><rect x="88" y="7.4" width="6" height="5.2" fill="#444"/>`;}
+ else{const[x0,x1]=S.L,r=S.r,n=S.n;
+  const fin=(f,dy=1)=>{const[x,len,hh,tip,t]=f;if(t=='grid')return `<rect x="${x}" y="${dy<0?c-r-hh:c+r}" width="${len}" height="${hh}" fill="none" stroke="${col}" stroke-width=".8"/>`;
+   const y0=c-dy*r,y1=c-dy*(r+hh);const tx=t=='bf'?x+len*.3:x;return `<polygon points="${x},${y0} ${x+len},${y0} ${tx+tip},${y1} ${tx},${y1}" fill="${col}" opacity=".9"/>`};
+  [...(S.fins||[]),...(S.can||[]),...(S.can2||[])].forEach(f=>{g+=fin(f,1)+fin(f,-1)});
+  g+=`<path d="M${x0} ${c-r} L${x1-n} ${c-r} Q${x1} ${c-r*.25} ${x1} ${c} Q${x1} ${c+r*.25} ${x1-n} ${c+r} L${x0} ${c+r} Z" fill="${S.bomb?'#8d99a5':'#e9edf0'}"/>`;
+  g+=`<path d="M${x1-n} ${c-r} Q${x1} ${c-r*.25} ${x1} ${c} Q${x1} ${c+r*.25} ${x1-n} ${c+r} Z" fill="${col}"/>`;
+  if(!S.bomb)g+=`<rect x="${x0+(x1-x0)*.35}" y="${c-r}" width="2" height="${2*r}" fill="${col}" opacity=".7"/>`;}
+ return `<svg class="${cls}" viewBox="0 0 100 20" width="${w}" height="${h}" preserveAspectRatio="xMidYMid meet">${g}</svg>`;}
+
+/* ================= TIPOS DE GUÍA ================= */
+const GUIDE={
+ arh:{n:"Radar activo",i:"wave",c:"#7dff5a"},
+ sarh:{n:"Radar semiactivo",i:"semi",c:"#5ad1ff"},
+ ir:{n:"Infrarrojo",i:"fire",c:"#ff9d3d"},
+ tv:{n:"TV / cámara",i:"tv",c:"#c78bff"},
+ laser:{n:"Láser",i:"laser",c:"#ff5a8a"},
+ arm:{n:"Antirradiación",i:"arm",c:"#ff7b2e"},
+ none:{n:"Sin guía",i:"bomb",c:"#9aa6b3"},
+ gun:{n:"Cañón",i:"gun",c:"#ffd23d"}
+};
+function gbadge(g){const G=GUIDE[g];return `<span class="gb"><span class="gi" style="background:${G.c}">${ico(G.i)}</span>${G.n}</span>`}
+$('guideLegend').innerHTML=['arh','sarh','ir'].map(g=>`<span class="chip"><span style="color:${GUIDE[g].c}">${ico(GUIDE[g].i)}</span>${GUIDE[g].n}</span>`).join('')+
+ `<span class="chip">${ico('eye-off','color:var(--g)')}No alerta al enemigo</span><span class="chip">${ico('multi','color:var(--b)')}Multi-blanco</span>`;
+
+/* ================= ARMAS ================= */
+const S_ARH=[[kb('ALT+R'),'Radar ON'],['clic <b>SRC PD</b>','→ <b>TWS HDN</b>'],[kb('Bloq Mayús'),'elige el misil'],[kb('ALT+T'),'selecciona blanco'],[ico('target','color:var(--r)'),'<b>DISPARA</b>'],[kb('ALT+T'),'siguiente → dispara'],[ico('turn','color:var(--a)'),'cono ~10 s y gira']];
+const S_IR=[[kb('ALT+W'),'modo <b>ACM</b>'],[kb('Bloq Mayús'),'elige el misil'],[ico('target','color:var(--a)'),'nariz al enemigo'],[ico('sound','color:var(--a)'),'tono agudo constante'],[ico('target','color:var(--r)'),'<b>DISPARA</b>']];
+const S_TV=[[kb('Bloq Mayús'),'elige el arma'],[ico('tv','color:var(--a)'),'vista cámara del arma'],[ico('target','color:var(--a)'),'cruz sobre el objetivo'],[ico('lock','color:var(--a)'),'<b>Fijar objetivo</b>'],[ico('target','color:var(--r)'),'<b>LANZA</b> y aléjate']];
+const WEAP={
+ aa:[
+  {id:'PL12',n:'PL-12',star:1,g:'arh',img:'pl12',sh:'aam_l',c:'#7dff5a',r:[8,40],rl:'15–40 km de frente · 8–12 km por detrás',fof:1,multi:1,rwr:'late',steps:S_ARH,tip:'¿TWS no lo sigue bien? <kbd>ALT+F</kbd> (lock) y dispara: más preciso, pero el enemigo recibe alarma.'},
+  {id:'RVV',n:'RVV-AE (R-77)',g:'arh',img:'r77',sh:'r77',c:'#9dff7a',r:[8,35],rl:'Igual que el PL-12 · 2.ª opción',fof:1,multi:1,rwr:'late',steps:S_ARH,tip:'Úsalo si un slot no acepta PL-12.'},
+  {id:'ER',n:'R-27ER1',g:'sarh',img:'r27',sh:'r27',c:'#5ad1ff',r:[10,30],rl:'10–30 km · un solo blanco',fof:0,multi:0,rwr:'yes',steps:[[kb('ALT+R'),'Radar PD o TWS'],[kb('ALT+T'),'selecciona'],[kb('ALT+F'),'<b>FIJAR</b> (cuadro STT)'],[kb('Bloq Mayús'),'R-27ER1 → <b>DISPARA</b>'],[ico('lock','color:var(--r)'),'<b>No pierdas el lock</b> hasta el impacto']],tip:'Si pierdes el lock, el misil se pierde. Mejor no cargarlo si tienes PL-12.'},
+  {id:'ET',n:'R-27ET1',g:'ir',img:'r27',sh:'r27',c:'#ffd23d',r:[3,12],rl:'3–12 km · mejor por detrás',fof:1,multi:1,rwr:'no',steps:[[kb('ALT+A'),'cambia a <b>IR</b>'],[ico('target','color:var(--a)'),'nariz al enemigo'],[kb('ALT+F'),'fija con el IRST'],[kb('Bloq Mayús'),'R-27ET1 · tono agudo'],[ico('target','color:var(--r)'),'<b>DISPARA</b> y olvida']],tip:'Ideal contra uno que huye o no te ha visto.'},
+  {id:'R73',n:'R-73E',star:1,g:'ir',img:'r73',sh:'aam_s',c:'#ff9d3d',r:[0.5,8],rl:'0,5–8 km · hasta 45–60° fuera de la nariz',fof:1,multi:1,rwr:'no',steps:S_IR,tip:'Por detrás casi seguro. De frente: menos de 4 km. ¿Suelta bengalas? Espera 1–2 s y dispara otro.'},
+  {id:'PL8',n:'PL-8B',g:'ir',img:'pl8',sh:'aam_s',c:'#ffb870',r:[0.5,7],rl:'0,5–7 km · combate cercano',fof:1,multi:1,rwr:'no',steps:S_IR,tip:'Gira menos que el R-73E. Úsalo si se acaban los slots de R-73E.'},
+  {id:'GUN',n:'GSh-30-1',g:'gun',img:'gun',sh:'gun',c:'#ffd23d',r:[0,1],rl:'< 1 km · 150 balas (~7 s)',fof:0,multi:0,rwr:'no',steps:[[`<span class="key">${ico('mouse','width:12px;height:12px')} Clic izq</span>`,'dispara'],[ico('target','color:var(--a)'),'ráfagas cortas, menos de 1 km']],tip:'Cañón de 30 mm en la raíz del ala derecha. Se acaba rápido.'}
+ ],
+ ag:[
+  {id:'KH',n:'Kh-29TD',star:1,g:'tv',img:'kh29',sh:'agm',c:'#ff5a8a',r:[3,10],rl:'3–10 km · tanques y vehículos',fof:1,steps:S_TV,tip:'1 misil = 1 tanque. Dispara a más de 5 km para evitar antiaéreos. Pesa 686 kg.'},
+  {id:'KAB',n:'KAB-500Kr',star:1,g:'tv',img:'kab500',sh:'bomb',c:'#c78bff',r:[3,7],rl:'Suelta a 3–7 km, desde 3–5 km de altura',fof:1,steps:[[kb('Bloq Mayús'),'elige KAB'],[ico('tv','color:var(--a)'),'cámara → cruz'],[ico('lock','color:var(--a)'),'<b>Fijar objetivo</b>'],[ico('up','color:var(--a)'),'nivelado o subiendo'],[ico('bomb','color:var(--r)'),'<b>SUELTA</b> y gira']],tip:'Te frena poco. Después vuelve a PL-12 para pelear.'},
+  {id:'K15',n:'KAB-1500Kr',g:'tv',img:'kab1500',sh:'bomb',c:'#a070ff',r:[3,7],rl:'Bases · desde 4–6 km de altura',fof:1,steps:[[kb('Bloq Mayús'),'elige KAB-1500'],[ico('tv','color:var(--a)'),'cámara → base'],[ico('lock','color:var(--a)'),'<b>Fijar objetivo</b>'],[ico('bomb','color:var(--r)'),'<b>SUELTA</b> desde lejos y alto']],tip:'Pesa 1,5 t: pon una en cada ala o sale el error de peso.'},
+  {id:'LD',n:'LD-10 / YJ-91',g:'arm',img:'',sh:'arm',c:'#ff7b2e',r:[10,40],rl:'10–40 km · antiaéreos con radar',fof:1,steps:[[ico('radar','color:var(--a)'),'RWR muestra un antiaéreo'],[kb('Bloq Mayús'),'LD-10 o YJ-91'],[ico('lock','color:var(--a)'),'marcador / se fija'],[ico('target','color:var(--r)'),'<b>LANZA</b>: va solo al radar']],tip:'Si el antiaéreo apaga su radar, puede fallar. Prueba otra variante del YJ-91 (L111/L112/L113).'},
+  {id:'K59',n:'Kh-59ME',g:'tv',img:'',sh:'cruise',c:'#2fd4c4',r:[15,40],rl:'Decenas de km · necesita pod APK-9',fof:0,steps:[[ico('pylon','color:var(--a)'),'lleva el pod <b>APK-9</b>'],[ico('target','color:var(--a)'),'lanza hacia el objetivo'],[ico('tv','color:var(--a)'),'cámara activa → <b>fija</b>'],[ico('radar','color:var(--a)'),'quédate en rango']],tip:'Te distrae del combate aéreo. Úsalo con compañeros cerca.'},
+  {id:'KHL',n:'Kh-29L',g:'laser',img:'kh29',sh:'agm',c:'#8a96a3',r:[3,8],rl:'Necesita designador láser',fof:0,bad:1,steps:[[ico('laser','color:var(--a)'),'necesita designador'],[ico('x','color:var(--r)'),'sin marcador láser → no sirve']],tip:'Mejor usa el Kh-29TD: hace lo mismo sin complicaciones.'}
+ ],
+ dumb:[
+  {n:'FAB-500 / FAB-1500',img:'fab500',sh:'fab',c:'#8a96a3',u:'Bases',h:'Pasada recta y nivelada; suelta con el punto de impacto encima'},
+  {n:'RBK-500 PTAB',img:'',sh:'bomb',c:'#b38a5a',u:'Grupos de tanques',h:'Racimo: suelta encima del grupo, a baja altura'},
+  {n:'S-8 / S-13 / S-25',img:'rockets',sh:'rocket',c:'#ff9d3d',u:'Vehículos',h:'Picado suave, apunta con la cruz, dispara a 1,5–2 km'}
+ ]
+};
+const WBY={};[...WEAP.aa,...WEAP.ag].forEach(w=>WBY[w.id]=w);
+
+function rangeBar(r,c){const max=40,a=Math.min(r[0],max)/max*100,b=Math.min(r[1],max)/max*100;
+ return `<div><div class="rbar"><i style="left:${a}%;width:${Math.max(2,b-a)}%;background:${c}"></i></div><div class="rlab"><span>0</span><span>10</span><span>20</span><span>30</span><span>40 km</span></div></div>`}
+function wcard(w,isAA){
+ const ph=w.img&&IMG[w.img]?`<div class="ph" style="background-image:url('${IMG[w.img]}')">`:`<div class="ph art">${mslSVG(w.sh,w.c,'big',300,60)}`;
+ let fl='';
+ if(w.fof!==undefined)fl+=w.fof?`<span class="tag t-ok">${ico('check','width:11px;height:11px')}Dispara y olvida</span>`:`<span class="tag t-mid">${ico('lock','width:11px;height:11px')}Requiere guiarlo</span>`;
+ if(isAA&&w.g!='gun'){fl+=w.multi?`<span class="tag t-info">${ico('multi','width:11px;height:11px')}Multi-blanco</span>`:`<span class="tag t-no">1 blanco</span>`;
+  fl+=w.rwr=='no'?`<span class="tag t-ok">${ico('eye-off','width:11px;height:11px')}Sin alarma</span>`:w.rwr=='late'?`<span class="tag t-mid">Alarma tardía</span>`:`<span class="tag t-no">Alarma todo el vuelo</span>`;}
+ if(w.bad)fl+=`<span class="tag t-no">No recomendado</span>`;
+ return `<div class="wc" id="w-${w.id}">${ph}${gbadge(w.g)}${w.star?'<span class="star">⭐ TOP</span>':''}<div class="nm"><b>${w.n}</b>${mslSVG(w.sh,w.c)}</div></div>
+ <div class="bd"><div class="flags">${fl}</div>${rangeBar(w.r,w.c)}<small>${ico('target','width:13px;height:13px;color:var(--d)')} ${w.rl}</small>
+ <details class="more"><summary>${ico('chev','width:14px;height:14px').replace('class="i"','class="i chev"')}Cómo usarlo (${w.steps.length} pasos)</summary>
+ <ul class="steps mt">${w.steps.map((s,i)=>`<li><span class="n">${i+1}</span>${s[0]} <span>${s[1]}</span></li>`).join('')}</ul></details>
+ <div class="wtip">${ico('bulb')}<span>${w.tip}</span></div></div></div>`}
+$('aaList').innerHTML=WEAP.aa.map(w=>wcard(w,1)).join('');
+$('agList').innerHTML=WEAP.ag.map(w=>wcard(w,0)).join('');
+$('dumbList').innerHTML=WEAP.dumb.map(w=>`<div class="wc">${w.img&&IMG[w.img]?`<div class="ph" style="height:110px;background-image:url('${IMG[w.img]}')">`:`<div class="ph art" style="height:110px">${mslSVG(w.sh,w.c,'big',260,52)}`}<div class="nm"><b style="font-size:.95rem">${w.n}</b></div></div><div class="bd"><span class="tag t-info" style="align-self:flex-start">${w.u}</span><small>${w.h}</small></div></div>`).join('');
+$('homeMsl').innerHTML=WEAP.aa.filter(w=>w.g!='gun').map(w=>`<div class="mthumb" onclick="go('armas','aa','w-${w.id}')"><div class="ph" style="background-image:url('${IMG[w.img]||''}')"></div><div class="tx"><b>${w.n}</b><br><span style="color:${GUIDE[w.g].c};font-size:.72rem">${ico(GUIDE[w.g].i,'width:12px;height:12px')} ${GUIDE[w.g].n}</span></div></div>`).join('');
+
+/* ================= SETUPS ================= */
+const W={R73:"R73",PL12:"PL12",ET:"ET",ER:"ER",KAB:"KAB",KH:"KH",K15:"K15",LD:"LD",YJ:"LD",K59:"K59",POD:"POD",E:"E"};
+const WLAB={R73:"R-73E",PL12:"PL-12",ET:"R-27ET1",ER:"R-27ER1",KAB:"KAB-500",KH:"Kh-29TD",K15:"KAB-1500",LD:"LD-10",YJ:"YJ-91",K59:"Kh-59ME",POD:"APK-9",E:"vacío"};
+const SETS=[
+ {l:"I",i:"radar",n:"BVR máximo",d:"10 PL-12 + 2 R-73E · cazar desde lejos",s:["R73","PL12","PL12","PL12","PL12","PL12","PL12","PL12","PL12","PL12","PL12","R73"]},
+ {l:"A",i:"target",n:"Full aire-aire ⭐",d:"8 largo + 4 corto alcance · el recomendado",s:["R73","R73","PL12","PL12","PL12","PL12","PL12","PL12","PL12","PL12","R73","R73"]},
+ {l:"B",i:"eye-off",n:"Anti-alarma",d:"+2 R-27ET1: ataque IR sin alarma enemiga",s:["R73","R73","PL12","ET","PL12","PL12","PL12","PL12","ET","PL12","R73","R73"]},
+ {l:"C",i:"multi",n:"Mixto",d:"4 PL-12 + 4 R-73E + 2 bombas guiadas",s:["R73","R73","PL12","KAB","PL12","E","E","PL12","KAB","PL12","R73","R73"]},
+ {l:"D",i:"bomb",n:"Mixto pesado",d:"Tierra primero · ve con escolta",s:["R73","R73","PL12","KH","KAB","E","E","KAB","KH","PL12","R73","R73"]},
+ {l:"E",i:"tv",n:"Tanques",d:"6 Kh-29TD: uno por tanque",s:["R73","R73","KH","KH","KH","PL12","PL12","KH","KH","KH","R73","R73"]},
+ {l:"F",i:"fire",n:"Bases",d:"KAB-1500: gran parte de una base de un golpe",s:["R73","R73","PL12","KAB","K15","E","E","K15","KAB","PL12","R73","R73"]},
+ {l:"G",i:"arm",n:"Caza-antiaéreos",d:"Antirradiación contra Pantsir, Tor…",s:["R73","R73","PL12","LD","YJ","E","E","YJ","LD","PL12","R73","R73"]},
+ {l:"H",i:"cruise",n:"Ataque lejano",d:"Kh-59ME + pod APK-9 · no mezclar con KAB",s:["R73","R73","PL12","K59","E","POD","E","E","K59","PL12","R73","R73"]}
+];
+const WCOL={R73:'#ff9d3d',PL12:'#7dff5a',ET:'#ffd23d',ER:'#5ad1ff',KAB:'#c78bff',KH:'#ff5a8a',K15:'#a070ff',LD:'#ff7b2e',YJ:'#ff4040',K59:'#2fd4c4',POD:'#cccccc',E:'#3a4652'};
+const WSH={R73:'aam_s',PL12:'aam_l',ET:'r27',ER:'r27',KAB:'bomb',KH:'agm',K15:'bomb',LD:'arm',YJ:'arm',K59:'cruise',POD:'pod'};
+function drawSet(k){const t=SETS[k];$('setName').textContent=t.n;$('setDesc').textContent=t.d;$('setIco').innerHTML=ico(t.i);
+ // vista superior del avión + 12 pilones (1 = punta ala izquierda … 12 = punta ala derecha)
+ let g=`<rect width="400" height="205" fill="#0b1016" rx="10"/>
+ <g fill="#1c2630" stroke="#3a4856" stroke-width="1.5" stroke-linejoin="round">
+  <path d="M200 6 L207 26 L211 52 L216 74 L382 146 L382 158 L246 156 L236 160 L292 182 L292 190 L224 186 L212 196 L200 192 L188 196 L176 186 L108 190 L108 182 L164 160 L154 156 L18 158 L18 146 L184 74 L189 52 L193 26 Z"/>
+  <rect x="182" y="140" width="4" height="46" rx="2"/><rect x="214" y="140" width="4" height="46" rx="2"/>
+  <ellipse cx="200" cy="40" rx="5" ry="12" fill="#2e4a63"/></g>`;
+ const P=[[22,152],[74,128],[108,116],[142,104],[178,96],[191,118],[209,118],[222,96],[258,104],[292,116],[326,128],[378,152]];
+ const used={};
+ t.s.forEach((w,i)=>{used[w]=(used[w]||0)+1;const col=WCOL[w],[x,y]=P[i],e=w=='E';
+  g+=`<circle cx="${x}" cy="${y}" r="9" fill="${e?'#0b1016':col}" stroke="${col}" stroke-width="2" ${e?'stroke-dasharray="3 2"':''}/><text x="${x}" y="${y+3.5}" fill="${e?'#5d6b76':'#111'}" font-size="9.5" font-weight="800" text-anchor="middle" font-family="Arial">${i+1}</text>`;});
+ g+=`<text x="12" y="198" fill="#5d6b76" font-size="9" font-family="Arial">◀ ala izquierda</text><text x="388" y="198" fill="#5d6b76" font-size="9" font-family="Arial" text-anchor="end">ala derecha ▶</text>`;
+ $('pyl').innerHTML=g;
+ const sl=(i,r)=>{const w=t.s[i],col=WCOL[w];return `<div class="sl${r?' r':''}" style="border-${r?'right':'left'}-color:${col}"><b>${i+1}</b>${w=='E'?'':mslSVG(WSH[w],col,'ms',40,10)}<span style="color:${w=='E'?'var(--d)':'var(--t)'}">${WLAB[w]}</span></div>`};
+ $('setMir').innerHTML=[0,1,2,3,4,5].map(i=>sl(i,0)+`<span class="eq">${t.s[i]==t.s[11-i]?'=':'≠'}</span>`+sl(11-i,1)).join('');
+ $('setLeg').innerHTML=Object.entries(used).filter(e=>e[0]!="E").map(([w,n])=>`<span class="chip"><b style="color:${WCOL[w]}">${n}×</b>${mslSVG(WSH[w],WCOL[w],'ms',46,10)}${WLAB[w]}</span>`).join('');
+ [...$('setTabs').children].forEach((b,j)=>b.classList.toggle('on',j==k));}
+$('setTabs').innerHTML=SETS.map((t,k)=>`<button onclick="drawSet(${k})"><span class="lt">${t.l}</span>${t.n}</button>`).join('');
+drawSet(1);
+
+/* ================= RADAR ================= */
+const INFO={
+vista:["Mostrar/ocultar panel","Muestra u oculta las etiquetas <kbd>ALT+…</kbd> y los botones. <b>No lo necesitas en combate.</b>"],
+tipo:["<kbd>ALT+A</kbd> Radar ↔ IR","Cambia entre <b>radar</b> e <b>IRST</b> (sale 'IR'). El IR no hace sonar la alarma del enemigo. Úsalo con R-73 y R-27ET."],
+acm:["<kbd>ALT+W</kbd> Lejos ↔ cerca","De <b>SRC</b> (50 km) a <b>ACM</b>: franja de 10 km que <b>fija sola</b> lo que tengas delante."],
+busq:["<kbd>ALT+B</kbd> Patrón de barrido","Ancho y bajo (50°x10°) o angosto y alto. Ancho = ves más. Angosto = fijas más fácil."],
+barras:["Opciones de pantalla","Cono o cuadrado. <b>No es necesario para pelear.</b>"],
+subir:["Antena ARRIBA","Para enemigos <b>más altos</b>. Asígnale tecla (ej. <kbd>ALT+↑</kbd>)."],
+bajar:["Antena ABAJO","Para enemigos <b>más bajos</b>. Asígnale tecla (ej. <kbd>ALT+↓</kbd>)."],
+centro:["Centrar antena","Vuelve la antena al frente (0°)."],
+escala:["<kbd>ALT+Q</kbd> Escala","10 / 25 / 50 / 100 km. <b>Lejos → 50-100 · Cerca → 10.</b>"],
+power:["<kbd>ALT+R</kbd> Encender/apagar","Apagado: el enemigo no te ve en su RWR, pero tú tampoco ves nada."],
+modo:["'SRC PD' = modo","<b>Clic</b> aquí: PD → PD HDN → TWS → <b>TWS HDN</b> ⭐ (el mejor para empezar)."],
+patron:["'50°x10°' = área","50° de ancho × 10° de alto. Muy poca altura: usa antena arriba/abajo."],
+km:["'50 km*' = escala","El * = el radar ve un poco más allá. Cambia con <kbd>ALT+Q</kbd>."],
+elev:["60° / -55°","Límites de la antena. La <b>marca pequeña</b> es hacia dónde mira ahora."],
+barrido:["La línea que se mueve","El haz del radar barriendo. Normal."],
+contacto:["Raya = avión","<kbd>ALT+T</kbd> selecciona · <kbd>ALT+F</kbd> fija · doble clic con el mouse."]
+};
+document.querySelectorAll('#panel .rbtn').forEach(b=>{const f=()=>{const d=INFO[b.dataset.k];$('info').innerHTML='<h4>'+d[0]+'</h4><p>'+d[1]+'</p>'};b.addEventListener('click',f);b.addEventListener('mouseenter',f)});
+$('radarKeys').innerHTML=[['ALT+R','power','Radar ON/OFF'],['ALT+T','multi','Seleccionar blanco'],['ALT+F','lock','FIJAR (lock)'],['ALT+W','target','Lejos ↔ cerca'],['ALT+A','fire','Radar ↔ IR'],['ALT+B','search','Barrido'],['ALT+Q','blue','Escala km'],['ALT+E','chaff','Bengalas / chaff']]
+ .map(k=>`<div class="kt">${kb(k[0])}<b style="font-size:.86rem">${k[2]}</b></div>`).join('');
+
+function R(o){let s=`<svg viewBox="0 0 300 230" class="sky d"><path d="M150 200 L30 120 A145 145 0 0 1 270 120 Z" fill="#3f8f2c" fill-opacity=".85" stroke="#7dff5a" stroke-width="2"/>
+<g stroke="#7dff5a" fill="none"><line x1="150" y1="200" x2="150" y2="58"/><path d="M110 170 A50 50 0 0 1 190 170"/><path d="M75 140 A95 95 0 0 1 225 140"/></g>
+<text x="110" y="45" fill="#7dff5a" font-family="Consolas" font-weight="700" font-size="16">${o.m}</text>`;
+(o.c||[]).forEach(c=>{s+=`<rect x="${c[0]}" y="${c[1]}" width="12" height="5" fill="#d9ffcc"/>`;
+ if(c[2]=='s')s+=`<line x1="${c[0]-5}" y1="${c[1]-6}" x2="${c[0]-5}" y2="${c[1]+11}" stroke="#fff" stroke-width="2"/><line x1="${c[0]+17}" y1="${c[1]-6}" x2="${c[0]+17}" y2="${c[1]+11}" stroke="#fff" stroke-width="2"/>`;
+ if(c[2]=='l')s+=`<rect x="${c[0]-7}" y="${c[1]-8}" width="26" height="21" fill="none" stroke="#fff" stroke-width="2"/>`;
+ if(c[2]=='m')s+=`<path d="M150 200 Q${c[0]-20} ${c[1]+60} ${c[0]+6} ${c[1]+8}" stroke="#ff5a4d" stroke-width="2" fill="none" stroke-dasharray="5 3"/>`;});
+return s+`<text x="10" y="222" fill="#ffe08a" font-size="14" font-weight="700">${o.k||''}</text></svg>`}
+const scard=(h,svg,p)=>`<div class="card"><h3>${h}</h3>${svg}<p class="sm">${p}</p></div>`;
+$('lock1').innerHTML=[
+ ["<span class='n'>1</span> Enciende → TWS HDN",R({m:"TWS HDN",c:[[180,95],[95,140]],k:"ALT+R → clic SRC PD"}),"Clic en <b>SRC PD</b> hasta <b>TWS HDN</b>. Escala con <kbd>ALT+Q</kbd>."],
+ ["<span class='n'>2</span> Selecciona",R({m:"TWS HDN",c:[[180,95,'s'],[95,140]],k:"ALT+T"}),"Rayas a los lados. Otra vez = siguiente avión."],
+ ["<span class='n'>3</span> Fija",R({m:"STT",c:[[180,95,'l']],k:"ALT+F"}),"Cuadro en radar y HUD. Ya puedes disparar."]
+].map(x=>scard(...x)).join('');
+$('multiTbl').innerHTML=WEAP.aa.filter(w=>['PL12','ER','R73','ET'].includes(w.id)).map(w=>`<div class="kt" style="flex-direction:row;align-items:center"><span style="color:${GUIDE[w.g].c}">${ico(GUIDE[w.g].i,'width:22px;height:22px')}</span><div style="flex:1"><b style="font-size:.88rem">${w.n}</b><br><small>${w.rl.split('·')[0]}</small></div>${w.multi?`<span class="tag t-ok">${ico('check','width:11px;height:11px')}Varios</span>`:`<span class="tag t-no">1 a la vez</span>`}</div>`).join('');
+$('multi').innerHTML=[
+ ["<span class='n'>1</span> Selecciona A",R({m:"TWS HDN",c:[[110,100,'s'],[190,120]],k:"ALT+T"}),"En TWS basta con seleccionar."],
+ ["<span class='n'>2</span> PL-12 a A",R({m:"TWS HDN",c:[[110,100,'m'],[190,120]],k:"DISPARO"}),"El misil sale hacia A."],
+ ["<span class='n'>3</span> Cambia a B",R({m:"TWS HDN",c:[[110,100,'m'],[190,120,'s']],k:"ALT+T → DISPARO"}),"Dos misiles, uno a cada avión."],
+ ["<span class='n'>4</span> Gira 45°",R({m:"TWS HDN",c:[[110,100,'m'],[190,120,'m']],k:"Gira 45°"}),"Mantenlos en el cono unos segundos."]
+].map(x=>scard(...x)).join('');
+
+/* ================= PARTIDA / DEFENSA ================= */
+const PH=[
+ {h:"Despegue",s:"0 km",i:"up",l:[[kb('ALT+R'),'radar ON'],['clic SRC PD','→ TWS HDN'],[kb('ALT+Q'),'100 km'],[ico('up','width:14px'),'sube a 8–10 km']]},
+ {h:"Largo alcance",s:"40–25 km",i:"radar",l:[[kb('Bloq Mayús'),'PL-12'],[kb('ALT+T'),'selecciona'],[ico('target','width:14px;color:var(--r)'),'DISPARA ×2'],[kb('ALT+T'),'siguiente']]},
+ {h:"Defiéndete",s:"misil entrante",i:"shield",red:1,l:[[ico('turn','width:14px'),'gira 60–90°'],[kb('ALT+E'),'bengalas/chaff'],[ico('dots','width:14px'),'espera ~10 s']]},
+ {h:"Medio alcance",s:"15–8 km",i:"target",l:[['2×','PL-12 más'],[ico('fire','width:14px;color:#ff9d3d'),'o R-27ET1 por detrás'],[kb('ALT+A'),'IR + '+kb('ALT+F')]]},
+ {h:"Cerca",s:"< 8 km",i:"fire",l:[[kb('ALT+W'),'ACM'],[ico('target','width:14px'),'nariz al enemigo'],[kb('Bloq Mayús'),'R-73E'],[ico('sound','width:14px'),'tono → DISPARA']]}
+];
+$('phases').innerHTML=PH.map((p,i)=>`<div class="phase${p.red?' red':''}"><div class="ph-h"><div class="cico" style="background:${p.red?'rgba(255,90,77,.15)':'rgba(125,255,90,.12)'};color:${p.red?'var(--r)':'var(--g)'}">${ico(p.i)}</div><div><b>${i+1}. ${p.h}</b><small>${p.s}</small></div></div><ul>${p.l.map(x=>`<li>${x[0]}<span>${x[1]}</span></li>`).join('')}</ul></div>`).join('');
+const DEF=[
+ {h:"Misil de radar",c:"var(--b)",i:"wave",s:[[ico('turn','width:16px'),'gira 90°'],[kb('ALT+E'),'chaff'],[ico('dive','width:16px'),'pica al suelo']],p:"El misil queda a tu costado y se confunde con el suelo."},
+ {h:"Misil infrarrojo",c:"#ff9d3d",i:"fire",s:[[kb('ALT+E'),'bengalas'],[ico('turn','width:16px'),'giro fuerte'],[ico('engine','width:16px'),'corta postcombustión']],p:"Menos calor = el misil pierde tu motor."},
+ {h:"Sin alarma pero lo ves",c:"var(--a)",i:"eye-off",s:[[ico('radar','width:16px'),'enemigo de frente 25–40 km'],['=','asume que ya disparó']],p:"En TWS no te llega aviso hasta el final. Dispara tú primero."},
+ {h:"Te persiguen de cerca",c:"var(--r)",i:"warn",s:[[ico('speed','width:16px'),'no pierdas velocidad'],[kb('ALT+E'),'bengalas preventivas'],[ico('crew','width:16px'),'llévalo hacia tu equipo']],p:"Girar fuerte a baja velocidad te deja sin energía."}
+];
+$('defList').innerHTML=DEF.map(d=>`<div class="dcard" style="border-top:3px solid ${d.c}"><div class="hdr"><div class="big" style="background:rgba(255,255,255,.05);color:${d.c}">${ico(d.i)}</div><b>${d.h}</b></div><div class="seq">${d.s.map(x=>`<span class="chip">${x[0]} ${x[1]}</span>`).join('<span class="ar">›</span>')}</div><small>${d.p}</small></div>`).join('');
+
+/* ================= PLANO ================= */
+const BP_SVG=`<svg viewBox="0 0 400 430" class="d" fill="none" stroke="#e8f2ff" stroke-width="1.3" stroke-linejoin="round" font-family="Consolas,monospace" font-size="9">
+ <g><path d="M200 8 L207 28 L211 54 L216 76 L382 148 L382 160 L246 158 L236 162 L292 184 L292 192 L224 188 L212 198 L200 194 L188 198 L176 188 L108 192 L108 184 L164 162 L154 158 L18 160 L18 148 L184 76 L189 54 L193 28 Z"/>
+  <path d="M182 142 L186 142 L186 188 L182 188 Z M214 142 L218 142 L218 188 L214 188 Z"/><ellipse cx="200" cy="44" rx="5" ry="14"/>
+  <path d="M184 76 L172 120 M216 76 L228 120 M230 130 L320 150 M170 130 L80 150" stroke-dasharray="3 3" opacity=".6"/>
+  <path d="M18 168 L382 168 M18 164 L18 172 M382 164 L382 172" opacity=".7"/><text x="60" y="180" fill="#e8f2ff" stroke="none" text-anchor="middle">14,7 m</text>
+  <path d="M398 8 L398 198 M394 8 L402 8 M394 198 L402 198" opacity=".7"/><text x="392" y="104" fill="#e8f2ff" stroke="none" text-anchor="end">21,9 m</text>
+  <text x="10" y="20" fill="#9cc8ff" stroke="none">VISTA SUPERIOR</text></g>
+ <g transform="translate(0 220)"><text x="10" y="10" fill="#9cc8ff" stroke="none">VISTA LATERAL</text>
+  <path d="M14 70 Q40 62 86 58 L122 52 Q140 38 168 44 L196 50 L300 52 L318 18 L340 18 L346 52 L372 56 L386 64 L300 74 L276 82 L150 80 L120 76 L70 76 Q36 74 14 70 Z"/>
+  <path d="M124 52 Q140 40 166 45" /><path d="M200 74 L270 74 L276 82" opacity=".7"/><path d="M290 70 L330 70" opacity=".6"/>
+  <path d="M14 94 L386 94 M14 90 L14 98 M386 90 L386 98" opacity=".7"/><text x="200" y="106" fill="#e8f2ff" stroke="none" text-anchor="middle">21,9 m</text>
+  <path d="M396 18 L396 82 M392 18 L400 18 M392 82 L400 82" opacity=".7"/><text x="390" y="54" fill="#e8f2ff" stroke="none" text-anchor="end">6,4 m</text></g>
+ <g transform="translate(0 340)"><text x="10" y="10" fill="#9cc8ff" stroke="none">VISTA FRONTAL</text>
+  <ellipse cx="200" cy="44" rx="16" ry="14"/><path d="M60 52 L184 48 M216 48 L340 52"/><path d="M58 50 L58 56 M342 50 L342 56"/>
+  <rect x="172" y="54" width="18" height="14" rx="3"/><rect x="210" y="54" width="18" height="14" rx="3"/>
+  <path d="M186 36 L176 4 L170 4 L180 38 M214 36 L224 4 L230 4 L220 38"/><path d="M196 34 Q200 26 204 34"/>
+  <path d="M200 58 L200 80 M184 68 L180 80 M216 68 L220 80"/><circle cx="200" cy="82" r="2.5"/><circle cx="180" cy="82" r="3"/><circle cx="220" cy="82" r="3"/></g>
+</svg>`;
+$('bp').insertAdjacentHTML('afterbegin',IMG.su_3view?`<img src="${IMG.su_3view}" alt="Plano de 3 vistas del Su-30">`:BP_SVG);
+
+/* ================= GALERÍA / CRÉDITOS ================= */
+IMG.g_render=wtRender('su_30mkk');IMG.g_social='https://wiki.warthunder.com/assets/gunit_social/su_30mkk.jpg';IMG.g_slot=wtSlot('su_30mkk');
+CREDITS.g_render=CREDITS.g_social=CREDITS.g_slot={a:'War Thunder Wiki',l:'© Gaijin Entertainment (online)'};
+const GAL=[['g_social','Su-30MKK en War Thunder'],['g_render','Modelo del juego'],['r73','Misil R-73E'],['r77','Misil RVV-AE (R-77)'],['pl12','Misil PL-12'],['r27','Familia R-27'],['kh29','Misil Kh-29'],['kab500','Bomba guiada KAB-500Kr']].filter(g=>IMG[g[0]]);
+$('gal').innerHTML=GAL.map(g=>`<figure onclick="lb('${g[0]}','${g[1]}')"${g[0].startsWith('g_')?' class="gx"':''}><img src="${IMG[g[0]]}" alt="${g[1]}" loading="lazy"${g[0]=='g_render'?' style="object-fit:contain;position:relative"':''} onerror="this.closest('figure').remove()"><figcaption style="position:relative">${g[1]}</figcaption></figure>`).join('');
+function lb(k,c){$('lbimg').src=IMG[k];const cr=CREDITS[k];$('lbcap').innerHTML=c+(cr?`<br>${cr.a} · ${cr.l}`:'');$('lb').classList.add('on')}
+$('credList').innerHTML=Object.entries(CREDITS).filter(([k])=>IMG[k]&&!k.startsWith('g_')).map(([k,c])=>`<li><b>${c.t}</b> — ${c.a} · ${c.l} · <a href="${c.u}" target="_blank" rel="noopener">fuente</a></li>`).join('');
+</script>
+
+<script>
+/* ================= KEY CODES (DirectInput) ================= */
+const DIK={Escape:1,Digit1:2,Digit2:3,Digit3:4,Digit4:5,Digit5:6,Digit6:7,Digit7:8,Digit8:9,Digit9:10,Digit0:11,Minus:12,Equal:13,Backspace:14,Tab:15,
+KeyQ:16,KeyW:17,KeyE:18,KeyR:19,KeyT:20,KeyY:21,KeyU:22,KeyI:23,KeyO:24,KeyP:25,BracketLeft:26,BracketRight:27,Enter:28,ControlLeft:29,
+KeyA:30,KeyS:31,KeyD:32,KeyF:33,KeyG:34,KeyH:35,KeyJ:36,KeyK:37,KeyL:38,Semicolon:39,Quote:40,Backquote:41,ShiftLeft:42,Backslash:43,
+KeyZ:44,KeyX:45,KeyC:46,KeyV:47,KeyB:48,KeyN:49,KeyM:50,Comma:51,Period:52,Slash:53,ShiftRight:54,NumpadMultiply:55,AltLeft:56,Space:57,CapsLock:58,
+F1:59,F2:60,F3:61,F4:62,F5:63,F6:64,F7:65,F8:66,F9:67,F10:68,NumLock:69,ScrollLock:70,Numpad7:71,Numpad8:72,Numpad9:73,NumpadSubtract:74,
+Numpad4:75,Numpad5:76,Numpad6:77,NumpadAdd:78,Numpad1:79,Numpad2:80,Numpad3:81,Numpad0:82,NumpadDecimal:83,IntlBackslash:86,F11:87,F12:88,
+NumpadEnter:156,ControlRight:157,NumpadDivide:181,PrintScreen:183,AltRight:184,Home:199,ArrowUp:200,PageUp:201,ArrowLeft:203,ArrowRight:205,End:207,ArrowDown:208,PageDown:209,Insert:210,Delete:211};
+const KNAME={1:"Esc",14:"Retroceso",15:"Tab",28:"Enter",29:"Ctrl izq",42:"Shift izq",54:"Shift der",56:"Alt",57:"Espacio",58:"Bloq Mayús",
+55:"Num *",69:"Bloq Num",70:"Bloq Despl",71:"Num 7",72:"Num 8",73:"Num 9",74:"Num -",75:"Num 4",76:"Num 5",77:"Num 6",78:"Num +",79:"Num 1",80:"Num 2",81:"Num 3",82:"Num 0",83:"Num .",
+156:"Num Enter",157:"Ctrl der",181:"Num /",183:"Impr Pant",184:"Alt Gr",199:"Inicio",200:"↑",201:"RePág",203:"←",205:"→",207:"Fin",208:"↓",209:"AvPág",210:"Insert",211:"Supr",
+12:"-",13:"=",26:"[",27:"]",39:"Ñ",40:"'",41:"º",43:"\\",51:",",52:".",53:"/",86:"<"};
+Object.entries(DIK).forEach(([c,n])=>{if(KNAME[n])return;if(c.startsWith('Key'))KNAME[n]=c.slice(3);else if(c.startsWith('Digit'))KNAME[n]=c.slice(5);else if(/^F\d+$/.test(c))KNAME[n]=c;});
+const MNAME={0:"Clic izq",1:"Clic der",2:"Clic central",3:"Botón lateral 1",4:"Botón lateral 2",5:"Rueda ↑",6:"Rueda ↓"};
+const MODS=[29,157,42,54,56,184];
+function tokName(t){const n=+t.slice(1);return t[0]=='m'?(MNAME[n]||'Mouse '+n):(KNAME[n]||'Tecla '+n)}
+function comboHTML(c){return c.map(t=>`<span class="key">${tokName(t)}</span>`).join('<small>+</small>')}
+function combosHTML(cs){return cs&&cs.length?cs.map(comboHTML).join(' <small>o</small> '):'<span class="key none">sin tecla</span>'}
+const K=(...a)=>a.map(x=>typeof x=='number'?'k'+x:x);
+
+/* ================= ACCIONES ================= */
+const CAT={"Vuelo":{i:"flight",c:"#4aa3ff"},"Radar e IR":{i:"radar",c:"#7dff5a"},"Armas":{i:"missile",c:"#ff9d3d"},"Otros":{i:"dots",c:"#8b9aa6"}};
+const ACTIONS=[
+ {id:"ID_FLAPS",cat:"Vuelo",n:"Flaps",keys:[K(33)],st:"def",g:1,part:"flaps",d:"Más sustentación para despegar, aterrizar o girar lento.",w:"Despegue y aterrizaje. Se rompen si vas muy rápido."},
+ {id:"ID_GEAR",cat:"Vuelo",n:"Tren de aterrizaje",keys:[K(34)],st:"def",g:1,part:"gear",d:"Sube o baja las ruedas.",w:"Súbelo al despegar. Bájalo bajo ~450 km/h."},
+ {id:"ID_AIR_BRAKE",cat:"Vuelo",n:"Freno aéreo",keys:[K(35)],st:"def",g:1,part:"airbrake",d:"Placa en el lomo para frenar rápido.",w:"Para no pasarte de un enemigo o antes de aterrizar."},
+ {id:"ID_CHUTE",cat:"Vuelo",n:"Paracaídas de frenado",keys:[],st:"none",g:1,part:"chute",d:"Paracaídas de cola al tocar pista.",w:"Solo al aterrizar, ya en el suelo."},
+ {id:"ID_TOGGLE_ENGINE",cat:"Vuelo",n:"Motor on/off",keys:[],st:"none",g:1,part:"nozzles",d:"Arranca o detiene los AL-31F.",w:"Casi nunca. Reparar en pista más rápido."},
+ {id:"ID_TOGGLE_COCKPIT_DOOR",cat:"Vuelo",n:"Abrir/cerrar cabina",keys:[],st:"none",g:1,part:"canopy",d:"Abre la cubierta de cristal.",w:"Solo en tierra."},
+ {id:"ID_SENSOR_SWITCH",cat:"Radar e IR",n:"Radar on/off",keys:[K(56,19)],st:"conf",g:1,part:"radar",d:"Enciende o apaga el radar N001VE.",w:"Apagado: el enemigo no te ve en su alarma."},
+ {id:"ID_SENSOR_TYPE_SWITCH",cat:"Radar e IR",n:"Radar ↔ IR (IRST)",keys:[K(56,30)],st:"conf",g:1,part:"irst",d:"Sensor infrarrojo OLS-30. No hace sonar alarmas.",w:"De cerca, con R-73E / R-27ET1."},
+ {id:"ID_SENSOR_ACM_SWITCH",cat:"Radar e IR",n:"Lejos ↔ cerca (SRC/ACM)",keys:[K(56,17)],st:"conf",g:1,part:"radar",d:"SRC 50°x10° ↔ ACM 3°x75°.",w:"Enemigo a menos de 8–10 km."},
+ {id:"ID_SENSOR_MODE_SWITCH",cat:"Radar e IR",n:"Modo / barrido",keys:[K(56,48)],st:"conf",g:1,part:"radar",d:"Botón lupa del panel. Haz la Prueba para confirmar.",w:"Empieza en TWS HDN."},
+ {id:"ID_SENSOR_RANGE_SWITCH",cat:"Radar e IR",n:"Escala de distancia",keys:[K(56,16)],st:"conf",g:1,part:"radar",d:"10 / 25 / 50 / 100 km.",w:"Lejos: 50–100. Cerca: 10."},
+ {id:"ID_SENSOR_TARGET_SWITCH",cat:"Radar e IR",n:"Siguiente blanco",keys:[K(56,20)],st:"conf",g:1,part:"radar",d:"Salta al siguiente avión del radar.",w:"Antes de disparar PL-12 en TWS."},
+ {id:"ID_SENSOR_TARGET_LOCK",cat:"Radar e IR",n:"Fijar blanco (lock)",keys:[K(56,33)],st:"conf",g:1,part:"radar",d:"Fijación dura (aparece el cuadro).",w:"Obligatorio para R-27ER1."},
+ {id:"ID_SENSOR_ELEV_UP",cat:"Radar e IR",n:"Antena ARRIBA",keys:[],st:"none",g:1,part:"radar",d:"Sube el barrido del radar.",w:"Enemigos más altos que tú."},
+ {id:"ID_SENSOR_ELEV_DOWN",cat:"Radar e IR",n:"Antena ABAJO",keys:[],st:"none",g:1,part:"radar",d:"Baja el barrido del radar.",w:"Enemigos más bajos (clave en BVR)."},
+ {id:"ID_FIRE_MGUNS",cat:"Armas",n:"Cañón GSh-30-1",keys:[["m0"]],st:"conf",part:"gun",d:"30 mm, 150 balas (~7 s).",w:"Menos de 1 km, ráfagas cortas."},
+ {id:"ID_OPEN_VISUAL_WEAPON_SELECTOR",cat:"Armas",n:"Selector de armas",keys:[K(58)],st:"conf",part:"weapons",d:"Menú para elegir misil, bomba o cohete.",w:"Antes de cada disparo."},
+ {id:"ID_AAM",cat:"Armas",n:"Lanzar misil aire-aire",keys:[],st:"none",g:1,part:"weapons",d:"Dispara el misil AA seleccionado.",w:"Con blanco seleccionado o fijado."},
+ {id:"ID_WEAPON_LOCK",cat:"Armas",n:"Fijar buscador / arma guiada",keys:[],st:"none",g:1,part:"weapons",d:"1.ª: enciende buscador. 2.ª: intenta fijar.",w:"R-73E, KAB, Kh-29TD."},
+ {id:"ID_TOGGLE_GM_VIEW",cat:"Armas",n:"Cámara del arma guiada",keys:[],st:"none",g:1,part:"weapons",d:"Ves por la cámara de KAB / Kh-29TD / Kh-59ME.",w:"Para apuntar armas de TV."},
+ {id:"ID_AGM",cat:"Armas",n:"Lanzar misil aire-tierra",keys:[],st:"none",g:1,part:"weapons",d:"Kh-29TD, Kh-59ME, LD-10, YJ-91.",w:"Con el objetivo fijado."},
+ {id:"ID_BOMBS",cat:"Armas",n:"Soltar bombas",keys:[],st:"none",g:1,part:"weapons",d:"Bombas normales o KAB.",w:"Sobre la base o con la KAB fijada."},
+ {id:"ID_ROCKETS",cat:"Armas",n:"Lanzar cohetes",keys:[],st:"none",g:1,part:"weapons",d:"S-8KO, S-13OF, S-25.",w:"Picado suave, a 1,5–2 km."},
+ {id:"ID_FLARES",cat:"Armas",n:"Contramedidas",keys:[K(56,18)],st:"conf",g:1,part:"cm",d:"Bengalas (vs IR) y chaff (vs radar).",w:"Cuando suene la alarma, girando."},
+ {id:"ID_FLIGHTMENU",cat:"Otros",n:"Menú del juego",keys:[K(1)],st:"conf",d:"Pausa / menú.",w:"—"},
+ {id:"ID_MPSTATSCREEN",cat:"Otros",n:"Tabla de puntos",keys:[K(49)],st:"conf",d:"Tabla de la partida.",w:"Ver qué enemigos quedan."},
+ {id:"ID_CAMERA_SHELL_FPV",cat:"Otros",n:"Cámara del proyectil",keys:[K(74)],st:"conf",d:"Sigue al proyectil disparado.",w:"Opcional."}
+];
+const ORIG_BLK=document.getElementById('origblk').textContent.trim();
+
+const LS='su30mkk_binds_v1';
+let state={changes:{},baseBlk:ORIG_BLK};
+try{const s=JSON.parse(localStorage.getItem(LS)||'null');if(s&&s.baseBlk)state=s;}catch(e){}
+function save(){try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}}
+function bindOf(a){return state.changes[a.id]!==undefined?state.changes[a.id]:a.keys}
+function statusOf(a){return state.changes[a.id]!==undefined?'user':a.st}
+const BADGE={conf:['t-ok','confirmada'],def:['t-mid','verifica'],none:['t-no','sin tecla'],user:['t-info','cambiada']};
+
+function parseHotkeys(blk){
+ const out=[];const i=blk.indexOf('hotkeys{');if(i<0)return out;
+ let depth=1,j=i+8,start=j;
+ for(;j<blk.length&&depth>0;j++){if(blk[j]=='{')depth++;else if(blk[j]=='}')depth--;}
+ const body=blk.slice(start,j-1);
+ const re=/([A-Za-z0-9_]+)\{([^{}]*)\}/g;let m;
+ while((m=re.exec(body))){const toks=[];
+  m[2].split('\n').forEach(l=>{let x=l.match(/keyboardKey:i=(\d+)/);if(x)toks.push('k'+x[1]);x=l.match(/mouseButton:i=(\d+)/);if(x)toks.push('m'+x[1]);});
+  out.push({id:m[1],toks,raw:m[0]});}
+ return out;}
+function hotkeysRange(blk){const i=blk.indexOf('  hotkeys{');let d=0,j=blk.indexOf('{',i);
+ for(let k=j;k<blk.length;k++){if(blk[k]=='{')d++;else if(blk[k]=='}'){d--;if(!d)return [i,k+1];}}return null}
+function block(id,combo){return `    ${id}{\n${combo.map(t=>t[0]=='m'?`      mouseButton:i=${t.slice(1)}`:`      keyboardKey:i=${t.slice(1)}`).join('\n')}\n    }\n`}
+function buildBlk(){
+ const base=state.baseBlk,hk=parseHotkeys(base),r=hotkeysRange(base);
+ const changed=new Set(Object.keys(state.changes));
+ let body='  hotkeys{\n';
+ hk.filter(h=>!changed.has(h.id)).forEach(h=>{body+='    '+h.raw.trim().replace(/\n\s*/g,'\n      ').replace(/\n      \}$/,'\n    }')+'\n\n'});
+ changed.forEach(id=>{const cs=state.changes[id];if(!cs.length)body+=`    ${id}{}\n\n`;else cs.forEach(c=>body+=block(id,c)+'\n');});
+ body+='  }';
+ return base.slice(0,r[0])+body+base.slice(r[1]);}
+function applyImported(blk){
+ const hk=parseHotkeys(blk);state.baseBlk=blk;state.changes={};
+ const by={};hk.forEach(h=>{(by[h.id]=by[h.id]||[]).push(h.toks)});
+ ACTIONS.forEach(a=>{if(by[a.id]){a.keys=by[a.id].filter(t=>t.length);a.st='conf';a.g=0;}});
+ save();}
+
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2600)}
+function downloadBlk(){
+ const txt=buildBlk(),name='SU30MKK_controles.blk';
+ if(window.Android&&Android.saveFile){Android.saveFile(name,txt);return}
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain'}));a.download=name;document.body.appendChild(a);a.click();a.remove();toast('Descargado: '+name)}
+window.onSavedFile=ok=>toast(ok?'Archivo guardado ✔':'No se guardó');
+
+function conflicts(){const map={},bad=new Set();
+ ACTIONS.forEach(a=>bindOf(a).forEach(c=>{const k=[...c].sort().join('+');(map[k]=map[k]||[]).push(a.id)}));
+ Object.values(map).forEach(ids=>{if(ids.length>1)ids.forEach(i=>bad.add(i))});return bad}
+
+function renderCtrl(){
+ const bad=conflicts(),q=($('csearch').value||'').toLowerCase();
+ let h='';
+ Object.keys(CAT).forEach(c=>{const list=ACTIONS.filter(a=>a.cat==c&&(!q||(a.n+' '+a.d).toLowerCase().includes(q)));if(!list.length)return;
+  h+=`<div class="hd"><div class="cico" style="background:${CAT[c].c}22;color:${CAT[c].c}">${ico(CAT[c].i)}</div><h3>${c}</h3><span class="ln"></span></div><div class="card" style="padding:4px 10px">`;
+  list.forEach(a=>{const b=BADGE[statusOf(a)];
+   h+=`<div class="ctrlrow${bad.has(a.id)?' conflict':''}"><div class="nm"><b>${a.n}</b> <span class="tag ${b[0]}">${b[1]}</span>${bad.has(a.id)?' <span class="tag t-no">⚠ repetida</span>':''}<small>${a.d}</small></div>
+   <div class="kb">${combosHTML(bindOf(a))}</div>
+   <div style="display:flex;gap:4px"><button class="ibtn" title="Cambiar" onclick="capStart('${a.id}')">${ico('edit')}</button>${state.changes[a.id]!==undefined?`<button class="ibtn" title="Restaurar" onclick="resetOne('${a.id}')">${ico('reset')}</button>`:''}</div></div>`});
+  h+='</div>'});
+ const others=parseHotkeys(state.baseBlk).filter(x=>!ACTIONS.some(a=>a.id==x.id)&&x.toks.length);
+ if(others.length&&!q){h+=`<details class="card mt"><summary class="sm" style="cursor:pointer">Otras teclas de tu archivo (${others.length}) · se conservan al exportar</summary>`;
+  others.forEach(o=>h+=`<div class="ctrlrow"><div class="nm"><code class="sm">${o.id}</code></div><div class="kb">${comboHTML(o.toks)}</div></div>`);h+='</details>'}
+ $('ctrlList').innerHTML=h;
+ $('ctrlCount').textContent=Object.keys(state.changes).length;}
+function resetOne(id){delete state.changes[id];save();renderCtrl();renderFunc();}
+function resetAll(){if(!confirm('¿Borrar todos tus cambios y volver al archivo original?'))return;state={changes:{},baseBlk:ORIG_BLK};save();location.reload()}
+function importBlk(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{applyImported(r.result);renderCtrl();renderFunc();toast('Archivo importado ✔')};r.readAsText(f)}
+
+let capId=null,capCombo=[];
+function capStart(id){capId=id;capCombo=[];const a=ACTIONS.find(x=>x.id==id);
+ $('capTitle').textContent=a.n;$('capKeys').innerHTML='<span class="sm">Pulsa la tecla o combinación…</span>';
+ $('capture').classList.add('on')}
+function capEnd(save_){$('capture').classList.remove('on');
+ if(save_!==undefined){state.changes[capId]=save_;save();renderCtrl();renderFunc();
+  const bad=conflicts();if(bad.has(capId))toast('⚠ Esa tecla ya la usa otra acción');else toast('Guardado ✔');}
+ capId=null}
+function capManual(){const c=[];
+ if($('mCtrl').checked)c.push('k29');if($('mShift').checked)c.push('k42');if($('mAlt').checked)c.push('k56');
+ const v=$('mKey').value;c.push(v[0]=='m'?v:'k'+v);capEnd([c])}
+function fillManual(){let h='<optgroup label="Teclado">';
+ Object.entries(KNAME).filter(([n])=>!MODS.includes(+n)).sort((a,b)=>a[1].localeCompare(b[1])).forEach(([n,t])=>h+=`<option value="${n}">${t}</option>`);
+ h+='</optgroup><optgroup label="Mouse">';Object.entries(MNAME).forEach(([n,t])=>h+=`<option value="m${n}">${t}</option>`);$('mKey').innerHTML=h+'</optgroup>';}
+function showCap(){$('capKeys').innerHTML=capCombo.length?comboHTML(capCombo):''}
+document.addEventListener('keydown',e=>{if(!capId)return;e.preventDefault();
+ if(e.code=='Escape'&&!capCombo.length){capEnd();return}
+ const n=DIK[e.code];if(!n)return;const t='k'+n;
+ if(!capCombo.includes(t))capCombo.push(t);showCap();
+ if(!MODS.includes(n)){const c=[...capCombo.filter(x=>MODS.includes(+x.slice(1))),t];setTimeout(()=>capEnd([c]),250)}});
+document.addEventListener('keyup',e=>{if(!capId)return;const n=DIK[e.code];
+ if(n&&MODS.includes(n)&&capCombo.length&&capCombo.every(x=>MODS.includes(+x.slice(1)))){setTimeout(()=>{if(capId)capEnd([capCombo.slice()])},150)}});
+function capMouse(e){if(!capId||!e.target.closest('#capPad'))return;e.preventDefault();
+ const m={0:0,1:2,2:1,3:3,4:4}[e.button];const c=[...capCombo.filter(x=>MODS.includes(+x.slice(1))),'m'+m];capEnd([c])}
+function capWheel(e){if(!capId||!e.target.closest('#capPad'))return;e.preventDefault();capEnd([[...capCombo,'m'+(e.deltaY<0?5:6)]])}
+
+function renderFunc(){
+ let h='';
+ Object.keys(CAT).filter(c=>c!='Otros').forEach(c=>{
+  h+=`<div class="hd"><div class="cico" style="background:${CAT[c].c}22;color:${CAT[c].c}">${ico(CAT[c].i)}</div><h3>${c}</h3><span class="ln"></span></div><div class="fgrid">`;
+  ACTIONS.filter(a=>a.cat==c).forEach(a=>{const b=BADGE[statusOf(a)];
+   h+=`<div class="fcard"><div class="top"><b>${a.n}</b><span class="tag ${b[0]}">${b[1]}</span></div><div class="kb">${combosHTML(bindOf(a))}</div>
+   <p>${a.d}</p><p>${ico('bulb','width:13px;height:13px;color:var(--a)')} ${a.w}</p>
+   <div class="acts">${a.part?`<button onclick="go3d('${a.part}')">${ico('cube','width:13px;height:13px')}Ver en 3D</button>`:''}<button onclick="go('ctrl','teclas');capStart('${a.id}')">${ico('edit','width:13px;height:13px')}Cambiar tecla</button></div></div>`});
+  h+='</div>'});
+ $('funcList').innerHTML=h;}
+
+/* ================= 3D ================= */
+let V3=null;
+const PARTS={
+ radar:{n:"Radar N001VE",d:"Detecta aviones hasta ~100 km.",acts:["ID_SENSOR_SWITCH","ID_SENSOR_MODE_SWITCH","ID_SENSOR_TARGET_SWITCH","ID_SENSOR_TARGET_LOCK"]},
+ irst:{n:"IRST OLS-30",d:"Sensor de calor + telémetro láser. Sin alarma para el enemigo.",acts:["ID_SENSOR_TYPE_SWITCH"]},
+ canopy:{n:"Cabina",d:"Dos asientos. Mira en el casco para disparar R-73E mirando al enemigo.",acts:["ID_TOGGLE_COCKPIT_DOOR"],anim:"canopy"},
+ airbrake:{n:"Freno aéreo",d:"Placa grande sobre el lomo.",acts:["ID_AIR_BRAKE"],anim:"airbrake"},
+ flaps:{n:"Flaps",d:"Borde trasero interior del ala.",acts:["ID_FLAPS"],anim:"flaps"},
+ slats:{n:"Slats",d:"Se bajan solos al girar fuerte para evitar la pérdida.",acts:[],anim:"slats"},
+ ailerons:{n:"Alerones",d:"Hacen rotar el avión (alabeo). Con el mouse.",acts:[],anim:"ailerons"},
+ stabs:{n:"Estabilizadores",d:"Suben o bajan la nariz (cabeceo).",acts:[],anim:"stabs"},
+ rudders:{n:"Timones (2 colas)",d:"Giran la nariz a los lados (guiñada).",acts:[],anim:"rudders"},
+ gear:{n:"Tren de aterrizaje",d:"Rueda de nariz + 2 principales.",acts:["ID_GEAR"],anim:"gear"},
+ nozzles:{n:"Motores AL-31F",d:"Postcombustión = mucha velocidad y mucho calor (más fácil para misiles IR).",acts:["ID_TOGGLE_ENGINE"],anim:"ab"},
+ gun:{n:"Cañón GSh-30-1",d:"30 mm, 150 balas, raíz del ala derecha.",acts:["ID_FIRE_MGUNS"],anim:"gun"},
+ weapons:{n:"Pilones y misiles",d:"12 puntos de carga. Puntas: R-73E / PL-8B.",acts:["ID_OPEN_VISUAL_WEAPON_SELECTOR","ID_AAM","ID_WEAPON_LOCK","ID_TOGGLE_GM_VIEW","ID_BOMBS"]},
+ cm:{n:"Contramedidas",d:"Bengalas y chaff en el 'aguijón' de la cola.",acts:["ID_FLARES"],anim:"cm"},
+ chute:{n:"Paracaídas",d:"Guardado en la cola. Solo al aterrizar.",acts:["ID_CHUTE"],anim:"chute"},
+ probe:{n:"Sonda de repostaje",d:"Retráctil, a la izquierda de la cabina. Decorativa en el juego.",acts:[],anim:"probe"}
+};
+function initV3(){
+ if(V3)return;const wrap=$('v3wrap');
+ const R=new THREE.WebGLRenderer({antialias:true,alpha:true});R.setPixelRatio(Math.min(devicePixelRatio,2));wrap.appendChild(R.domElement);
+ const S=new THREE.Scene(),C=new THREE.PerspectiveCamera(40,1,0.1,200);
+ S.add(new THREE.HemisphereLight(0xdcecff,0x1a2633,1.0));const dl=new THREE.DirectionalLight(0xffffff,1.0);dl.position.set(8,14,10);S.add(dl);const dl2=new THREE.DirectionalLight(0x88aaff,.35);dl2.position.set(-10,-4,-8);S.add(dl2);
+ const plane=new THREE.Group();S.add(plane);
+ const pick=[];const mats={};
+ function M(col,part,o={}){const m=new THREE.MeshStandardMaterial(Object.assign({color:col,metalness:.3,roughness:.55},o));if(part)(mats[part]=mats[part]||[]).push(m);return m}
+ function add(geo,mat,part,parent=plane){const me=new THREE.Mesh(geo,mat);me.userData.part=part;parent.add(me);if(part)pick.push(me);return me}
+ const GREY=0x8b98a4,DARK=0x5a6672,LIGHT=0x9eabb7;
+ const fp=[[0,11],[.32,10.3],[.62,9.2],[.86,8],[1,6.8],[1.05,5],[1.1,3],[1.15,0],[1.1,-4],[.9,-7],[.55,-9.6],[.3,-10.9],[0,-11]].map(p=>new THREE.Vector2(p[0],p[1]));
+ const fus=new THREE.LatheGeometry(fp,32);fus.rotateX(Math.PI/2);fus.scale(1.15,.82,1);add(fus,M(GREY),null);
+ const rp=[[0,11.05],[.34,10.3],[.64,9.2],[.87,8.05],[.88,8]].map(p=>new THREE.Vector2(p[0],p[1]));
+ const rad=new THREE.LatheGeometry(rp,32);rad.rotateX(Math.PI/2);rad.scale(1.17,.84,1);add(rad,M(0x3f4a55,'radar'),'radar');
+ [-1,1].forEach(s=>{
+  const eng=new THREE.CylinderGeometry(.72,.68,7.5,24);eng.rotateX(Math.PI/2);const e=add(eng,M(DARK),null);e.position.set(s*1.35,-.45,-5.6);
+  const i=add(new THREE.BoxGeometry(1.15,1.0,3.4),M(DARK),null);i.position.set(s*1.35,-.6,0.2);
+  const l=add(new THREE.BoxGeometry(1.15,1.0,.15),M(0x222831),null);l.position.set(s*1.35,-.6,1.95);
+  const noz=new THREE.CylinderGeometry(.62,.5,1.2,24,1,true);noz.rotateX(Math.PI/2);const n=add(noz,M(0x3a3f45,'nozzles',{side:THREE.DoubleSide,metalness:.7}),'nozzles');n.position.set(s*1.35,-.45,-9.9);
+  const ab=new THREE.ConeGeometry(.5,3,20,1,true);ab.rotateX(-Math.PI/2);const a=new THREE.Mesh(ab,new THREE.MeshBasicMaterial({color:0xff8a1e,transparent:true,opacity:0,side:THREE.DoubleSide}));
+  a.position.set(s*1.35,-.45,-12);plane.add(a);(plane.userData.ab=plane.userData.ab||[]).push(a);});
+ const wingMat=M(GREY);
+ function wing(s){const sh=new THREE.Shape();sh.moveTo(1.0,6.4);sh.lineTo(2.1,1.6);sh.lineTo(7.6,-4.6);sh.lineTo(7.6,-5.2);sh.lineTo(4.9,-5.05);sh.lineTo(1.6,-5.3);sh.lineTo(1.0,-5.3);
+  const g=new THREE.ExtrudeGeometry(sh,{depth:.1,bevelEnabled:false});g.rotateX(Math.PI/2);if(s<0)g.scale(-1,1,1);const w=add(g,wingMat,null);w.position.y=-.05;return w}
+ wing(1);wing(-1);
+ const surf=plane.userData.surf={};
+ function hinge(name,part,s,x0,x1,z,chord,col,y=-.1){const g=new THREE.Group();g.position.set(0,y,z);plane.add(g);
+  const len=Math.abs(x1-x0);const m=add(new THREE.BoxGeometry(len,.08,chord),M(col,part),part,g);m.position.set(s*(x0+len/2),0,-chord/2);
+  (surf[name]=surf[name]||[]).push(g);return g}
+ [-1,1].forEach(s=>{hinge('flaps','flaps',s,1.7,4.8,-5.15,.85,LIGHT);hinge('ailerons','ailerons',s,4.9,7.4,-5.05,.6,LIGHT);
+  const sg=new THREE.Group();sg.position.set(s*4.85,-.05,-1.5);sg.rotation.y=s>0?0.845:Math.PI-0.845;plane.add(sg);
+  add(new THREE.BoxGeometry(7.4,.09,.32),M(LIGHT,'slats'),'slats',sg);(surf.slats=surf.slats||[]).push(sg);});
+ [-1,1].forEach(s=>{const g=new THREE.Group();g.position.set(s*1.9,-.35,-8.6);plane.add(g);
+  const sh=new THREE.Shape();sh.moveTo(0,1.0);sh.lineTo(3.4,-1.3);sh.lineTo(3.4,-1.9);sh.lineTo(0,-1.6);const geo=new THREE.ExtrudeGeometry(sh,{depth:.08,bevelEnabled:false});geo.rotateX(Math.PI/2);if(s<0)geo.scale(-1,1,1);
+  add(geo,M(LIGHT,'stabs'),'stabs',g);(surf.stabs=surf.stabs||[]).push(g);});
+ [-1,1].forEach(s=>{const t=new THREE.Group();t.position.set(s*1.55,.35,0);t.rotation.z=-s*0.12;plane.add(t);
+  const sh=new THREE.Shape();sh.moveTo(-5.4,0);sh.lineTo(-8.6,3.9);sh.lineTo(-9.5,3.9);sh.lineTo(-9.3,.8);sh.lineTo(-9.0,0);
+  const geo=new THREE.ExtrudeGeometry(sh,{depth:.1,bevelEnabled:false});geo.rotateY(-Math.PI/2);add(geo,M(GREY),null,t);
+  const rg=new THREE.Group();rg.position.set(0,0,-9.3);t.add(rg);const r=add(new THREE.BoxGeometry(.08,3.0,.7),M(LIGHT,'rudders'),'rudders',rg);r.position.set(0,2.3,-.35);(surf.rudders=surf.rudders||[]).push(rg);
+  // estrella roja de la PLAAF en la cola
+  const star=new THREE.Mesh(new THREE.CircleGeometry(.45,5),new THREE.MeshBasicMaterial({color:0xd8261c,side:THREE.DoubleSide}));star.position.set(s*.07,2.3,-8.3);star.rotation.y=Math.PI/2;t.add(star);});
+ const cg=new THREE.Group();cg.position.set(0,.72,4.3);plane.add(cg);
+ const cgeo=new THREE.SphereGeometry(1,24,16,0,Math.PI*2,0,Math.PI/2);cgeo.scale(.58,.55,2.1);
+ const can=add(cgeo,M(0x88c8ff,'canopy',{transparent:true,opacity:.55,metalness:.9,roughness:.1}),'canopy',cg);can.position.z=2.0;plane.userData.canopy=cg;
+ const ir=add(new THREE.SphereGeometry(.2,16,12),M(0xc8e4ff,'irst',{metalness:1,roughness:.05}),'irst');ir.position.set(.28,.75,7.9);
+ const abg=new THREE.Group();abg.position.set(0,.98,2.2);plane.add(abg);const abm=add(new THREE.BoxGeometry(1.3,.06,2.2),M(0x7d8996,'airbrake'),'airbrake',abg);abm.position.z=-1.1;plane.userData.airbrake=abg;
+ const gun=add(new THREE.CylinderGeometry(.07,.07,1.2,10),M(0x222222,'gun'),'gun');gun.rotation.x=Math.PI/2;gun.position.set(1.55,.15,3.8);
+ const muzzle=new THREE.Mesh(new THREE.SphereGeometry(.25,10,8),new THREE.MeshBasicMaterial({color:0xffd23d,transparent:true,opacity:0}));muzzle.position.set(1.55,.15,4.6);plane.add(muzzle);plane.userData.muzzle=muzzle;
+ const pg=new THREE.Group();pg.position.set(-.75,.55,7.6);plane.add(pg);const pr=add(new THREE.CylinderGeometry(.05,.05,1.1,8),M(0x666666,'probe'),'probe',pg);pr.rotation.x=Math.PI/2;pr.position.z=-.3;plane.userData.probe=pg;
+ const st=add(new THREE.BoxGeometry(.5,.35,2.4),M(DARK,'cm'),'cm');st.position.set(0,-.2,-10.2);
+ const ch=add(new THREE.CylinderGeometry(.18,.18,.5,12),M(0x4a4a3a,'chute'),'chute');ch.rotation.x=Math.PI/2;ch.position.set(0,-.2,-11.55);
+ const chuteG=new THREE.Group();chuteG.position.set(0,-.2,-11.8);plane.add(chuteG);chuteG.visible=false;
+ const canopyC=new THREE.Mesh(new THREE.SphereGeometry(1.4,16,8,0,Math.PI*2,0,Math.PI/2),new THREE.MeshStandardMaterial({color:0xe85030,side:THREE.DoubleSide}));canopyC.rotation.x=-Math.PI/2;canopyC.position.z=-6;chuteG.add(canopyC);
+ [[.9,.9],[-.9,.9],[.9,-.9],[-.9,-.9]].forEach(p=>{const l=new THREE.Mesh(new THREE.CylinderGeometry(.01,.01,6,4),new THREE.MeshBasicMaterial({color:0xdddddd}));l.position.set(p[0]/2,p[1]/2,-3);l.rotation.x=Math.PI/2;chuteG.add(l)});
+ plane.userData.chute=chuteG;
+ const flares=[];for(let i=0;i<8;i++){const f=new THREE.Mesh(new THREE.SphereGeometry(.18,8,6),new THREE.MeshBasicMaterial({color:0xffe08a}));f.visible=false;S.add(f);flares.push(f)}plane.userData.flares=flares;
+ const gearG=new THREE.Group();plane.add(gearG);plane.userData.gear=gearG;
+ function leg(x,z,len,r){const g=new THREE.Group();g.position.set(x,-.7,z);gearG.add(g);
+  const s=add(new THREE.CylinderGeometry(.07,.07,len,8),M(0xb0b0b0,'gear'),'gear',g);s.position.y=-len/2;
+  const w=add(new THREE.CylinderGeometry(r,r,.25,16),M(0x1d1d1d,'gear'),'gear',g);w.rotation.z=Math.PI/2;w.position.y=-len;return g}
+ leg(0,7.2,1.3,.3);leg(2.2,-2.2,1.5,.45);leg(-2.2,-2.2,1.5,.45);
+ function missile(x,y,z,len,col){const g=new THREE.Group();g.position.set(x,y,z);plane.add(g);
+  const b=add(new THREE.CylinderGeometry(.11,.11,len,10),M(0xe8e8e8,'weapons'),'weapons',g);b.rotation.x=Math.PI/2;
+  const n=add(new THREE.ConeGeometry(.11,.4,10),M(col,'weapons'),'weapons',g);n.rotation.x=Math.PI/2;n.position.z=len/2+.2;
+  const f=add(new THREE.BoxGeometry(.5,.02,.3),M(0xcccccc,'weapons'),'weapons',g);f.position.z=-len/2+.2;const f2=f.clone();f2.rotation.z=Math.PI/2;g.add(f2)}
+ [-1,1].forEach(s=>{missile(s*7.75,-.12,-4.3,2.9,0xff9d3d);missile(s*5.6,-.45,-2.6,3.6,0x7dff5a);missile(s*3.7,-.45,-1.0,3.6,0x7dff5a);missile(s*1.35,-1.25,0,3.6,0x7dff5a)});
+ let th=0.8,ph=1.05,rd=34,tgt=new THREE.Vector3(0,0,-1);
+ function cam(){C.position.set(tgt.x+rd*Math.sin(ph)*Math.sin(th),tgt.y+rd*Math.cos(ph),tgt.z+rd*Math.sin(ph)*Math.cos(th));C.lookAt(tgt)}
+ cam();
+ const el=R.domElement;let pinch=null,moved=0;const ptrs=new Map();
+ el.addEventListener('pointerdown',e=>{el.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=0;
+  if(ptrs.size==2){const p=[...ptrs.values()];pinch=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y)}});
+ el.addEventListener('pointermove',e=>{const p=ptrs.get(e.pointerId);if(!p)return;const dx=e.clientX-p.x,dy=e.clientY-p.y;
+  if(ptrs.size==1){th-=dx*.008;ph=Math.min(3.0,Math.max(.15,ph-dy*.008));moved+=Math.abs(dx)+Math.abs(dy)}
+  p.x=e.clientX;p.y=e.clientY;
+  if(ptrs.size==2){const q=[...ptrs.values()],d=Math.hypot(q[0].x-q[1].x,q[0].y-q[1].y);rd=Math.min(70,Math.max(10,rd*pinch/d));pinch=d;moved=99}cam()});
+ el.addEventListener('pointerup',e=>{ptrs.delete(e.pointerId);if(moved<6)clickAt(e)});
+ el.addEventListener('pointercancel',e=>ptrs.delete(e.pointerId));
+ el.addEventListener('wheel',e=>{e.preventDefault();rd=Math.min(70,Math.max(10,rd*(e.deltaY>0?1.1:.9)));cam()},{passive:false});
+ const ray=new THREE.Raycaster(),mv=new THREE.Vector2();
+ function clickAt(e){const r=el.getBoundingClientRect();mv.x=((e.clientX-r.left)/r.width)*2-1;mv.y=-((e.clientY-r.top)/r.height)*2+1;ray.setFromCamera(mv,C);
+  const h=ray.intersectObjects(pick,false)[0];if(h)selectPart(h.object.userData.part)}
+ function resize(){const w=wrap.clientWidth,h=wrap.clientHeight;if(!w||!h)return;R.setSize(w,h,false);C.aspect=w/h;C.updateProjectionMatrix();if(!resize.done){rd=C.aspect<1?Math.min(70,38/C.aspect):34;resize.done=1;cam()}}
+ window.addEventListener('resize',resize);
+ const A={flaps:0,airbrake:0,gear:1,canopy:0,ab:0,slats:0,probe:0,chute:0,ailerons:0,stabs:0,rudders:0};const T=Object.assign({},A);
+ let wig=null,wigT=0,cmT=-1,gunT=-1,auto=true,last=performance.now();
+ V3={A,T,resize,setAuto:v=>auto=v,wiggle:n=>{wig=n;wigT=0},cm:()=>{cmT=0},gun:()=>{gunT=0},running:false};
+ function loop(now){if(!V3.running)return;requestAnimationFrame(loop);const dt=Math.min(.05,(now-last)/1000);last=now;
+  Object.keys(T).forEach(k=>{A[k]+=(T[k]-A[k])*Math.min(1,dt*4)});
+  surf.flaps.forEach(g=>g.rotation.x=-A.flaps*.6);
+  plane.userData.airbrake.rotation.x=A.airbrake*.9;plane.userData.canopy.rotation.x=-A.canopy*.5;
+  plane.userData.gear.scale.y=Math.max(.001,A.gear);plane.userData.gear.visible=A.gear>.02;
+  plane.userData.probe.position.z=7.6+A.probe*.6;plane.userData.chute.visible=A.chute>.05;plane.userData.chute.scale.setScalar(Math.max(.01,A.chute));
+  plane.userData.ab.forEach(a=>{a.material.opacity=A.ab*(.65+.2*Math.sin(now/40));a.scale.set(1,1,.8+.3*Math.sin(now/55))});
+  if(wig){wigT+=dt;const v=Math.sin(wigT*6)*.45;
+   if(wig=='ailerons')surf.ailerons.forEach((g,i)=>g.rotation.x=(i%2?v:-v));
+   if(wig=='stabs')surf.stabs.forEach(g=>g.rotation.x=v*.6);
+   if(wig=='rudders')surf.rudders.forEach(g=>g.rotation.y=v);
+   if(wig=='slats')surf.slats.forEach(g=>g.children[0].position.y=-Math.abs(v)*.25);
+   if(wigT>3){surf.ailerons.forEach(g=>g.rotation.x=0);surf.stabs.forEach(g=>g.rotation.x=0);surf.rudders.forEach(g=>g.rotation.y=0);wig=null}}
+  if(cmT>=0){cmT+=dt;plane.userData.flares.forEach((f,i)=>{const t=cmT-i*.12;f.visible=t>0&&t<2.2;if(f.visible){const s=i%2?1:-1;f.position.set(s*(.4+t*2.2),-.2-t*t*1.6,-10.5-t*4)}});if(cmT>3.5)cmT=-1}
+  if(gunT>=0){gunT+=dt;plane.userData.muzzle.material.opacity=(Math.floor(gunT*20)%2)?.9:0;if(gunT>1.5){gunT=-1;plane.userData.muzzle.material.opacity=0}}
+  if(auto&&!ptrs.size){th+=dt*.15;cam()}
+  R.render(S,C)}
+ V3.start=()=>{if(V3.running)return;V3.running=true;resize();last=performance.now();requestAnimationFrame(loop)};
+ V3.stop=()=>V3.running=false;
+ V3.highlight=p=>{Object.entries(mats).forEach(([k,ms])=>ms.forEach(m=>{m.emissive=new THREE.Color(k==p?0x7a5a10:0x000000)}))};
+}
+function selectPart(p){const P=PARTS[p];if(!P||!V3)return;V3.highlight(p);V3.setAuto(false);
+ const T=V3.T,an=P.anim;let actBtn='';
+ if(an&&['flaps','airbrake','gear','canopy','ab','probe','chute'].includes(an))actBtn=`<button class="btn" onclick="toggleAnim('${an}')">${ico('play')}Activar / desactivar</button>`;
+ if(an&&['ailerons','stabs','rudders','slats'].includes(an))actBtn=`<button class="btn" onclick="V3.wiggle('${an}')">${ico('play')}Ver movimiento</button>`;
+ if(an=='cm')actBtn=`<button class="btn" onclick="V3.cm()">${ico('play')}Soltar bengalas</button>`;
+ if(an=='gun')actBtn=`<button class="btn" onclick="V3.gun()">${ico('play')}Disparar</button>`;
+ const acts=P.acts.map(id=>{const a=ACTIONS.find(x=>x.id==id);return a?`<div class="ctrlrow"><div class="nm"><b>${a.n}</b><small>${a.w}</small></div><div class="kb">${combosHTML(bindOf(a))}</div></div>`:''}).join('');
+ $('v3info').innerHTML=`<div class="card"><h3>${P.n}</h3><p class="sm">${P.d}</p>${actBtn}${acts?'<div class="mt">'+acts+'</div>':'<p class="sm">Automático o con el mouse: no necesita tecla.</p>'}</div>`;
+ [...document.querySelectorAll('#v3parts button')].forEach(b=>b.classList.toggle('on',b.dataset.p==p));
+ if(an&&['flaps','airbrake','canopy','ab','probe'].includes(an)&&T[an]==0)toggleAnim(an);
+ if(an&&['ailerons','stabs','rudders','slats'].includes(an))V3.wiggle(an);}
+function toggleAnim(a){const T=V3.T;T[a]=T[a]>0.5?0:1}
+function go3d(p){go('avion','3d');setTimeout(()=>selectPart(p),150)}
+$('v3parts').innerHTML=Object.entries(PARTS).map(([k,p])=>`<button data-p="${k}" onclick="selectPart('${k}')">${p.n}</button>`).join('');
+
+/* ================= CATÁLOGO: aviones premium comprables (paquete o águilas) ================= */
+/* fila: [id, nombre, nación, rango, BR(RB), rol, precioGE, idPaqueteTienda, vel.máx, tripulación, motor, cañones, armas, misilesAA] */
+const PREM=%%CATALOG%%;
+const NATS=[['usa','EE. UU.','#2b4f9e'],['germany','Alemania','#7a6a3a'],['ussr','URSS','#b3261e'],['britain','Reino Unido','#24467a'],['japan','Japón','#c8102e'],
+ ['china','China','#b3261e'],['italy','Italia','#2e7d4f'],['france','Francia','#2c4f9e'],['sweden','Suecia','#1c5ea8'],['israel','Israel','#2b63b8']];
+const FLAGSVG={
+ usa:'<rect width="30" height="20" fill="#fff"/><g fill="#b22234"><rect width="30" height="1.54"/><rect y="3.08" width="30" height="1.54"/><rect y="6.16" width="30" height="1.54"/><rect y="9.24" width="30" height="1.54"/><rect y="12.32" width="30" height="1.54"/><rect y="15.4" width="30" height="1.54"/><rect y="18.46" width="30" height="1.54"/></g><rect width="13" height="10.8" fill="#3c3b6e"/>',
+ germany:'<rect width="30" height="20" fill="#ffce00"/><rect width="30" height="13.3" fill="#dd0000"/><rect width="30" height="6.67" fill="#000"/>',
+ ussr:'<rect width="30" height="20" fill="#cc0000"/><polygon points="5,2 6,4.6 3.2,3 6.8,3 4,4.6" fill="#ffd700"/><path d="M3.5 7.5l3 3M6 7l-3 4" stroke="#ffd700" stroke-width=".8"/>',
+ britain:'<rect width="30" height="20" fill="#012169"/><path d="M0 0L30 20M30 0L0 20" stroke="#fff" stroke-width="4"/><path d="M0 0L30 20M30 0L0 20" stroke="#c8102e" stroke-width="1.5"/><path d="M15 0v20M0 10h30" stroke="#fff" stroke-width="6"/><path d="M15 0v20M0 10h30" stroke="#c8102e" stroke-width="3.4"/>',
+ japan:'<rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#bc002d"/>',
+ china:'<rect width="30" height="20" fill="#de2910"/><g fill="#ffde00"><polygon points="5,2 6.2,5.6 2.4,3.4 7.6,3.4 3.8,5.6"/><circle cx="10" cy="2" r=".8"/><circle cx="12" cy="4" r=".8"/><circle cx="12" cy="7" r=".8"/><circle cx="10" cy="9" r=".8"/></g>',
+ italy:'<rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#009246"/><rect x="20" width="10" height="20" fill="#ce2b37"/>',
+ france:'<rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#0055a4"/><rect x="20" width="10" height="20" fill="#ef4135"/>',
+ sweden:'<rect width="30" height="20" fill="#006aa7"/><path d="M11 0v20M0 10h30" stroke="#fecc00" stroke-width="4"/>',
+ israel:'<rect width="30" height="20" fill="#fff"/><rect y="2" width="30" height="2.5" fill="#0038b8"/><rect y="15.5" width="30" height="2.5" fill="#0038b8"/><g fill="none" stroke="#0038b8" stroke-width=".9"><polygon points="15,6 18,11.2 12,11.2"/><polygon points="15,14 12,8.8 18,8.8"/></g>'};
+const FLAGURI={};NATS.forEach(([k])=>FLAGURI[k]=`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20">'+FLAGSVG[k]+'</svg>')}`);
+const flag=k=>`<span class="flag" style="background:url('${FLAGURI[k]}') center/cover"></span>`;
+const ROLES={f:['Caza','plane'],a:['Ataque','bomb'],b:['Bombardero','bomb']};
+const WPN={m:['Misiles aire-aire','missile'],g:['Armas guiadas aire-tierra','target'],b:['Bombas','bomb'],r:['Cohetes','rocket'],t:['Torpedos','cruise']};
+const ROM=['','I','II','III','IV','V','VI','VII','VIII','IX'];
+const AC=PREM.map(r=>({id:r[0],n:r[1],nat:NATS[r[2]][0],rk:r[3],br:r[4],role:r[5],ge:r[6],pk:r[7],spd:r[8],crew:r[9],eng:r[10],guns:r[11],w:r[12],aam:r[13]}));
+const ACI={};AC.forEach(a=>ACI[a.id]=a);
+const OWN_LS='wt_own';let OWN;try{OWN=JSON.parse(localStorage.getItem(OWN_LS))||['su_30mkk']}catch(e){OWN=['su_30mkk']}
+const CF={buy:'all',nat:'all',role:'all',rk:'all'};
+const geFmt=n=>n.toLocaleString('es-PE');
+function buyTags(a){return (a.ge?`<span class="buy ge"><i class="eagle"></i>${geFmt(a.ge)}</span>`:'')+(a.pk?`<span class="buy pk">${ico('gift','width:12px;height:12px')}Paquete</span>`:'')}
+function fbtns(id,list,key){$(id).innerHTML=list.map(([v,l,x])=>`<button class="${CF[key]==v?'on':''}" onclick="CF.${key}='${v}';renderCat()">${x||''}${l}</button>`).join('')}
+function renderCat(){
+ const geN=AC.filter(a=>a.ge).length,pkN=AC.filter(a=>a.pk).length;
+ fbtns('cfBuy',[['all',`Todos (${AC.length})`],['ge',`Águilas doradas (${geN})`,'<i class="eagle"></i>'],['pk',`Paquetes (${pkN})`,ico('gift','width:14px;height:14px')],['own','Mis aviones',ico('check','width:14px;height:14px')]],'buy');
+ fbtns('cfNat',[['all','Todas las naciones'],...NATS.map(([k,n])=>[k,n,flag(k)])],'nat');
+ fbtns('cfRole',[['all','Todos los tipos'],...Object.entries(ROLES).map(([k,v])=>[k,v[0]])],'role');
+ fbtns('cfRank',[['all','Todos los rangos'],...[1,2,3,4,5,6,7,8].map(r=>[String(r),'Rango '+ROM[r]])],'rk');
+ const q=($('cq').value||'').toLowerCase().replace(/[\s\-\.]/g,'');
+ const L=AC.filter(a=>(CF.buy=='all'||(CF.buy=='ge'&&a.ge)||(CF.buy=='pk'&&a.pk)||(CF.buy=='own'&&OWN.includes(a.id)))&&(CF.nat=='all'||a.nat==CF.nat)&&(CF.role=='all'||a.role==CF.role)&&(CF.rk=='all'||a.rk==+CF.rk)&&(!q||a.n.toLowerCase().replace(/[\s\-\.]/g,'').includes(q)));
+ $('cCount').textContent=L.length+' avión'+(L.length==1?'':'es');
+ $('cList').innerHTML=L.length?L.map(a=>`<div class="ci" onclick="go('ficha','${a.id}')"><div class="sl">${ico('plane')}<img loading="lazy" src="${wtSlot(a.id)}" alt="" onload="this.previousElementSibling&&this.previousElementSibling.remove()" onerror="this.remove()"></div><div class="tx"><b>${a.n}</b><small>${flag(a.nat)}${ROM[a.rk]} · BR ${a.br} · ${ROLES[a.role][0]}</small><div style="display:flex;gap:4px;margin-top:3px">${buyTags(a)}</div></div>${OWN.includes(a.id)?`<span class="own">${ico('check')}</span>`:''}</div>`).join(''):'<div class="empty">No hay aviones con esos filtros.</div>';
+}
+function ficha(id){const a=ACI[id];if(!a)return go('cat');const N=NATS.find(x=>x[0]==a.nat);
+ $('fHero').style.setProperty('--nc',N[2]);gx($('fHero'),a.id);
+ $('fRk').innerHTML=`${flag(a.nat)}<span class="rank">RANGO ${ROM[a.rk]}</span><span class="rank">BR ${a.br}</span><span class="rank">${N[1].toUpperCase()}</span>`;
+ $('fName').textContent=a.n;$('fRole').textContent=ROLES[a.role][0]+' premium · '+(a.ge&&a.pk?'águilas doradas o paquete':a.ge?'se compra con águilas doradas':'se compra en paquete');
+ const sp=[['speed',a.spd?a.spd.toLocaleString('es-PE')+' km/h':'—','vel. máx.'],['engine',a.eng.replace(/^(\d+) x /,'$1× '),'motor'],['crew',a.crew,a.crew==1?'tripulante':'tripulantes'],
+  ['gun',(a.guns.split(' · ')[0]||'—').replace(/ (cannon|machine gun)s?$/,'').replace(/^(\S+ mm).*/,'$1'),a.guns?'arma principal':'sin cañón fijo'],['star','BR '+a.br,'realista'],['target',ROM[a.rk],'rango']];
+ $('fSpecs').innerHTML=sp.map(s=>`<div class="spec">${ico(s[0])}<b style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s[1]}</b><small>${s[2]}</small></div>`).join('');
+ let b='';
+ if(a.ge)b+=`<div class="opt"><div class="big" style="background:rgba(240,180,60,.15)"><i class="eagle" style="width:22px;height:22px"></i></div><div><b>${geFmt(a.ge)} águilas doradas</b><small>Cómpralo dentro del juego: hangar → árbol de ${N[1]} → rango ${ROM[a.rk]}.</small></div></div>`;
+ if(a.pk)b+=`<div class="opt"><div class="big" style="background:rgba(74,163,255,.15);color:#9fd0ff">${ico('gift')}</div><div><b>Paquete en la tienda de Gaijin</b><small>Se paga con dinero real. Normalmente incluye el avión, águilas doradas y días de cuenta premium.</small></div><a class="btn" href="https://store.gaijin.net/story.php?id=${a.pk}" target="_blank" rel="noopener" style="text-decoration:none">${ico('ext')}Ver</a></div>`;
+ $('fBuy').innerHTML=b;
+ const ws=[...a.w].map(c=>`<span class="chip">${ico(WPN[c][1])}${WPN[c][0]}</span>`).join('');
+ $('fArm').innerHTML=`<div class="wchips">${a.guns?a.guns.split(' · ').map(g=>`<span class="chip">${ico('gun')}${g.replace(/ cannon$/,' (cañón)').replace(/ machine guns?$/,' (ametralladora)')}</span>`).join(''):''}${ws}</div>${a.aam?`<p class="sm" style="margin-top:8px"><b>Misiles aire-aire:</b> ${a.aam}</p>`:''}${!a.guns&&!ws?'<p class="sm">Sin armamento ofensivo fijo.</p>':''}`;
+ const own=OWN.includes(a.id);$('fOwn').innerHTML=ico(own?'check':'plus')+(own?'Lo tengo':'Marcar "Lo tengo"');$('fOwn').style.color=own?'var(--g)':'';$('fOwn').onclick=()=>{OWN=own?OWN.filter(x=>x!=a.id):[...OWN,a.id];try{localStorage.setItem(OWN_LS,JSON.stringify(OWN))}catch(e){}ficha(id);renderMine()};
+ $('fWiki').href='https://wiki.warthunder.com/unit/'+a.id;$('fWiki').innerHTML=ico('ext')+'Ver en el wiki';
+ $('fGuide').style.display=a.id=='su_30mkk'?'':'none';
+ $('ttl').textContent=a.n;$('sttl').textContent='Catálogo · '+N[1];}
+function renderMine(){const M=OWN.map(i=>ACI[i]).filter(Boolean);
+ $('myAc').innerHTML=M.map(a=>`<div class="accard" onclick="${a.id=='su_30mkk'?"go('avion','fotos')":`go('ficha','${a.id}')`}"><div class="ph gx" style="--nc:${NATS.find(x=>x[0]==a.nat)[2]}"><img class="rd" src="${wtRender(a.id)}" alt="" style="width:90%" onerror="this.remove()"></div><div class="tx"><b>${a.n}</b><br><small>${NATS.find(x=>x[0]==a.nat)[1]} · Rango ${ROM[a.rk]}</small></div></div>`).join('')
+ +`<div class="accard soon" style="cursor:pointer;opacity:1" onclick="go('cat')"><svg class="i" style="width:28px;height:28px"><use href="#i-shop"/></svg><small style="margin-top:6px">Ver catálogo (${AC.length} aviones)</small></div>`;}
+renderMine();
+
+/* ================= NAVEGACIÓN ================= */
+const TABS=[
+ {id:'home',n:'Hangar',i:'home'},
+ {id:'cat',n:'Catálogo',i:'shop'},
+ {id:'avion',n:'Avión',i:'plane',subs:[['fotos','Fotos','photo'],['planos','Planos','blue'],['3d','3D','cube'],['func','Funciones','list']]},
+ {id:'armas',n:'Armas',i:'missile',subs:[['aa','Aire-aire','target'],['ag','Aire-tierra','bomb'],['setups','Setups','pylon']]},
+ {id:'combate',n:'Combate',i:'radar',subs:[['panel','Panel radar','radar'],['leer','Leer','eye-off'],['fijar','Fijar','lock'],['multi','Multi-blanco','multi'],['cerca','Cerca','fire'],['bvr','BVR','wave'],['partida','Partida','flight'],['defensa','Defensa','shield']]},
+ {id:'ctrl',n:'Controles',i:'keys',subs:[['teclas','Mis teclas','keys'],['instalar','Instalar .blk','down'],['prueba','Prueba','play']]}
+];
+const TILES=[['Radar','radar','combate','panel','#7dff5a'],['Misiles','missile','armas','aa','#ff9d3d'],['Setups','pylon','armas','setups','#f0b43c'],['Controles','keys','ctrl','teclas','#4aa3ff'],
+ ['Vista 3D','cube','avion','3d','#2fd4c4'],['Catálogo','shop','cat','','#ffcf6b'],['BVR','wave','combate','bvr','#c78bff'],['Defensa','shield','combate','defensa','#ff5a4d']];
+$('tiles').innerHTML=TILES.map(t=>`<div class="tile" onclick="go('${t[2]}','${t[3]}')"><div class="ic" style="background:${t[4]}1f;color:${t[4]}">${ico(t[1])}</div>${t[0]}</div>`).join('');
+$('tabbar').innerHTML=TABS.map(t=>`<button data-t="${t.id}" onclick="go('${t.id}')">${ico(t.i)}${t.n}</button>`).join('');
+const lastSub={};
+function go(tab,sub,anchor){
+ if(tab=='ficha'&&!ACI[sub]){tab='cat';sub=undefined}
+ const T=TABS.find(t=>t.id==tab);let key=tab,title=T?T.n:'Créditos';
+ if(T&&T.subs){sub=sub||lastSub[tab]||T.subs[0][0];lastSub[tab]=sub;key=tab+'/'+sub;title=T.subs.find(s=>s[0]==sub)[1]}
+ document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.dataset.v==key));
+ $('ttl').textContent=tab=='home'?'Hangar':title;$('sttl').textContent=tab=='cat'?'Premium: águilas doradas y paquetes':'Su-30MKK'+(T&&T.subs?' · '+T.n:'');
+ $('seg').innerHTML=T&&T.subs?T.subs.map(s=>`<button class="${s[0]==sub?'on':''}" onclick="go('${tab}','${s[0]}')">${ico(s[2])}${s[1]}</button>`).join(''):'';
+ const onb=$('seg').querySelector('.on');if(onb)onb.scrollIntoView({inline:'center',block:'nearest'});
+ document.querySelectorAll('#tabbar button').forEach(b=>b.classList.toggle('on',b.dataset.t==(tab=='ficha'?'cat':T?tab:'home')));
+ if(tab=='cat')renderCat();if(tab=='ficha')ficha(sub);curTab=tab;
+ if(key=='avion/3d'){initV3();V3.start()}else if(V3)V3.stop();
+ if(key=='ctrl/teclas')renderCtrl();if(key=='avion/func')renderFunc();
+ if(anchor){setTimeout(()=>{const e=$(anchor);if(e){e.scrollIntoView({behavior:'smooth',block:'center'});e.style.outline='2px solid var(--a)';setTimeout(()=>e.style.outline='',1500)}},60)}else scrollTo(0,0);
+ try{localStorage.setItem('wt_last',JSON.stringify([tab,sub]))}catch(e){}
+}
+$('spgo').onclick=()=>{$('splash').classList.add('off')};
+/* botón atrás de Android: cierra visor/modal, ficha -> catálogo, resto -> hangar; en el hangar sale de la app */
+let curTab='home';
+window.appBack=function(){
+ if($('lb').classList.contains('on')){$('lb').classList.remove('on');return 1}
+ if($('capture').classList.contains('on')){capEnd();return 1}
+ if(!$('splash').classList.contains('off'))return 0;
+ if(curTab=='ficha'){go('cat');return 1}
+ if(curTab!='home'){go('home');return 1}
+ return 0};
+document.getElementById('capPad').addEventListener('mousedown',capMouse);document.getElementById('capPad').addEventListener('wheel',capWheel,{passive:false});
+document.getElementById('capPad').addEventListener('contextmenu',e=>e.preventDefault());
+fillManual();renderFunc();
+(function(){const h=location.hash.slice(1);
+ if(h){$('splash').classList.add('inst','off');const[t,s]=h.split('/');if(TABS.some(x=>x.id==t)||t=='creditos'||t=='ficha')return go(t,s);}
+ go('home');})();
+</script>
+</body>
+</html>
