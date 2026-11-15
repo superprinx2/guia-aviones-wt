@@ -376,6 +376,41 @@ details.more[open] summary .chev{transform:rotate(90deg)}
 .rmodes{display:flex;gap:6px;overflow-x:auto;margin-top:10px;padding-bottom:4px;scrollbar-width:none}
 .rmodes button{flex:none;background:#0d1a0d;border:1px solid #2b5a2b;color:#8fe88f;border-radius:8px;padding:7px 12px;font-family:Consolas,"Roboto Mono",monospace;font-weight:700;font-size:.8rem;cursor:pointer}
 .rmodes button.on{background:#7dff5a;color:#061006;border-color:#7dff5a}
+.rmodes button.ir{background:#1a1004;border-color:#6a4410;color:#ffcf8a}.rmodes button.ir.on{background:#ffb347;color:#1a0f00;border-color:#ffb347}
+.rtabs{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:6px;margin-top:4px}
+.rtabs button{background:var(--pn);border:1px solid var(--ln);border-radius:10px;padding:8px 6px;cursor:pointer;color:var(--t);text-align:left}
+.rtabs button b{display:block;font-size:.82rem}.rtabs button small{font-size:.68rem;color:var(--m)}
+.rtabs button.on{border-color:var(--g);background:rgba(125,255,90,.08)}.rtabs button.on b{color:var(--g)}
+.rscope.ir{border-color:#4a3008;background:#070400}
+.rcap{text-align:center;font-family:Consolas,monospace;font-size:.7rem;color:#6f9a6f;margin-top:4px;letter-spacing:1px;text-transform:uppercase}
+.coRow{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--ln)}
+.coRow:last-child{border-bottom:0}
+.coRow .n{width:22px;height:22px}
+.coRow b{display:block;font-size:.84rem}.coRow small{display:block;font-size:.74rem;color:var(--m)}
+.coRow .kb{display:flex;gap:3px;align-items:center;flex-wrap:wrap;justify-content:flex-end;max-width:46%}
+/* ---------- VENDER LA APP: encabezados, vitrina, progreso ---------- */
+.phero{position:relative;overflow:hidden;border-radius:14px;padding:14px 14px 12px;margin-bottom:12px;border:1px solid var(--ln);background:radial-gradient(ellipse at 100% 0%,var(--pc) 0%,transparent 55%),linear-gradient(150deg,#1b242d,#10151a)}
+.phero .pk{display:flex;align-items:center;gap:10px}
+.phero .pi{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35);flex:none}
+.phero .pi svg.i{width:24px;height:24px}
+.phero h2{font-size:1.2rem;margin:0}
+.phero .ps{font-size:.78rem;color:#c9d3da;margin-top:2px}
+.phero p{margin:8px 0 0;font-size:.85rem;color:#e7edf1}
+.nextup{display:flex;align-items:center;gap:10px;margin-top:16px;padding:12px;border-radius:12px;background:linear-gradient(90deg,rgba(240,180,60,.16),rgba(240,180,60,.04));border:1px solid rgba(240,180,60,.4);cursor:pointer}
+.nextup .ni{width:36px;height:36px;border-radius:10px;background:var(--a);color:#111;display:flex;align-items:center;justify-content:center;flex:none}
+.nextup div{flex:1}.nextup small{display:block;color:var(--a2);font-size:.68rem;font-weight:800;letter-spacing:1.2px}
+.nextup b{font-size:.9rem}
+.show{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.sc{position:relative;overflow:hidden;border-radius:12px;padding:12px;border:1px solid var(--ln);background:linear-gradient(160deg,var(--sc) -60%,#141b22 55%);cursor:pointer;min-height:118px;display:flex;flex-direction:column}
+.sc .si{width:34px;height:34px;border-radius:10px;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;color:var(--scc)}
+.sc b{margin-top:8px;font-size:.9rem;line-height:1.2}
+.sc small{color:var(--m);font-size:.74rem;margin-top:3px;flex:1}
+.sc .go{font-size:.72rem;font-weight:800;color:var(--scc);margin-top:6px;letter-spacing:.5px}
+.sc.done::after{content:"✓";position:absolute;top:8px;right:10px;color:var(--g);font-weight:800}
+.prog{display:flex;align-items:center;gap:10px;margin:2px 0 10px}
+.prog .bar{flex:1;height:8px;border-radius:4px;background:var(--bg2);border:1px solid var(--ln);overflow:hidden}
+.prog .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--a),var(--g))}
+.prog small{font-size:.76rem;color:var(--m);white-space:nowrap}
 .mancard{background:var(--pn);border:1px solid var(--ln);border-radius:12px;overflow:hidden}
 .mancard svg{display:block;width:100%;height:auto;background:linear-gradient(#5b8fc0,#2b5f97 60%,#163f70)}
 .mancard .bd{padding:10px 12px}
@@ -490,6 +525,8 @@ details.more[open] summary .chev{transform:rotate(90deg)}
   </div>
  </div>
 
+ <div id="showBox"></div>
+
  <div class="hd"><span class="up">Acceso rápido</span><span class="ln"></span></div>
  <div class="tiles" id="tiles"></div>
 
@@ -572,25 +609,30 @@ details.more[open] summary .chev{transform:rotate(90deg)}
 
 <!-- ============ ARMAS: SETUPS ============ -->
 <section class="view" data-v="armas/arm">
+ <div id="armHero"></div>
  <p class="lead" id="armLead"></p>
  <div class="flags" id="armLegend"></div>
  <div class="grid g2 mt" id="armList"></div>
+ <div id="armNext"></div>
 </section>
 
 <!-- ============ ARMAS: PILONES (armador por slot con las reglas del juego) ============ -->
 <section class="view" data-v="armas/pil">
+ <div id="pylHero"></div>
  <p class="lead">Toca un slot para elegir qué llevar. Cada slot solo acepta <b>las armas que el juego permite en ese slot</b> y un solo tipo de carga.</p>
  <div class="card"><svg id="pylSvg" class="d" style="max-width:560px;margin:auto"></svg><div class="legend" id="pylLeg"></div></div>
  <div class="row mt" style="gap:8px" id="pylStat"></div>
  <div class="card mt" style="padding:4px 10px" id="pylList"></div>
  <div class="row mt" style="gap:8px"><button class="btn alt" style="flex:1;justify-content:center" onclick="pylClear()"><svg class="i"><use href="#i-reset"/></svg>Vaciar</button><button class="btn" style="flex:1;justify-content:center" onclick="go('armas','sets')"><svg class="i"><use href="#i-pylon"/></svg>Setups listos</button></div>
  <p class="sm mt">Slots, armas permitidas y límites de peso tomados del wiki oficial del juego para este avión.</p>
+ <div id="pylNext"></div>
 </section>
 
 <!-- ============ ARMAS: SETUPS (generados respetando los slots) ============ -->
 <section class="view" data-v="armas/sets">
- <p class="lead">Configuraciones listas que <b>sí entran</b> en tu avión: respetan qué arma va en cada slot y los límites de peso. Toca <b>Cargar</b> para pasarla a Pilones y ajustarla.</p>
+ <div id="setsHero"></div>
  <div class="grid g2" id="setsList"></div>
+ <div id="setsNext"></div>
 </section>
 
 <!-- ============ COMBATE: PANEL ============ -->
@@ -697,7 +739,7 @@ details.more[open] summary .chev{transform:rotate(90deg)}
   <li><span class="n">3</span>Se <b>fija solo</b> (cuadro en el HUD)</li>
   <li><span class="n">4</span><b>R-73E</b> → <svg class="i" style="width:15px;height:15px;color:var(--a)"><use href="#i-sound"/></svg> tono agudo → dispara</li>
  </ul>
- <div class="hd"><span class="up">¿Por qué no fijaba a 2 km?</span><span class="ln"></span></div>
+ <div class="hd"><span class="up">¿Por qué el radar no fija a corta distancia?</span><span class="ln"></span></div>
  <ul class="dont">
   <li><svg class="i"><use href="#i-x"/></svg>En SRC PD 50 km queda pegado a la punta del cono</li>
   <li><svg class="i"><use href="#i-x"/></svg>De costado, el PD lo borra</li>
@@ -710,7 +752,7 @@ details.more[open] summary .chev{transform:rotate(90deg)}
 
 <!-- ============ COMBATE: BVR ============ -->
 <section class="view" data-v="combate/bvr">
- <p class="lead">El AIM-120 del F-16 = tu <b>PL-12</b>. Mismo juego: disparar de lejos.</p>
+ <div class="tip" style="margin-top:0"><svg class="i"><use href="#i-info"/></svg><div><b>¿Qué es BVR?</b> "Más allá del alcance visual": pelear con misiles de radar a 20–40 km, antes de ver al enemigo. Gana quien dispara primero y mejor. Tu misil para esto es el <b>PL-12</b> (radar activo). Los aviones enemigos modernos tienen misiles equivalentes (AIM-120, R-77…), así que ellos juegan igual contra ti.</div></div>
  <div class="card"><h3>La técnica "crank": dispara, gira 45°, espera</h3>
  <svg viewBox="0 0 900 230" class="d"><rect width="900" height="230" fill="#0b1016" rx="8"/>
  <g font-family="Arial" font-weight="700">
@@ -747,9 +789,10 @@ details.more[open] summary .chev{transform:rotate(90deg)}
   <path d="M340 130 l-20 -6 l0 12 z" fill="#5ad1ff"/><text x="300" y="118">enemigo (5 km)</text></g></svg>
  <p class="sm">Barrido de solo 10° de alto: un enemigo 3–4 km más bajo a 20 km queda <b>fuera</b>. Usa el botón flecha abajo del panel (o asígnale tecla).</p>
  </div>
- <div class="card"><h3>❓ Por qué no sonó la alarma</h3>
+ <div class="card"><h3>❓ Te derriban sin que suene la alarma: por qué</h3>
+ <p class="sm" style="margin-top:0">Pasa mucho con los misiles de radar activo: el enemigo dispara en modo TWS (sin fijarte) y tu alarma solo suena cuando el misil enciende su propio radar, ya muy cerca.</p>
  <svg viewBox="0 0 420 150" class="d"><rect width="420" height="150" fill="#0b1016" rx="8"/><g font-family="Arial" font-size="12" fill="#fff">
-  <path d="M20 70 l25 -8 l0 16 z" fill="#5ad1ff"/><text x="10" y="100">F-16</text>
+  <path d="M20 70 l25 -8 l0 16 z" fill="#5ad1ff"/><text x="2" y="100">ENEMIGO</text>
   <path d="M395 70 l-25 -8 l0 16 z" fill="#7dff5a"/><text x="378" y="100">TÚ</text>
   <line x1="45" y1="70" x2="250" y2="70" stroke="#888" stroke-dasharray="5 4"/><line x1="250" y1="70" x2="368" y2="70" stroke="#ff5a4d" stroke-width="3"/>
   <text x="60" y="55">fase 1: guiado en TWS</text><text x="80" y="92" fill="#8b9aa6">🔇 sin alarma</text>
@@ -802,6 +845,7 @@ details.more[open] summary .chev{transform:rotate(90deg)}
   <label class="chip" style="cursor:pointer"><input type="checkbox" id="ctrlMine" checked onchange="renderCtrl()"> Solo las de mi avión</label>
   <div class="search"><svg class="i"><use href="#i-search"/></svg><input id="csearch" placeholder="Buscar acción…" oninput="renderCtrl()"></div>
  </div>
+ <div class="card mt" id="ctrlMiss"></div>
  <div id="ctrlList"></div>
  <div class="warn"><svg class="i"><use href="#i-info"/></svg><div>El archivo solo incluye <b>las teclas que cambies</b>. Las marcadas <span class="tag t-no">sin tecla</span> o <span class="tag t-mid">verifica</span> usan nombres internos deducidos: revisa en el juego. Si falla, asígnala en el juego, exporta y <b>importa ese archivo aquí</b>.</div></div>
 </section>
@@ -1133,6 +1177,7 @@ const LS='su30mkk_binds_v1';
 let state={changes:{},baseBlk:ORIG_BLK};
 try{const s=JSON.parse(localStorage.getItem(LS)||'null');if(s&&s.baseBlk)state=s;}catch(e){}
 function save(){try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}}
+if(state.imported)syncActions(state.baseBlk);
 function bindOf(a){return state.changes[a.id]!==undefined?state.changes[a.id]:a.keys}
 function statusOf(a){return state.changes[a.id]!==undefined?'user':a.st}
 const BADGE={conf:['t-ok','confirmada'],def:['t-mid','verifica'],none:['t-no','sin tecla'],user:['t-info','cambiada']};
@@ -1159,14 +1204,31 @@ function buildBlk(){
  body+='  }';
  return base.slice(0,r[0])+body+base.slice(r[1]);}
 function applyImported(blk){
- const hk=parseHotkeys(blk);state.baseBlk=blk;state.changes={};
+ state.baseBlk=blk;state.changes={};syncActions(blk);state.imported=1;save();}
+function syncActions(blk){const hk=parseHotkeys(blk);
  const by={};hk.forEach(h=>{(by[h.id]=by[h.id]||[]).push(h.toks)});
- ACTIONS.forEach(a=>{if(by[a.id]){a.keys=by[a.id].filter(t=>t.length);a.st='conf';a.g=0;}});
- save();}
+ /* lo que no está en el archivo importado queda SIN ASIGNAR (no se rellena con el ejemplo) */
+ ACTIONS.forEach(a=>{if(by[a.id]){a.keys=by[a.id].filter(t=>t.length);a.st=a.keys.length?'conf':'none';a.g=0;}else{a.keys=[];a.st='none';a.g=0}});}
+/* asignación automática: para cada función sin tecla elige la primera combinación libre */
+const RECO={ID_FLAPS:[[33],[29,33]],ID_GEAR:[[34],[29,34]],ID_AIR_BRAKE:[[35],[29,35]],ID_CHUTE:[[56,35],[29,46]],ID_TOGGLE_ENGINE:[[29,23],[56,23]],ID_TOGGLE_COCKPIT_DOOR:[[29,46],[56,46]],
+ ID_SENSOR_SWITCH:[[56,19],[29,19]],ID_SENSOR_TYPE_SWITCH:[[56,30],[29,30]],ID_SENSOR_ACM_SWITCH:[[56,17],[29,17]],ID_SENSOR_MODE_SWITCH:[[56,48],[29,48]],ID_SENSOR_RANGE_SWITCH:[[56,16],[29,16]],
+ ID_SENSOR_TARGET_SWITCH:[[56,20],[29,20]],ID_SENSOR_TARGET_LOCK:[[56,33],[29,37]],ID_SENSOR_ELEV_UP:[[56,200],[29,200]],ID_SENSOR_ELEV_DOWN:[[56,208],[29,208]],ID_FIRE_MGUNS:[['m0']],
+ ID_OPEN_VISUAL_WEAPON_SELECTOR:[[58],[15]],ID_AAM:[[57],['m2']],ID_WEAPON_LOCK:[[47],[56,47]],ID_TOGGLE_GM_VIEW:[[56,34],[29,47]],ID_AGM:[[29,57],[56,57]],ID_BOMBS:[[42,57],[44]],
+ ID_ROCKETS:[[45],[56,45]],ID_FLARES:[[56,18],[46]],ID_FLIGHTMENU:[[1]],ID_MPSTATSCREEN:[[15],[49]],ID_CAMERA_SHELL_FPV:[[74]]};
+function usedCombos(){const u=new Set(),ch=state.changes,key=c=>[...c].sort().join('+');
+ parseHotkeys(state.baseBlk).forEach(h=>{if(ch[h.id]===undefined&&h.toks.length)u.add(key(h.toks))});
+ Object.values(ch).forEach(cs=>cs.forEach(c=>c.length&&u.add(key(c))));ACTIONS.forEach(a=>bindOf(a).forEach(c=>u.add(key(c))));return u}
+function autoAssign(onlyMine){const u=usedCombos(),cp=caps(),done=[];
+ ACTIONS.forEach(a=>{if(bindOf(a).length||(onlyMine&&!actionFor(a,cp)))return;
+  const c=(RECO[a.id]||[]).map(x=>x.map(t=>typeof t=='number'?'k'+t:t)).find(x=>!u.has([...x].sort().join('+')));
+  if(c){state.changes[a.id]=[c];u.add([...c].sort().join('+'));done.push(a.n)}});
+ save();return done}
+function autoAssignUI(){const d=autoAssign(true);toast(d.length?`Asignadas ${d.length} teclas libres ✔`:'No faltaba ninguna tecla');rerender()}
+function downloadReco(){const d=autoAssign(true);downloadBlk();if(d.length)setTimeout(()=>toast(`Incluye ${d.length} teclas nuevas asignadas`),2700);rerender()}
 
 function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2600)}
 function downloadBlk(){
- const txt=buildBlk(),name='SU30MKK_controles.blk';
+ const txt=buildBlk(),name='WT_controles_'+(ACI[CUR]?ACI[CUR].n.replace(/[^\w\-]+/g,'_'):'avion')+'.blk';
  if(window.Android&&Android.saveFile){Android.saveFile(name,txt);return}
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain'}));a.download=name;document.body.appendChild(a);a.click();a.remove();toast('Descargado: '+name)}
 window.onSavedFile=ok=>toast(ok?'Archivo guardado ✔':'No se guardó');
@@ -1190,18 +1252,23 @@ function renderCtrl(){
  if(others.length&&!q){h+=`<details class="card mt"><summary class="sm" style="cursor:pointer">Otras teclas de tu archivo (${others.length}) · se conservan al exportar</summary>`;
   others.forEach(o=>h+=`<div class="ctrlrow"><div class="nm"><code class="sm">${o.id}</code></div><div class="kb">${comboHTML(o.toks)}</div></div>`);h+='</details>'}
  $('ctrlList').innerHTML=h;
- $('ctrlCount').textContent=Object.keys(state.changes).length;}
-function resetOne(id){delete state.changes[id];save();renderCtrl();renderFunc();}
+ $('ctrlCount').textContent=Object.keys(state.changes).length;
+ const miss=ACTIONS.filter(a=>actionFor(a,cp)&&!bindOf(a).length);
+ $('ctrlMiss').innerHTML=miss.length?`<div style="display:flex;gap:10px;align-items:flex-start"><div class="cico" style="background:rgba(255,90,77,.15);color:var(--r)">${ico('warn')}</div><div style="flex:1"><b>${miss.length} funciones de tu ${ACI[CUR].n} están sin asignar</b><br><small>${miss.map(a=>a.n).join(' · ')}</small></div></div>
+  <div class="row mt" style="gap:6px"><button class="btn" style="flex:1;justify-content:center;min-width:140px" onclick="autoAssignUI()">${ico('check')}Asignar automáticamente</button><button class="btn alt" style="flex:1;justify-content:center;min-width:140px" onclick="downloadReco()">${ico('down')}Descargar config. recomendada</button></div>
+  <small class="sm">Se usan teclas que estén libres en tu archivo: no se pisa ninguna que ya tengas.</small>`
+  :`<div style="display:flex;gap:10px;align-items:center"><div class="cico" style="background:rgba(125,255,90,.15);color:var(--g)">${ico('check')}</div><div><b>Todas las funciones de tu ${ACI[CUR].n} tienen tecla</b><br><small>${state.imported?'Usando tu archivo importado.':'Usando el archivo de ejemplo. Importa el tuyo para ver tus teclas reales.'}</small></div></div>`;}
+function resetOne(id){delete state.changes[id];save();rerender();}
 function resetAll(){if(!confirm('¿Borrar todos tus cambios y volver al archivo original?'))return;state={changes:{},baseBlk:ORIG_BLK};save();location.reload()}
-function importBlk(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{applyImported(r.result);renderCtrl();renderFunc();toast('Archivo importado ✔')};r.readAsText(f)}
+function importBlk(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{applyImported(r.result);inp.value='';const cp=caps(),miss=ACTIONS.filter(a=>actionFor(a,cp)&&!bindOf(a).length).length;rerender();toast(miss?`Importado ✔ · ${miss} funciones de tu avión sin tecla`:'Importado ✔ · todo asignado')};r.readAsText(f)}
 
 let capId=null,capCombo=[];
 function capStart(id){capId=id;capCombo=[];const a=ACTIONS.find(x=>x.id==id);
  $('capTitle').textContent=a.n;$('capKeys').innerHTML='<span class="sm">Pulsa la tecla o combinación…</span>';
  $('capture').classList.add('on')}
 function capEnd(save_){$('capture').classList.remove('on');
- if(save_!==undefined){state.changes[capId]=save_;save();renderCtrl();renderFunc();
-  const bad=conflicts();if(bad.has(capId))toast('⚠ Esa tecla ya la usa otra acción');else toast('Guardado ✔');}
+ if(save_!==undefined){state.changes[capId]=save_;save();
+  const bad=conflicts();if(bad.has(capId))toast('⚠ Esa tecla ya la usa otra acción');else toast('Guardado ✔');rerender()}
  capId=null}
 function capManual(){const c=[];
  if($('mCtrl').checked)c.push('k29');if($('mShift').checked)c.push('k42');if($('mAlt').checked)c.push('k56');
@@ -1469,7 +1536,8 @@ function caps(){const d=D(),r=d.radar||{},ft=d.ft||[],ws=(d.wp||[]).map(x=>WDB[x
  return {radar:!!(r.radar&&r.s===true),tws,iff:!!r.iff,irst:/IRST/.test(r.opt||''),tvopt:/TV/.test(r.opt||''),rwr:!!d.rwr,cm:ft.includes('cm'),chute:ft.includes('chute'),hmd:ft.includes('hmd'),nvd:ft.includes('nvd'),ti:ft.includes('ti'),
   flaps:!!(d.fl&&(d.fl[0]||d.fl[1]||d.fl[2])),cflaps:!!(d.fl&&d.fl[2]),ab:!!(d.fl&&d.fl[3]),guns:(d.guns||[]).length>0,pyl:(d.n||0)>0,t,gs,
   guided:!!(gs.ir||gs.tv||gs.laser||gs.gnss||gs.arh||gs.sarh||gs.arm),tvw:!!(gs.tv||t.gbomb)};}
-const keyOf=id=>{const a=ACTIONS.find(x=>x.id==id);return a?combosHTML(bindOf(a)):'<span class="key none">sin tecla</span>'};
+const keyOf=id=>{const a=ACTIONS.find(x=>x.id==id);if(!a)return '';const b=bindOf(a);
+ return b.length?combosHTML(b):`<span class="key none" style="cursor:pointer;color:#ff9a90;border-color:#7a2a22" onclick="event.stopPropagation();capStart('${id}')">sin asignar ✎</span>`};
 
 /* ---------- datos del avión en el hangar, splash y cabecera ---------- */
 function specTiles(id){const d=DET.p[id]||{},p=d.p||{},r=d.radar||{},a=ACI[id];
@@ -1504,9 +1572,9 @@ let TABS=[];
 function buildTabs(){const c=caps(),su=isSu();
  const av=[['fotos','Imágenes','photo'],['datos','Datos','list']];if(su)av.push(['planos','Planos','blue'],['3d','3D','cube']);av.push(['func','Funciones','keys']);
  const ar=[['arm','Armamento','missile']];if(su)ar.push(['aa','Guía AA','target'],['ag','Guía AT','bomb']);if(c.pyl)ar.push(['pil','Pilones','pylon'],['sets','Setups','star']);
- const co=[];if(su)co.push(['panel','Panel radar','radar'],['leer','Leer','eye-off'],['fijar','Fijar','lock'],['multi','Multi-blanco','multi'],['cerca','Cerca','fire'],['bvr','BVR','wave'],['partida','Partida','flight']);
- else{if(c.radar)co.push(['radar','Radar','radar'],['leer','Leer radar','eye-off']);if(c.t.aam)co.push(['misiles','Misiles','missile'])}
- if(c.irst&&!su)co.push(['irst','IRST','fire']);
+ const co=[];if(c.radar)co.push(['radar','Radar','radar']);if(c.irst)co.push(['irst','IRST','fire']);
+ if(su)co.push(['panel','Panel Su-30','radar'],['leer','Leer','eye-off'],['fijar','Fijar','lock'],['multi','Multi-blanco','multi'],['cerca','Cerca','fire'],['bvr','BVR','wave'],['partida','Partida','flight']);
+ else{if(c.radar)co.push(['leer','Leer radar','eye-off']);if(c.t.aam)co.push(['misiles','Misiles','missile'])}
  co.push(['man','Maniobras','turn']);co.push(su?['defensa','Defensa','shield']:['def','Defensa','shield']);
  if(c.t.agm||c.t.gbomb||c.t.bomb||c.t.rkt||c.t.arm)co.push(['tierra','Ataque a tierra','bomb']);
  TABS=[{id:'home',n:'Hangar',i:'home'},{id:'cat',n:'Catálogo',i:'shop'},{id:'avion',n:'Avión',i:'plane',subs:av},{id:'armas',n:'Armas',i:'missile',subs:ar},
@@ -1650,49 +1718,127 @@ function renderSets(){const c=caps(),K=[];
 let SETS_CACHE={};
 function loadSet(k){LO[CUR]=SETS_CACHE[k].slice();loSave();go('armas','pil');toast('Setup cargado en Pilones')}
 
-/* ---------- COMBATE: radar estilo juego ---------- */
-let RMODE='src';
-function scopeSVG(mode){const irst=mode=='irst',col=irst?'#ffb347':'#7dff5a',dim=irst?'#5a3a10':'#1f4a1f',lab=irst?'#ffcf8a':'#9dff7a';
- const W=320,H=260,x0=40,x1=290,y0=26,y1=226;
- let g=`<rect width="${W}" height="${H}" fill="#030603"/><rect x="${x0}" y="${y0}" width="${x1-x0}" height="${y1-y0}" fill="${irst?'#120b03':'#061206'}" stroke="${col}" stroke-opacity=".7"/>`;
- for(let i=1;i<4;i++)g+=`<line x1="${x0}" x2="${x1}" y1="${y0+i*(y1-y0)/4}" y2="${y0+i*(y1-y0)/4}" stroke="${dim}" stroke-dasharray="3 4"/>`;
- for(let i=1;i<4;i++)g+=`<line y1="${y0}" y2="${y1}" x1="${x0+i*(x1-x0)/4}" x2="${x0+i*(x1-x0)/4}" stroke="${dim}" stroke-dasharray="3 4"/>`;
- const cx=(x0+x1)/2;
- const narrow=mode=='acm'?[cx-18,cx+18]:mode=='stt'?null:[x0,x1];
- if(narrow)g+=`<line x1="${narrow[0]}" x2="${narrow[0]}" y1="${y0}" y2="${y1}" stroke="${col}" stroke-width="5" opacity=".55"><animate attributeName="x1" values="${narrow[0]};${narrow[1]};${narrow[0]}" dur="${mode=='acm'?1.2:3}s" repeatCount="indefinite"/><animate attributeName="x2" values="${narrow[0]};${narrow[1]};${narrow[0]}" dur="${mode=='acm'?1.2:3}s" repeatCount="indefinite"/></line>`;
- const T=[[cx+46,y0+60],[cx-70,y0+110],[cx+20,y0+150]];
- T.forEach(([x,y],k)=>{if(mode=='acm'&&k!=2)return;
-  g+=`<rect x="${x-6}" y="${y-2}" width="12" height="4" fill="${irst?'#ffd9a6':'#d9ffcc'}"/>`;
-  if(mode=='tws')g+=`<path d="M${x-9} ${y-9} h18 v18 h-18 z" fill="none" stroke="${col}" stroke-width="1.5"/><line x1="${x}" y1="${y}" x2="${x+(k?-10:12)}" y2="${y+(k?8:-10)}" stroke="${col}" stroke-width="1.5"/><text x="${x+12}" y="${y-10}" fill="${lab}" font-size="9" font-family="Consolas">${['A','B','C'][k]}</text>`;
-  if(mode=='src'&&k==0)g+=`<line x1="${x-9}" y1="${y-6}" x2="${x-9}" y2="${y+6}" stroke="#fff" stroke-width="1.5"/><line x1="${x+9}" y1="${y-6}" x2="${x+9}" y2="${y+6}" stroke="#fff" stroke-width="1.5"/>`;
-  if((mode=='stt'||mode=='irst')&&k==0)g+=`<rect x="${x-11}" y="${y-9}" width="22" height="18" fill="none" stroke="#fff" stroke-width="2"/><line x1="${x}" y1="${y}" x2="${x+14}" y2="${y+16}" stroke="#fff" stroke-width="1.5"/>`;});
- if(mode=='stt'||mode=='irst')g+=`<line x1="${T[0][0]}" y1="${y0}" x2="${T[0][0]}" y2="${y1}" stroke="${col}" stroke-width="2" opacity=".5"/>`;
- g+=`<path d="M${x0-12} ${y0+80} l8 -4 v8 z" fill="${col}"/><text x="${x0-30}" y="${y0+6}" fill="${lab}" font-size="9" font-family="Consolas">+${mode=='acm'?'60':'10'}°</text><text x="${x0-30}" y="${y1}" fill="${lab}" font-size="9" font-family="Consolas">${mode=='acm'?'-15':'-10'}°</text>`;
- const M={src:'SRC PD',tws:'TWS',stt:'TRK PD',acm:'ACM',irst:'IRST SRC'}[mode];
- g+=`<text x="${x0}" y="${y0-9}" fill="${lab}" font-size="13" font-weight="700" font-family="Consolas">${M}</text><text x="${x1}" y="${y0-9}" fill="${lab}" font-size="11" font-family="Consolas" text-anchor="end">${mode=='acm'?'10':irst?'20':'40'} km</text>`;
- g+=`<text x="${x0}" y="${y1+18}" fill="${lab}" font-size="10" font-family="Consolas">${mode=='acm'?'3°×60°':mode=='stt'||mode=='irst'?'BLANCO FIJADO':'±60° · 4 barras'}</text><text x="${x1}" y="${y1+18}" fill="${lab}" font-size="10" font-family="Consolas" text-anchor="end">${mode=='tws'?'3 blancos':mode=='src'?'2 contactos':''}</text>`;
- g+=`<circle cx="${cx}" cy="${y1+2}" r="3" fill="${lab}"/>`;
- return `<svg viewBox="0 0 ${W} ${H}">${g}</svg>`;}
-const RINFO={
- src:['Búsqueda (SRC)','El radar barre delante de ti y muestra los aviones como rayitas. <b>Arriba = lejos</b>, abajo = cerca; izquierda/derecha = a qué lado están. El enemigo <b>no</b> recibe alarma de lock, solo de que lo barres.',[['ID_SENSOR_SWITCH','Encender radar'],['ID_SENSOR_RANGE_SWITCH','Cambiar escala'],['ID_SENSOR_TARGET_SWITCH','Elegir blanco (las dos rayitas)'],['ID_SENSOR_ELEV_UP','Subir antena'],['ID_SENSOR_ELEV_DOWN','Bajar antena']]],
- tws:['Seguimiento múltiple (TWS)','Sigue <b>varios blancos a la vez sin fijarlos</b>: cada uno lleva un cuadro con una raya que indica hacia dónde vuela. Perfecto para misiles de radar activo: disparas sin que el enemigo reciba alarma de lock hasta que el misil se activa.',[['ID_SENSOR_MODE_SWITCH','Cambiar a TWS'],['ID_SENSOR_TARGET_SWITCH','Pasar al siguiente blanco'],['ID_AAM','Disparar']]],
- stt:['Fijado (lock / STT)','El radar se queda <b>solo con un avión</b>: aparece un cuadro sobre él. Necesario para misiles semiactivos y para que la mira del cañón calcule el tiro. El enemigo recibe <b>alarma de lock</b> en su RWR.',[['ID_SENSOR_TARGET_LOCK','Fijar / soltar'],['ID_AAM','Disparar'],['ID_FIRE_MGUNS','Cañón con mira calculada']]],
- acm:['Combate cercano (ACM)','Una franja estrecha delante de la nariz que <b>fija sola</b> al primer avión que entra. Úsala a menos de 8–10 km cuando el enemigo está delante.',[['ID_SENSOR_ACM_SWITCH','Cambiar búsqueda ↔ ACM'],['ID_SENSOR_TARGET_LOCK','Fijar']]],
- irst:['IRST (sensor de calor)','Funciona como el radar pero <b>busca calor</b>. Su gran ventaja: <b>no emite</b>, así que el enemigo <b>no recibe ninguna alarma</b>. Alcance menor y mejor por detrás del enemigo.',[['ID_SENSOR_TYPE_SWITCH','Cambiar radar ↔ IRST'],['ID_SENSOR_TARGET_LOCK','Fijar con IRST'],['ID_AAM','Disparar misil IR']]]};
-function radarModes(){const c=caps(),m=[];if(c.radar)m.push('src');if(c.radar&&c.tws)m.push('tws');if(c.radar)m.push('stt','acm');if(c.irst)m.push('irst');return m}
-function radarCard(mode){const R=RINFO[mode];
- return `<div class="row"><div class="rscope" style="flex:1.2">${scopeSVG(mode)}</div><div class="card"><h3>${R[0]}</h3><p class="sm">${R[1]}</p><div class="hd"><span class="up">Tus teclas</span><span class="ln"></span></div>${R[2].map(([id,n])=>`<div class="ctrlrow"><div class="nm"><b>${n}</b></div><div class="kb">${keyOf(id)}</div></div>`).join('')}</div></div>`;}
-function setRMode(m,box){RMODE=m;box=='irst'?renderIrst():renderRadar()}
-function renderRadar(){const c=caps(),d=D(),r=d.radar||{},modes=radarModes().filter(m=>m!='irst');if(!modes.includes(RMODE))RMODE=modes[0];
- $('radarBox').innerHTML=`<div class="card" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div class="cico" style="background:rgba(125,255,90,.15);color:var(--g)">${ico('radar')}</div><div style="flex:1;min-width:160px"><b>${r.m||'Radar'}</b><br><small>Banda ${r.band||'—'}</small></div>
-  <span class="tag ${c.tws?'t-ok':'t-no'}">${c.tws?'TWS: sí':'Sin TWS'}</span><span class="tag ${c.iff?'t-ok':'t-no'}">${c.iff?'IFF: sí':'Sin IFF'}</span>${c.irst?'<span class="tag t-mid">Con IRST</span>':''}</div>
-  <div class="rmodes">${modes.map(m=>`<button class="${m==RMODE?'on':''}" onclick="setRMode('${m}')">${{src:'SRC · Búsqueda',tws:'TWS · Varios',stt:'TRK · Lock',acm:'ACM · Cerca'}[m]}</button>`).join('')}</div>
-  <div class="mt">${radarCard(RMODE)}</div>
-  ${!c.tws?`<div class="tip">${ico('info')}<div>Tu radar <b>no tiene TWS</b>: para misiles de radar tienes que <b>fijar</b> (lock) al enemigo, y él recibirá la alarma.</div></div>`:''}
-  ${!c.iff?`<div class="warn">${ico('warn')}<div>Sin IFF el radar <b>no distingue amigos de enemigos</b>. Revisa el marcador antes de disparar.</div></div>`:''}
-  <div class="tip">${ico('bulb')}<div>¿No aparece el enemigo? El radar no ve aviones <b>volando de costado</b> contra el suelo (efecto Doppler) ni fuera de las barras: <b>sube o baja la antena</b>.</div></div>`;}
-function renderIrst(){RMODE='irst';$('irstBox').innerHTML=`<div class="rmodes"><button class="on" style="background:#ffb347;border-color:#ffb347;color:#1a0f00">IRST · Calor</button></div><div class="mt">${radarCard('irst')}</div>
- <div class="tip">${ico('eye-off')}<div><b>Ataque silencioso:</b> IRST + misil infrarrojo = el enemigo no recibe ninguna alarma hasta ver el misil.</div></div>`;}
+/* ---------- COMBATE: radar estilo juego (todas las pantallas y modos) ---------- */
+/* Pantallas que usa War Thunder: rectangular (B-scope), cono (PPI), circular 360°, vertical de combate cercano y IRST */
+const RDISP={
+ b:{n:'Rectangular',s:'B-scope',d:'La más común en jets con radar Doppler (F-16, F/A-18, MiG-29…). <b>Horizontal = ángulo</b> a izquierda o derecha de tu nariz; <b>vertical = distancia</b> (arriba lejos, abajo cerca). Ojo: los ángulos se "estiran", un avión cerca y a un lado aparece en la esquina.'},
+ ppi:{n:'Cono',s:'PPI de sector',d:'Un abanico que sale de tu avión, como mirar el mapa desde arriba. Muestra el ángulo real: más fácil de leer. La usan muchos radares de los años 60–80 y algunos modos de búsqueda.'},
+ c360:{n:'Circular 360°',s:'PPI completo',d:'Tú estás en el centro y el radar gira alrededor. Típica de radares de búsqueda/patrulla (como el del A2D-1) y del mapa de amenazas del RWR.'},
+ cs:{n:'Vertical ACM',s:'C-scope',d:'En combate cercano el radar barre una franja <b>vertical</b> delante de la nariz (arriba/abajo). Pon al enemigo dentro de la franja y <b>se fija solo</b>. Ideal en giros cerrados.'},
+ ir:{n:'IRST',s:'Infrarrojo',d:'Pantalla del sensor de calor. Parecida a la rectangular pero <b>sin distancia exacta</b> (salvo telémetro láser) y en color ámbar. No emite: el enemigo no se entera.'}};
+const RMODE_I={
+ src:['SRC','Búsqueda','El radar barre y muestra contactos. El enemigo sabe que lo barres, pero <b>no</b> recibe alarma de fijado.'],
+ tws:['TWS','Seguimiento múltiple','Sigue varios blancos a la vez con un vector de rumbo cada uno. Disparas misiles de radar activo sin fijar: el enemigo no recibe alarma de lock.'],
+ stt:['STT','Fijado (lock)','Un solo blanco con distancia, rumbo, altura y velocidad. Necesario para misiles semiactivos y para la mira calculada del cañón. <b>El enemigo recibe alarma</b>.'],
+ acm:['ACM','Combate cercano','Franja estrecha que se fija sola al primer avión que entra. Menos de 8–10 km.'],
+ irs:['IRST','Búsqueda IR','Busca calor sin emitir nada. Mejor contra el escape del motor (por detrás).'],
+ irt:['IRST TRK','Fijado IR','Fija el blanco con el sensor de calor: tu misil IR lo sigue sin que el enemigo reciba alarma de radar.']};
+let RD='b',RM='src';
+const rcol=ir=>ir?{c:'#ffb347',d:'#4a3008',l:'#ffd59a',bg:'#140c02',t:'#ffe2b8'}:{c:'#7dff5a',d:'#1d4a1d',l:'#a8ff8f',bg:'#041004',t:'#dfffd0'};
+function callout(x,y,n,col){return `<g><circle cx="${x}" cy="${y}" r="9" fill="#f0b43c" stroke="#111" stroke-width="1.5"/><text x="${x}" y="${y+4}" font-size="11" font-weight="800" text-anchor="middle" fill="#111" font-family="Arial">${n}</text></g>`}
+function tgt(x,y,k,C){/* tipos: h=hostil, f=amigo (IFF), s=seleccionado, l=fijado, t=track TWS */
+ let g=`<rect x="${x-7}" y="${y-2}" width="14" height="4" fill="${C.t}"/>`;
+ if(k.includes('f'))g+=`<line x1="${x-7}" y1="${y-7}" x2="${x+7}" y2="${y-7}" stroke="#5ad1ff" stroke-width="2.5"/>`;
+ if(k.includes('s'))g+=`<path d="M${x-11} ${y-6}v12M${x+11} ${y-6}v12" stroke="#fff" stroke-width="2"/>`;
+ if(k.includes('t'))g+=`<rect x="${x-10}" y="${y-8}" width="20" height="16" fill="none" stroke="${C.c}" stroke-width="1.4"/><line x1="${x}" y1="${y}" x2="${x+12}" y2="${y-12}" stroke="${C.c}" stroke-width="1.6"/>`;
+ if(k.includes('l'))g+=`<rect x="${x-12}" y="${y-10}" width="24" height="20" fill="none" stroke="#fff" stroke-width="2.2"/><line x1="${x}" y1="${y}" x2="${x-16}" y2="${y+18}" stroke="#fff" stroke-width="1.8"/>`;
+ return g;}
+function drawB(mode,ir){const C=rcol(ir),W=360,H=310,x0=46,x1=316,y0=40,y1=262,cx=(x0+x1)/2,co=[];let g='';
+ g+=`<rect width="${W}" height="${H}" fill="#020502"/><defs><linearGradient id="rg${ir?1:0}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.bg}"/><stop offset="1" stop-color="#000"/></linearGradient></defs>`;
+ g+=`<rect x="${x0}" y="${y0}" width="${x1-x0}" height="${y1-y0}" fill="url(#rg${ir?1:0})" stroke="${C.c}" stroke-width="1.5"/>`;
+ const acm=mode=='acm',R=acm?10:ir?20:40;
+ for(let i=1;i<4;i++){const y=y0+i*(y1-y0)/4;g+=`<line x1="${x0}" x2="${x1}" y1="${y}" y2="${y}" stroke="${C.d}" stroke-dasharray="2 5"/>`;
+  if(!ir)g+=`<text x="${x0-6}" y="${y+4}" fill="${C.l}" font-size="10" text-anchor="end" font-family="Consolas">${R-i*R/4}</text>`}
+ [-60,-30,0,30,60].forEach(a=>{const x=cx+a/60*(x1-x0)/2;g+=`<line x1="${x}" x2="${x}" y1="${y1}" y2="${y1+6}" stroke="${C.c}"/>${a?`<line x1="${x}" x2="${x}" y1="${y0}" y2="${y1}" stroke="${C.d}" stroke-dasharray="2 5"/>`:''}<text x="${x}" y="${y1+18}" fill="${C.l}" font-size="9.5" text-anchor="middle" font-family="Consolas">${a>0?'+':''}${a}</text>`});
+ /* barrido */
+ const sw=acm?[cx-14,cx+14]:[x0+4,x1-4];
+ if(mode!='stt'&&mode!='irt')g+=`<rect x="${sw[0]}" y="${y0}" width="4" height="${y1-y0}" fill="${C.c}" opacity=".45"><animate attributeName="x" values="${sw[0]};${sw[1]};${sw[0]}" dur="${acm?1.3:3.2}s" repeatCount="indefinite"/></rect>`;
+ if(acm)g+=`<rect x="${cx-16}" y="${y0}" width="32" height="${y1-y0}" fill="${C.c}" opacity=".08"/>`;
+ /* elevación de antena (izquierda) */
+ g+=`<line x1="${x0-22}" y1="${y0+20}" x2="${x0-22}" y2="${y1-20}" stroke="${C.d}"/><path d="M${x0-28} ${y0+95} l10 -5 v10 z" fill="${C.c}"/><text x="${x0-22}" y="${y0+14}" fill="${C.l}" font-size="8.5" text-anchor="middle" font-family="Consolas">EL</text>`;
+ co.push([x0-36,y0+95,'elev']);
+ /* textos de modo, barrido y escala */
+ const M={src:'PD SRC',tws:'TWS',stt:'PD STT',acm:'ACM',irs:'IRST SRC',irt:'IRST TRK'}[mode];
+ g+=`<text x="${x0}" y="${y0-14}" fill="${C.l}" font-size="14" font-weight="700" font-family="Consolas">${M}</text>`;co.push([x0+(M.length*9)+12,y0-18,'mode']);
+ g+=`<text x="${cx}" y="${y0-14}" fill="${C.l}" font-size="11" text-anchor="middle" font-family="Consolas">${acm?'±5°×60°':'±60° · 4B'}</text>`;
+ if(!ir){g+=`<text x="${x1}" y="${y0-14}" fill="${C.l}" font-size="13" text-anchor="end" font-family="Consolas">${R} km</text>`;co.push([x1-50,y0-18,'range'])}
+ g+=`<text x="${x0}" y="${H-10}" fill="${C.l}" font-size="10" font-family="Consolas">${ir?'SIN EMISIÓN':'IFF ON'}</text><text x="${x1}" y="${H-10}" fill="${C.l}" font-size="10" text-anchor="end" font-family="Consolas">0.92M  8.4km</text>`;
+ /* contactos */
+ const P=[[cx+60,y0+62],[cx-80,y0+120],[cx+18,y0+170],[cx-30,y0+80]];
+ if(mode=='src'){g+=tgt(...P[0],'hs',C)+tgt(...P[1],'h',C)+tgt(...P[2],'h',C)+tgt(...P[3],'f',C);co.push([P[0][0]+22,P[0][1]-14,'sel'],[P[3][0]-20,P[3][1]-16,'iff'])}
+ if(mode=='tws'){g+=tgt(...P[0],'t',C)+tgt(...P[1],'t',C)+tgt(...P[2],'ts',C)+tgt(...P[3],'f',C);co.push([P[2][0]+24,P[2][1]+4,'twsSel'],[P[1][0]-20,P[1][1]-16,'track'])}
+ if(mode=='stt'||mode=='irt'){g+=tgt(...P[0],'l',C);g+=`<line x1="${P[0][0]}" y1="${y0}" x2="${P[0][0]}" y2="${y1}" stroke="${C.c}" opacity=".35"/>`;
+  g+=`<text x="${P[0][0]-16}" y="${P[0][1]+30}" fill="${C.t}" font-size="9.5" text-anchor="end" font-family="Consolas">${ir?'ÁNG +18°':'27 km · ALT 6.1'}</text><text x="${P[0][0]-16}" y="${P[0][1]+42}" fill="${C.t}" font-size="9.5" text-anchor="end" font-family="Consolas">${ir?'':'980 km/h ↙'}</text>`;co.push([P[0][0]-26,P[0][1]-16,'lock']);
+  if(!ir){/* zona de lanzamiento del misil (derecha) */
+   const lx=x1+16;g+=`<line x1="${lx}" y1="${y0+20}" x2="${lx}" y2="${y1-30}" stroke="${C.c}" stroke-width="2"/><text x="${lx+6}" y="${y0+24}" fill="${C.l}" font-size="8.5" font-family="Consolas">Rmax</text><rect x="${lx-3}" y="${y0+90}" width="6" height="60" fill="${C.c}"/><text x="${lx+6}" y="${y0+120}" fill="${C.l}" font-size="8.5" font-family="Consolas">NEZ</text><text x="${lx+6}" y="${y1-30}" fill="${C.l}" font-size="8.5" font-family="Consolas">Rmin</text><path d="M${lx-12} ${y0+70} l8 4 l-8 4 z" fill="#fff"/>`;co.push([lx+2,y0+8,'lz'])}}
+ if(mode=='acm'){g+=tgt(cx+2,y0+150,'l',C);co.push([cx+30,y0+140,'acmLock']);g+=`<text x="${cx+22}" y="${y0+175}" fill="${C.t}" font-size="9.5" font-family="Consolas">AUTO</text>`}
+ if(mode=='irs'){g+=`<circle cx="${P[0][0]}" cy="${P[0][1]}" r="5" fill="${C.t}" opacity=".9"/><circle cx="${P[2][0]}" cy="${P[2][1]}" r="4" fill="${C.t}" opacity=".7"/>`;co.push([P[0][0]+18,P[0][1]-12,'irTgt'])}
+ g+=`<path d="M${cx-6} ${y1+28} l6 -8 l6 8 z" fill="${C.l}"/>`;
+ return [g,co,W,H];}
+function drawPPI(mode,full){const C=rcol(0),W=360,H=full?340:300,cx=180,cy=full?170:270,R=full?150:240,co=[];let g=`<rect width="${W}" height="${H}" fill="#020502"/>`;
+ const a0=full?-180:-60,a1=full?180:60,pt=(a,r)=>[cx+r*Math.sin(a*Math.PI/180),cy-r*Math.cos(a*Math.PI/180)];
+ if(full)g+=`<circle cx="${cx}" cy="${cy}" r="${R}" fill="#041004" stroke="${C.c}" stroke-width="1.5"/>`;
+ else{const [ax,ay]=pt(a0,R),[bx,by]=pt(a1,R);g+=`<path d="M${cx} ${cy} L${ax} ${ay} A${R} ${R} 0 0 1 ${bx} ${by} Z" fill="#041004" stroke="${C.c}" stroke-width="1.5"/>`}
+ [1,2,3].forEach(i=>{const r=R*i/4;if(full)g+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${C.d}" stroke-dasharray="2 5"/>`;else{const [ax,ay]=pt(a0,r),[bx,by]=pt(a1,r);g+=`<path d="M${ax} ${ay} A${r} ${r} 0 0 1 ${bx} ${by}" fill="none" stroke="${C.d}" stroke-dasharray="2 5"/>`}
+  const [tx,ty]=pt(full?0:a1,r);g+=`<text x="${tx+(full?4:6)}" y="${ty+(full?-3:4)}" fill="${C.l}" font-size="9.5" font-family="Consolas">${i*(full?50:10)}</text>`});
+ (full?[0,45,90,135,180,225,270,315]:[-60,-30,0,30,60]).forEach(a=>{const [x,y]=pt(a,R);g+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${C.d}" stroke-dasharray="2 5"/>`});
+ if(full)g+=`<line x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy-R}" stroke="${C.c}" stroke-width="3" opacity=".7"><animateTransform attributeName="transform" type="rotate" from="0 ${cx} ${cy}" to="360 ${cx} ${cy}" dur="4s" repeatCount="indefinite"/></line>`;
+ else g+=`<line x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy-R}" stroke="${C.c}" stroke-width="4" opacity=".55"><animateTransform attributeName="transform" type="rotate" values="-58 ${cx} ${cy};58 ${cx} ${cy};-58 ${cx} ${cy}" dur="3.4s" repeatCount="indefinite"/></line>`;
+ const T=full?[[40,.7,'hs'],[150,.5,'h'],[-100,.8,'f'],[260,.35,'h']]:[[22,.7,'hs'],[-35,.45,'h'],[8,.3,'h'],[-12,.85,'f']];
+ T.forEach(([a,r,k],i)=>{if(mode=='stt'&&i>0)return;const kk=mode=='stt'?'l':mode=='tws'?(k=='f'?'f':i==0?'ts':'t'):k;const [x,y]=pt(a,R*r);g+=tgt(x,y,kk,C)});
+ const [sx,sy]=pt(T[0][0],R*T[0][1]);co.push([sx+24,sy-12,mode=='stt'?'lock':mode=='tws'?'twsSel':'sel']);
+ const [fx,fy]=pt(T[3][0],R*T[3][1]);if(mode!='stt')co.push([fx-20,fy-14,'iff']);
+ g+=`<path d="M${cx-7} ${cy+(full?7:-2)} l7 -12 l7 12 z" fill="#f0b43c"/>`;
+ const M={src:full?'SRC 360':'SRC',tws:'TWS',stt:'STT'}[mode]||'SRC';
+ g+=`<text x="10" y="20" fill="${C.l}" font-size="14" font-weight="700" font-family="Consolas">${M}</text><text x="${W-10}" y="20" fill="${C.l}" font-size="13" text-anchor="end" font-family="Consolas">${full?200:40} km</text>`;co.push([10+M.length*9+14,16,'mode'],[W-70,16,'range']);
+ if(!full){g+=`<path d="M14 ${cy-120} l10 -5 v10 z" fill="${C.c}"/><text x="10" y="${cy-132}" fill="${C.l}" font-size="8.5" font-family="Consolas">EL</text>`;co.push([34,cy-120,'elev'])}
+ return [g,co,W,H];}
+function drawCS(){const C=rcol(0),W=360,H=310,x0=60,x1=300,y0=30,y1=270,cx=180,co=[];let g=`<rect width="${W}" height="${H}" fill="#020502"/><rect x="${x0}" y="${y0}" width="${x1-x0}" height="${y1-y0}" fill="#041004" stroke="${C.c}" stroke-width="1.5"/>`;
+ g+=`<rect x="${cx-18}" y="${y0}" width="36" height="${y1-y0}" fill="${C.c}" opacity=".1"/><line x1="${cx-18}" y1="${y0}" x2="${cx-18}" y2="${y1}" stroke="${C.c}" stroke-dasharray="4 4"/><line x1="${cx+18}" y1="${y0}" x2="${cx+18}" y2="${y1}" stroke="${C.c}" stroke-dasharray="4 4"/>`;
+ g+=`<rect x="${cx-18}" y="${y1-6}" width="36" height="6" fill="${C.c}" opacity=".6"><animate attributeName="y" values="${y1-6};${y0};${y1-6}" dur="1.4s" repeatCount="indefinite"/></rect>`;
+ g+=`<path d="M${cx-10} 190 h20 M${cx} 180 v20" stroke="${C.l}" stroke-width="1.5"/>`;
+ [60,30,0,-15].forEach(a=>{const y=y0+(60-a)/75*(y1-y0);g+=`<text x="${x0-6}" y="${y+4}" fill="${C.l}" font-size="9.5" text-anchor="end" font-family="Consolas">${a>0?'+':''}${a}°</text><line x1="${x0}" x2="${x0+6}" y1="${y}" y2="${y}" stroke="${C.c}"/>`});
+ g+=tgt(cx+4,95,'l',C);g+=`<text x="${cx+22}" y="120" fill="${C.t}" font-size="9.5" font-family="Consolas">2.8 km</text>`;
+ g+=`<text x="${x0}" y="20" fill="${C.l}" font-size="14" font-weight="700" font-family="Consolas">ACM VERT</text><text x="${x1}" y="20" fill="${C.l}" font-size="13" text-anchor="end" font-family="Consolas">10 km</text>`;
+ g+=`<text x="${x0}" y="${H-12}" fill="${C.l}" font-size="10" font-family="Consolas">ARRIBA = sobre tu nariz</text>`;
+ co.push([x0+108,16,'mode'],[cx+40,85,'acmLock'],[cx-34,190,'bore']);
+ return [g,co,W,H];}
+const CO_INFO={
+ mode:['Modo del radar','Cambia entre búsqueda, TWS y otros modos.','ID_SENSOR_MODE_SWITCH'],
+ range:['Escala de distancia','Cambia hasta dónde muestra la pantalla (10 · 20 · 40 · 80 km…).','ID_SENSOR_RANGE_SWITCH'],
+ elev:['Elevación de la antena','La flecha indica hacia dónde mira el radar en altura. Si no ves al enemigo, súbela o bájala.','ID_SENSOR_ELEV_UP','ID_SENSOR_ELEV_DOWN'],
+ sel:['Blanco seleccionado','Las dos rayas a los lados marcan el contacto elegido. Pasa al siguiente con la tecla.','ID_SENSOR_TARGET_SWITCH'],
+ iff:['Amigo (IFF)','Raya azul encima = avión aliado. No le dispares.',null],
+ twsSel:['Blanco TWS activo','El que tiene la marca es al que irá tu próximo misil.','ID_SENSOR_TARGET_SWITCH','ID_AAM'],
+ track:['Track con rumbo','Cuadro + raya: la raya apunta hacia donde vuela ese avión.',null],
+ lock:['Blanco fijado','Cuadro grande = fijado. Muestra distancia, altura, velocidad y rumbo.','ID_SENSOR_TARGET_LOCK'],
+ lz:['Zona de lanzamiento','Rmax = alcance máximo; NEZ = zona donde casi no puede escapar; Rmin = demasiado cerca. Dispara cuando la flecha entre en la zona.','ID_AAM'],
+ acmLock:['Fijado automático','Entra en la franja y el radar se fija solo.','ID_SENSOR_ACM_SWITCH'],
+ bore:['Centro de tu nariz','Pon al enemigo sobre esta cruz.',null],
+ irTgt:['Fuente de calor','Mancha = motor caliente. Fíjala con la tecla de lock.','ID_SENSOR_TYPE_SWITCH','ID_SENSOR_TARGET_LOCK']};
+function radarDisplays(){const c=caps(),L=[];if(c.radar)L.push('b','ppi','c360','cs');if(c.irst)L.push('ir');return L}
+function radarModesFor(d){const c=caps();if(d=='ir')return ['irs','irt'];if(d=='cs')return ['acm'];if(d=='c360')return ['src','stt'];const m=['src'];if(c.tws)m.push('tws');m.push('stt');if(d=='b')m.push('acm');return m}
+function scopeHTML(d,m){const r=d=='ppi'?drawPPI(m,0):d=='c360'?drawPPI(m,1):d=='cs'?drawCS():drawB(m,d=='ir');const [g,co,W,H]=r;
+ const seen=[];const used=co.filter(([, ,k])=>{if(seen.includes(k))return false;seen.push(k);return true});
+ const svg=`<svg viewBox="0 0 ${W} ${H}">${g}${used.map(([x,y],i)=>callout(x,y,i+1)).join('')}</svg>`;
+ const legend=used.map(([, ,k],i)=>{const I=CO_INFO[k];return `<div class="coRow"><span class="n">${i+1}</span><div style="flex:1;min-width:0"><b>${I[0]}</b><small>${I[1]}</small></div><div class="kb">${I.slice(2).filter(Boolean).map(keyOf).join('<small> / </small>')}</div></div>`}).join('');
+ return [svg,legend];}
+function radarBlock(box){const ds=radarDisplays();if(box=='irst')RD='ir';else if(RD=='ir'){RD='b';RM=''}if(!ds.includes(RD))RD=ds[0];const ms=radarModesFor(RD);if(!ms.includes(RM))RM=ms[0];
+ const [svg,legend]=scopeHTML(RD,RM),D0=RDISP[RD],M0=RMODE_I[RM];
+ return `<div class="rtabs">${ds.filter(d=>box=='irst'?d=='ir':d!='ir').map(d=>`<button class="${d==RD?'on':''}" onclick="RD='${d}';RM='';rerender()"><b>${RDISP[d].n}</b><small>${RDISP[d].s}</small></button>`).join('')}</div>
+ <div class="rmodes">${ms.map(m=>`<button class="${m==RM?'on':''}${RD=='ir'?' ir':''}" onclick="RM='${m}';rerender()">${RMODE_I[m][0]} · ${RMODE_I[m][1]}</button>`).join('')}</div>
+ <div class="row mt"><div class="rscope${RD=='ir'?' ir':''}" style="flex:1.3;min-width:290px">${svg}<div class="rcap">${D0.n} · ${M0[1]}</div></div>
+ <div class="card" style="min-width:260px"><h3>${M0[1]}</h3><p class="sm">${M0[2]}</p><div class="hd"><span class="up">Toca el número · tu tecla</span><span class="ln"></span></div>${legend}</div></div>
+ <div class="tip">${ico('info')}<div><b>Pantalla ${D0.n} (${D0.s}):</b> ${D0.d}</div></div>`;}
+function renderRadar(){const c=caps(),d=D(),r=d.radar||{};
+ $('radarBox').innerHTML=pageHero('radar','#7dff5a','Domina tu radar',`${r.m?r.m.split(',')[0]:'Radar'} · banda ${r.band||'—'} · ${c.tws?'con TWS':'sin TWS'}${c.irst?' · con IRST':''}`,'Cada pantalla y cada modo como en el juego, con la tecla de cada botón.')+
+ radarBlock('radar')+
+ `<div class="grid g2 mt"><div class="dcard"><div class="hdr"><div class="big" style="background:rgba(125,255,90,.12);color:var(--g)">${ico('radar')}</div><b>Doppler (PD) vs pulso</b></div><p class="sm" style="margin:0">El radar <b>Doppler (PD)</b> borra el suelo y ve aviones bajos, pero <b>pierde a los que vuelan de costado</b> (por eso el enemigo "se pone de lado"). El de <b>pulso</b> (radares antiguos) ve todo pero a baja altura se llena de suelo.</p></div>
+ <div class="dcard"><div class="hdr"><div class="big" style="background:rgba(240,180,60,.12);color:var(--a)">${ico('target')}</div><b>Orden de uso en combate</b></div><p class="sm" style="margin:0">1) Búsqueda para ver quién hay → 2) ${c.tws?'TWS para disparar de lejos sin alarma':'Lock para disparar'} → 3) ACM cuando están a menos de 10 km${c.irst?' → IRST para atacar en silencio':''}.</p></div></div>
+ ${!c.tws?`<div class="tip">${ico('info')}<div>Tu radar <b>no tiene TWS</b>: para misiles de radar tienes que <b>fijar</b> (lock) y el enemigo recibirá la alarma.</div></div>`:''}
+ ${!c.iff?`<div class="warn">${ico('warn')}<div>Sin IFF el radar <b>no distingue amigos de enemigos</b>: confirma el marcador antes de disparar.</div></div>`:''}`+nextUp('radar');}
+function renderIrst(){$('irstBox').innerHTML=pageHero('fire','#ffb347','Ataque silencioso con IRST','Sensor de calor: el enemigo no recibe ninguna alarma','Aprende a encontrar y fijar aviones sin emitir.')+radarBlock('irst')+
+ `<div class="tip">${ico('eye-off')}<div><b>Combo letal:</b> IRST + misil infrarrojo = el enemigo no se entera hasta ver el misil. Funciona mejor por detrás y con el enemigo a toda potencia.</div></div>`+nextUp('irst');}
 
 /* ---------- COMBATE: misiles aire-aire ---------- */
 function renderMsl(){const gs=wGroups().filter(g=>g.w[3]=='aam').sort((a,b)=>scoreAA(b.w)-scoreAA(a.w)),c=caps();
@@ -1739,6 +1885,47 @@ function renderTierra(){const gs=wGroups().filter(g=>!['aam','pod','tank','other
   return `<div class="card"><div style="display:flex;gap:10px;align-items:center"><img class="wic" style="width:46px;height:46px" src="${wtIcon(w[2])}" alt=""><div><b>${wShort(w[0])}</b><br><small style="color:${G.c}">${G.n}</small></div></div><ul class="steps mt">${st.map((s,i)=>`<li><span class="n">${i+1}</span>${s[0]} <span>${s[1]}</span></li>`).join('')}</ul></div>`}).join('')}</div>
  <div class="tip">${ico('bulb')}<div>Después de atacar, <b>vuelve a ganar altura</b>: los antiaéreos y cazas enemigos buscan aviones lentos y bajos.</div></div>`;}
 
+/* ---------- vender la guía: encabezados, vitrina, progreso y "siguiente" ---------- */
+function pageHero(i,col,t,sub,p){return `<div class="phero" style="--pc:${col}33"><div class="pk"><div class="pi" style="color:${col}">${ico(i)}</div><div><h2>${t}</h2><div class="ps">${sub}</div></div></div>${p?`<p>${p}</p>`:''}</div>`}
+const GUIDES=[
+ ['combate/radar','radar','#7dff5a','Domina tu radar','Todas las pantallas y modos como en el juego, con tu tecla en cada botón.',c=>c.radar],
+ ['armas/sets','star','#2fd4c4','Setups que sí entran','Cargas listas que respetan cada slot y el peso. Un toque y a volar.',c=>c.pyl],
+ ['armas/arm','missile','#ff9d3d','Cada arma explicada','Alcance, tipo de guía y los pasos exactos para dispararla.',()=>1],
+ ['combate/irst','fire','#ffb347','Ataque silencioso','IRST + misil IR: el enemigo no recibe ninguna alarma.',c=>c.irst],
+ ['combate/misiles','target','#ffd23d','Qué misil disparar','El correcto según la distancia y el ángulo.',c=>c.t.aam&&!isSu()],
+ ['armas/aa','target','#ffd23d','Misiles paso a paso','Guía detallada de cada misil del Su-30MKK.',()=>isSu()],
+ ['armas/pil','pylon','#f0b43c','Arma tu carga','Elige qué va en cada slot sin pasarte de peso.',c=>c.pyl],
+ ['combate/man','turn','#c78bff','Maniobras animadas','Cómo pelear con tu avión según su giro y su trepada.',()=>1],
+ ['combate/def','shield','#ff5a4d','Sobrevive más','Esquiva misiles de radar, infrarrojos y cañón.',()=>!isSu()],
+ ['combate/defensa','shield','#ff5a4d','Sobrevive más','Esquiva misiles de radar, infrarrojos y cañón.',()=>isSu()],
+ ['combate/bvr','wave','#4aa3ff','Gana de lejos (BVR)','La técnica crank para disparar primero y volver vivo.',()=>isSu()],
+ ['ctrl/teclas','keys','#4aa3ff','Tus teclas, tu avión','Importa tu .blk, completa lo que falta y llévalo al juego.',()=>1]];
+let VIS=[];try{VIS=JSON.parse(localStorage.getItem('wt_vis'))||[]}catch(e){}
+const guidesNow=()=>{const c=caps();return GUIDES.filter(g=>g[5](c))};
+function renderShow(){const G=guidesNow(),done=G.filter(g=>VIS.includes(g[0])).length;
+ $('showBox').innerHTML=`<div class="hd"><span class="up">Descubre tu guía del ${ACI[CUR].n}</span><span class="ln"></span></div>
+ <div class="prog"><div class="bar"><i style="width:${Math.round(done/G.length*100)}%"></i></div><small>${done} de ${G.length} explorado${done==1?'':'s'}</small></div>
+ <div class="show">${G.map(g=>{const [t,s]=g[0].split('/');return `<div class="sc${VIS.includes(g[0])?' done':''}" style="--sc:${g[2]};--scc:${g[2]}" onclick="go('${t}','${s}')"><div class="si">${ico(g[1])}</div><b>${g[3]}</b><small>${g[4]}</small><span class="go">${VIS.includes(g[0])?'VOLVER A VER ›':'EXPLORAR ›'}</span></div>`}).join('')}</div>`;}
+function nextUp(curK){const G=guidesNow();const i=G.findIndex(g=>g[0].endsWith('/'+curK)||g[0]==curK);
+ const rest=[...G.slice(i+1),...G.slice(0,Math.max(0,i))];const n=rest.find(g=>!VIS.includes(g[0]))||rest[0];if(!n)return '';const [t,s]=n[0].split('/');
+ return `<div class="nextup" onclick="go('${t}','${s}')"><div class="ni">${ico(n[1])}</div><div><small>SIGUIENTE EN TU GUÍA</small><b>${n[3]}</b></div>${ico('chev')}</div>`}
+let curKey='home';
+const RENDERS={'ctrl/teclas':renderCtrl,'avion/func':renderFunc,'avion/datos':renderDatos,'armas/arm':renderArm,'armas/pil':renderPyl,'armas/sets':renderSets,'combate/radar':renderRadar,'combate/irst':renderIrst,
+ 'combate/misiles':renderMsl,'combate/man':renderMan,'combate/def':renderDef,'combate/tierra':renderTierra};
+/* encabezado + "siguiente" para las páginas generadas */
+const HERO_FOR={
+ 'combate/man':['manBox','turn','#c78bff','Maniobras para tu avión',()=>'Animadas y adaptadas a su giro, trepada y límites'],
+ 'combate/def':['defBox','shield','#ff5a4d','Sobrevive más',()=>caps().rwr?'Con alerta de radar '+(D().rwr.m||''):'Sin alerta de radar: aprende a vigilar'],
+ 'combate/misiles':['mslBox','target','#ffd23d','Qué misil disparar',()=>wGroups().filter(g=>g.w[3]=='aam').length+' misiles aire-aire, del más lejano al más cercano'],
+ 'combate/tierra':['tierraBox','bomb','#ff7b2e','Ataque a tierra',()=>'Bombas, cohetes y armas guiadas paso a paso'],
+ 'avion/datos':['datosBox','list','#4aa3ff','Ficha técnica',()=>'Rendimiento, límites y sensores reales del juego']};
+const PAGE_EXTRA={
+ 'armas/arm':()=>{const g=wGroups();$('armHero').innerHTML=pageHero('missile','#ff9d3d','Tu arsenal',`${g.length} armas · ${g.filter(x=>x.w[3]=='aam').length} misiles aire-aire`,'Toca <b>Cómo usarlo</b> en cada arma: verás los pasos con tus teclas.');$('armNext').innerHTML=nextUp('arm')},
+ 'armas/pil':()=>{$('pylHero').innerHTML=pageHero('pylon','#f0b43c','Arma tu carga',`${D().n} slots · máx. ${fmt(D().maxW)} kg`,'');$('pylNext').innerHTML=nextUp('pil')},
+ 'armas/sets':()=>{$('setsHero').innerHTML=pageHero('star','#2fd4c4','Setups que sí entran','Respetan cada slot y el peso del juego','Toca <b>Cargar</b> para pasarlo a Pilones y ajustarlo a tu gusto.');$('setsNext').innerHTML=nextUp('sets')}};
+function decorate(key){const H=HERO_FOR[key];if(H){const b=$(H[0]);b.insertAdjacentHTML('afterbegin',pageHero(H[1],H[2],H[3],H[4](),''));b.insertAdjacentHTML('beforeend',nextUp(key.split('/')[1]))}if(PAGE_EXTRA[key])PAGE_EXTRA[key]()}
+function rerender(){const R=RENDERS[curKey];if(R){R();decorate(curKey)}if(curKey=='home'){kbStat();renderShow()}}
+
 /* ================= NAVEGACIÓN ================= */
 const lastSub={};
 function go(tab,sub,anchor){
@@ -1752,9 +1939,8 @@ function go(tab,sub,anchor){
  document.querySelectorAll('#tabbar button').forEach(b=>b.classList.toggle('on',b.dataset.t==(tab=='ficha'?'cat':T?tab:'home')));
  if(tab=='cat')renderCat();if(tab=='ficha')ficha(sub);curTab=tab;
  if(key=='avion/3d'){initV3();V3.start()}else if(V3)V3.stop();
- const R={'ctrl/teclas':renderCtrl,'avion/func':renderFunc,'avion/datos':renderDatos,'armas/arm':renderArm,'armas/pil':renderPyl,'armas/sets':renderSets,'combate/radar':renderRadar,'combate/irst':renderIrst,
-  'combate/misiles':renderMsl,'combate/man':renderMan,'combate/def':renderDef,'combate/tierra':renderTierra,'home':kbStat};
- if(R[key])R[key]();
+ curKey=key;if(!VIS.includes(key)&&GUIDES.some(g=>g[0]==key)){VIS.push(key);try{localStorage.setItem('wt_vis',JSON.stringify(VIS))}catch(e){}}
+ if(RENDERS[key]){RENDERS[key]();decorate(key)}if(key=='home'){kbStat();renderShow()}
  if(anchor){setTimeout(()=>{const e=$(anchor);if(e){e.scrollIntoView({behavior:'smooth',block:'center'});e.style.outline='2px solid var(--a)';setTimeout(()=>e.style.outline='',1500)}},60)}else scrollTo(0,0);
 }
 applyCur();
