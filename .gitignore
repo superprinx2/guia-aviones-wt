@@ -12,3 +12,7 @@ original/
 
 .claude/
 __pycache__/
+
+# material promocional (videos)
+promo/
+demo.html

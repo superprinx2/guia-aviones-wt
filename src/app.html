@@ -317,6 +317,28 @@ details.more[open] summary .chev{transform:rotate(90deg)}
 .pbox .opt b{display:block}
 .empty{text-align:center;color:var(--m);padding:30px 10px}
 
+/* ---------- DONACIONES ---------- */
+.donbtn{display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,120,80,.55);background:linear-gradient(120deg,rgba(255,110,64,.22),rgba(240,180,60,.12));color:var(--t);cursor:pointer;text-align:left}
+.donbtn .e{font-size:1.9rem;line-height:1}
+.donbtn b{display:block;font-size:.98rem}.donbtn small{color:#ffd2b8;font-size:.76rem}
+.donbtn .go{margin-left:auto;background:#ff7a45;color:#111;font-weight:800;border-radius:9px;padding:7px 10px;font-size:.8rem;white-space:nowrap}
+.donpill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,122,69,.9);color:#111;border:0;border-radius:16px;padding:5px 10px;font-weight:800;font-size:.74rem;cursor:pointer}
+#donate{position:fixed;inset:0;z-index:120;background:rgba(5,8,12,.82);display:none;align-items:flex-end;justify-content:center}
+#donate.on{display:flex}
+#donate .box{background:var(--pn);border:1px solid var(--ln2);border-radius:18px 18px 0 0;width:100%;max-width:520px;padding:14px 14px calc(16px + env(safe-area-inset-bottom))}
+.dn-top{display:flex;gap:12px;align-items:flex-start}
+.dn-emoji{font-size:2.4rem;line-height:1}
+.dn-top .dn-emoji{flex:none}
+.dn-top div{flex:1}.dn-top b{display:block;font-size:1.1rem}.dn-top small{color:var(--m);font-size:.82rem}
+.dn-amt{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 4px}
+.dn-amt span{font-size:.74rem;background:var(--bg2);border:1px solid var(--ln);border-radius:12px;padding:4px 9px;color:var(--a2)}
+.dn-opt{display:flex;align-items:center;gap:10px;margin-top:8px;background:var(--bg2);border:1px solid var(--ln);border-radius:12px;padding:10px}
+.dn-opt div{flex:1;min-width:0}.dn-opt small{display:block;color:var(--m);font-size:.72rem}.dn-opt b{font-family:Consolas,monospace;font-size:1rem;letter-spacing:.5px}
+.dn-ic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;background:#742284;flex:none;font-size:1.1rem}
+.dn-ic.bcp{background:#002a8d;color:#ff7800;font-size:.78rem}
+.dn-opt .dn-ic{flex:none;width:42px}
+.dn-opt.yape{border-color:#9b3db3;background:rgba(116,34,132,.18)}
+
 /* ---------- BANNER EDITOR DE CONTROLES (gancho principal) ---------- */
 .kbanner{position:relative;overflow:hidden;border-radius:16px;padding:14px;border:1px solid rgba(240,180,60,.55);background:radial-gradient(ellipse at 100% 0%,rgba(240,180,60,.28),transparent 60%),linear-gradient(150deg,#2a2210,#141a20 65%);box-shadow:0 8px 28px rgba(240,180,60,.12)}
 .kbanner::after{content:"";position:absolute;right:-30px;bottom:-30px;width:140px;height:140px;background:repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0 6px,transparent 6px 12px);border-radius:50%}
@@ -334,7 +356,7 @@ details.more[open] summary .chev{transform:rotate(90deg)}
 .flow{display:flex;flex-direction:column;gap:8px}
 .fs{position:relative;background:var(--pn);border:1px solid var(--ln);border-radius:12px;padding:10px 12px 10px 44px}
 .fs .n{position:absolute;left:12px;top:11px;width:22px;height:22px;font-size:.75rem}
-.fs b{display:block;font-size:.9rem}
+.fs>b{display:block;font-size:.9rem}
 .fs small{font-size:.8rem;color:var(--m)}
 
 /* ---------- ARMAS DEL JUEGO / PILONES ---------- */
@@ -486,6 +508,7 @@ details.more[open] summary .chev{transform:rotate(90deg)}
  <div class="sp-role" id="spRole"></div>
  <button class="sp-go" id="spgo">ENTRAR AL HANGAR <svg class="i"><use href="#i-chev"/></svg></button>
  <button class="sp-alt" onclick="openPicker()"><svg class="i"><use href="#i-plane"/></svg>ELEGIR OTRO AVIÓN <small id="spCount"></small></button>
+ <div style="text-align:center;margin-top:10px"><button class="donpill" onclick="openDonate()">🍗 Donar · tengo hambre</button></div>
  <div class="sp-cred">Guía no oficial creada por fans · No afiliada a Gaijin Entertainment</div>
 </div>
 
@@ -524,6 +547,8 @@ details.more[open] summary .chev{transform:rotate(90deg)}
    <button class="btn alt" onclick="downloadBlk()"><svg class="i"><use href="#i-down"/></svg>Exportar</button>
   </div>
  </div>
+
+ <button class="donbtn" onclick="openDonate()"><span class="e">🍗</span><span><b>El piloto tiene hambre</b><small>¿La guía te sirvió? Invítame un menú por Yape</small></span><span class="go">DONAR</span></button>
 
  <div id="showBox"></div>
 
@@ -879,6 +904,7 @@ details.more[open] summary .chev{transform:rotate(90deg)}
 
 <!-- ============ CRÉDITOS ============ -->
 <section class="view" data-v="creditos">
+ <button class="donbtn" style="margin:0 0 12px" onclick="openDonate()"><span class="e">🍗</span><span><b>Apoya la guía</b><small>Yape, Plin o transferencia BCP</small></span><span class="go">DONAR</span></button>
  <div class="card"><h3>Aviso</h3><p class="sm">Guía no oficial creada por fans. War Thunder es marca de Gaijin Entertainment; esta app no está afiliada ni respaldada por Gaijin. Los datos de juego son orientativos y pueden cambiar con las actualizaciones.</p></div>
  <div class="card mt"><h3>Imágenes de los aviones</h3><p class="sm">Los renders de los aviones y los datos del catálogo vienen del <a style="color:var(--b)" href="https://wiki.warthunder.com" target="_blank" rel="noopener">wiki oficial de War Thunder</a> (© Gaijin Entertainment). <b>No van dentro de la app</b>: se cargan desde internet cuando abres cada avión, así la app sigue pesando poco. Sin conexión verás una silueta.</p></div>
  <div class="card mt"><h3>Otras imágenes</h3><p class="sm">Fotos de armamento y planos de Wikimedia Commons bajo licencias libres:</p><ul class="credits" id="credList"></ul></div>
@@ -899,6 +925,15 @@ details.more[open] summary .chev{transform:rotate(90deg)}
 <select id="mKey"></select>
 <button class="btn" onclick="capManual()">Usar esta tecla</button></div>
 <div style="margin-top:12px;display:flex;gap:8px;justify-content:center"><button class="btn alt" onclick="capEnd([])">Sin tecla</button><button class="btn red" onclick="capEnd()">Cancelar</button></div></div></div>
+<!-- ======================= DONACIONES ======================= -->
+<div id="donate" onclick="if(event.target==this)this.classList.remove('on')"><div class="box">
+ <div class="dn-top"><div class="dn-emoji">🍗</div><div><b>El piloto tiene hambre</b><small>Esta guía es gratis y sin anuncios. Si te ayudó a dejar de ser manco, invítame un menú 😅</small></div><button class="ibtn" onclick="$('donate').classList.remove('on')"><svg class="i"><use href="#i-x"/></svg></button></div>
+ <div class="dn-amt"><span>S/ 5 · un café</span><span>S/ 10 · un menú</span><span>S/ 20 · pollo a la brasa</span></div>
+ <div class="dn-opt yape"><div class="dn-ic">Y</div><div><small>Yape / Plin</small><b>924 781 666</b></div><button class="btn" onclick="copyTxt('924781666','Número de Yape/Plin copiado')">Copiar</button></div>
+ <div class="dn-opt"><div class="dn-ic bcp">BCP</div><div><small>Cuenta BCP Soles</small><b>191-98376183-0-79</b></div><button class="btn alt" onclick="copyTxt('19198376183079','Cuenta BCP copiada')">Copiar</button></div>
+ <div class="dn-opt"><div class="dn-ic bcp">CCI</div><div><small>Interbancaria (otros bancos)</small><b>002-191-198376183079-59</b></div><button class="btn alt" onclick="copyTxt('00219119837618307959','CCI copiado')">Copiar</button></div>
+ <p class="sm" style="text-align:center;margin:10px 0 0">Gracias por apoyar la guía. Cada aporte ayuda a sumar más aviones y mejoras ❤️</p>
+</div></div>
 <div id="chooser" onclick="if(event.target==this)this.classList.remove('on')"><div class="box"><div class="bh"><b id="chTitle"></b><button class="ibtn" onclick="$('chooser').classList.remove('on')"><svg class="i"><use href="#i-x"/></svg></button></div><div class="bl" id="chList"></div></div></div>
 <div class="toast" id="toast"></div>
 
@@ -1885,6 +1920,13 @@ function renderTierra(){const gs=wGroups().filter(g=>!['aam','pod','tank','other
   return `<div class="card"><div style="display:flex;gap:10px;align-items:center"><img class="wic" style="width:46px;height:46px" src="${wtIcon(w[2])}" alt=""><div><b>${wShort(w[0])}</b><br><small style="color:${G.c}">${G.n}</small></div></div><ul class="steps mt">${st.map((s,i)=>`<li><span class="n">${i+1}</span>${s[0]} <span>${s[1]}</span></li>`).join('')}</ul></div>`}).join('')}</div>
  <div class="tip">${ico('bulb')}<div>Después de atacar, <b>vuelve a ganar altura</b>: los antiaéreos y cazas enemigos buscan aviones lentos y bajos.</div></div>`;}
 
+/* ---------- donaciones ---------- */
+function openDonate(){$('donate').classList.add('on')}
+function copyTxt(t,msg){const ok=()=>toast(msg+' ✔');
+ try{if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t).then(ok,()=>fallback());return}}catch(e){}
+ fallback();
+ function fallback(){const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();try{document.execCommand('copy');ok()}catch(e){toast('Copia este número: '+t)}a.remove()}}
+
 /* ---------- vender la guía: encabezados, vitrina, progreso y "siguiente" ---------- */
 function pageHero(i,col,t,sub,p){return `<div class="phero" style="--pc:${col}33"><div class="pk"><div class="pi" style="color:${col}">${ico(i)}</div><div><h2>${t}</h2><div class="ps">${sub}</div></div></div>${p?`<p>${p}</p>`:''}</div>`}
 const GUIDES=[
@@ -1951,6 +1993,9 @@ let curTab='home';
 window.appBack=function(){
  if($('lb').classList.contains('on')){$('lb').classList.remove('on');return 1}
  if($('capture').classList.contains('on')){capEnd();return 1}
+ if($('donate').classList.contains('on')){$('donate').classList.remove('on');return 1}
+ if($('chooser').classList.contains('on')){$('chooser').classList.remove('on');return 1}
+ if($('picker').classList.contains('on')){closePicker();return 1}
  if(!$('splash').classList.contains('off'))return 0;
  if(curTab=='ficha'){go('cat');return 1}
  if(curTab!='home'){go('home');return 1}
