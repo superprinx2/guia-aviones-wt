@@ -68,6 +68,7 @@ def build_html():
     creds = open(creds_path, encoding="utf-8").read() if os.path.exists(creds_path) else "{}"
     html = html.replace("%%CREDITS%%", creds)
     html = html.replace("%%CATALOG%%", open(os.path.join(SRC, "catalog.json"), encoding="utf-8").read())
+    html = html.replace("%%DETAILS%%", open(os.path.join(SRC, "details.json"), encoding="utf-8").read())
     html = html.replace("%%ORIGBLK%%", open(os.path.join(SRC, "orig.blk"), encoding="utf-8").read())
     html = html.replace("%%THREE%%", open(os.path.join(SRC, "three.min.js"), encoding="utf-8").read())
     with open(OUT_HTML, "w", encoding="utf-8", newline="\n") as f:

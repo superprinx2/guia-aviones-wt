@@ -6,6 +6,11 @@ D = os.path.join(ROOT, "build")
 OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "src", "catalog.json")
 d = json.load(open(os.path.join(D, "wiki", "prem.json"), encoding="utf-8"))
 s = [x for x in d if x["ge"] or x["store"]]
+# Solo aviones modernos: rango V o superior y con radar de busqueda (no solo telemetro)
+DET = json.load(open(os.path.join(D, "wiki", "details.json"), encoding="utf-8"))["planes"]
+RKN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"]
+s = [x for x in s if RKN.index(x["rk"]) >= 4 and DET.get(x["id"], {}).get("radar", {}).get("radar")
+     and DET[x["id"]]["radar"].get("s") is True]
 ROLE = {"fighter": "f", "assault": "a", "bomber": "b"}
 NAT = ["usa", "germany", "ussr", "britain", "japan", "china", "italy", "france", "sweden", "israel"]
 RK = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"]
